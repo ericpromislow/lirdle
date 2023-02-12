@@ -1,0 +1,22 @@
+{
+  "name": "lirdle",
+  "version": "1.0.0",
+  "description": "Wordle with one lie per response",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericpromislow/lirdle.git"
+  },
+  "author": "Eric Promislow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ericpromislow/lirdle/issues"
+  },
+  "homepage": "https://github.com/ericpromislow/lirdle#readme",
+  "dependencies": {
+    "live-server": "^1.2.2"
+  }
+}
