@@ -1,198 +1,257 @@
 import { WORDS, OTHERWORDS } from "./words.js";
 
 const INIT_NUM_ROWS = 6;
-let guessCount = 0;
-let currentGuess = [];
-let nextLetter = 0;
-let board;
-let numBoardRows = 0;
-const changes = [];
-const targetNum = getWordNumber();
-const targetString = WORDS[targetNum];
-console.log(targetString);
 
-function getWordNumber() {
-    // return Math.floor(Math.random() * WORDS.length)
-    const d = new Date();
-    const year = d.getFullYear().toString();
-    let month = (d.getMonth() + 1).toString();
-    let date = d.getDate().toString();
-    if (month.length === 1) {
-        month = '0' + month;
-    }
-    const dayNumber = parseInt(`${ year }${ month }${ date }`, 10);
-    return ((dayNumber * 2 + 1) * 1793) % WORDS.length;
-}
+try {
 
-function appendBoardRow() {
-    let row = document.createElement("div");
-    row.className = "letter-row";
+    const saveableState = {
+        changes: [],
+        date: null,
+        guessWords: [],
+        numBoardRows: INIT_NUM_ROWS,
+        scores: [],
+        targetString: '',
+    };
+    const state = {
+        board: null,
+        currentGuess: [],
+        guessCount: 0,
+        nextLetter: 0,
+    };
 
-    for (let j = 0; j < 5; j++) {
-        let box = document.createElement("div");
-        box.className = "letter-box";
-        row.appendChild(box);
-    }
-    board.appendChild(row);
-    numBoardRows += 1;
-}
-
-function initBoard() {
-    board = document.getElementById("game-board");
-
-    for (let i = 0; i < INIT_NUM_ROWS; i++) {
-        appendBoardRow();
-    }
-}
-
-initBoard();
-
-let ignoreEnter = false;
-
-function checkGuess () {
-    let row = document.getElementsByClassName("letter-row")[guessCount];
-    let guessString = '';
-    let target = Array.from(targetString);
-    const scores = [0, 0, 0, 0, 0];
-
-    for (const val of currentGuess) {
-        guessString += val
-    }
-
-    if (guessString.length != 5) {
-        ignoreEnter = true;
-        alert("Not enough letters!");
-        return
-    }
-
-    if (!WORDS.includes(guessString) && !OTHERWORDS.includes(guessString)) {
-        ignoreEnter = true;
-        alert(`Word ${ guessString } not in word-list`);
-        return
-    }
-
-    guessCount += 1;
-
-    for (let i = 0; i < 5; i++) {
-        let letterColor = '';
-
-        let letterPosition = target.indexOf(currentGuess[i]);
-        // is letter in the correct guess
-        if (letterPosition === -1) {
-            letterColor = 'grey';
-        } else {
-            // now, letter is definitely in word
-            // if letter index and right guess index are the same
-            // letter is in the right position
-            if (currentGuess[i] === target[i]) {
-                // shade green
-                letterColor = 'green';
-                scores[i] = 2;
-            } else {
-                // shade box yellow
-                letterColor = 'yellow';
-                scores[i] = 1;
-            }
-
-            target[letterPosition] = "#"
+    function initialize() {
+        initState();
+        initBoard();
+        try {
+            loadLocalStorage();
+        } catch (ex) {
+            //alert(`Error loading local storage: ${ex}`);
+            console.log(`Error loading local storage: ${ex}`);
+            defaultInitSavableState();
         }
     }
-    const guessedIt = scores.every((x) => x === 2);
-    const newScores = guessedIt ? scores : perturb(scores);
-    for (let i = 0; i < 5; i++) {
-        let box = row.children[i];
-        let letter = currentGuess[i];
-        const letterColor = ['grey', 'yellow', 'green'][newScores[i]];
-        let delay = 100 * i;
 
-        setTimeout(()=> {
-            //shade box
-            box.style.backgroundColor = letterColor;
-            if (letterColor !== 'grey') {
-                shadeKeyboard(letter, guessedIt ? 'green' : 'orange');
-            }
-        }, delay);
+
+    function defaultInitSavableState() {
+        saveableState.changes = [];
+        saveableState.date = getDateNumber();
+        const targetNum = getWordNumber(saveableState.date);
+        saveableState.guessWords = [];
+        saveableState.numBoardRows = INIT_NUM_ROWS;
+        saveableState.scores = [];
+        saveableState.targetString = WORDS[targetNum];
+        console.log(`Secret string is ${ saveableState.targetString }`);
     }
 
-    if (guessString === targetString) {
-        setTimeout(() => {
-            alert(`You got it in ${ guessCount } guess${ guessCount > 1 ? 'es' : '' }!`);
-        }, 1_000);
-        return;
-    } else {
-        currentGuess = [];
-        nextLetter = 0;
-        if (guessCount >= numBoardRows) {
+    function getDateNumber() {
+        const d = new Date();
+        const year = d.getFullYear().toString();
+        let month = (d.getMonth() + 1).toString();
+        let date = d.getDate().toString();
+        if (month.length === 1) {
+            month = '0' + month;
+        }
+        return parseInt(`${year}${month}${date}`, 10);
+    }
+
+    function getWordNumber(dateNumber) {
+        return Math.floor(Math.random() * WORDS.length);
+        // this cycles through the list sort of randomly but not really
+        return ((dateNumber * 2 + 1) * 1793) % WORDS.length;
+    }
+
+    function initState() {
+        state.board = null;
+        state.currentGuess = [];
+        state.guessCount = 0;
+        state.nextLetter = 0;
+    }
+
+    function appendBoardRow() {
+        let row = document.createElement("div");
+        row.className = "letter-row";
+
+        for (let j = 0; j < 5; j++) {
+            let box = document.createElement("div");
+            box.className = "letter-box";
+            row.appendChild(box);
+        }
+        state.board.appendChild(row);
+    }
+
+    function initBoard() {
+        state.board = document.getElementById("game-board");
+
+        for (let i = 0; i < saveableState.numBoardRows; i++) {
             appendBoardRow();
         }
     }
-}
 
-function deleteLetter () {
-    let row = document.getElementsByClassName("letter-row")[guessCount];
-    let box = row.children[nextLetter - 1];
-    box.textContent = "";
-    box.classList.remove("filled-box");
-    currentGuess.pop();
-    nextLetter -= 1;
-}
 
-function insertLetter (pressedKey) {
-    if (nextLetter === 5) {
-        return;
-    }
-    pressedKey = pressedKey.toLowerCase();
+    let ignoreEnter = false;
 
-    let row = document.getElementsByClassName("letter-row")[guessCount];
-    let box = row.children[nextLetter];
-    box.textContent = pressedKey;
-    box.classList.add("filled-box");
-    currentGuess.push(pressedKey);
-    nextLetter += 1;
-}
+    function checkGuess() {
+        let row = document.getElementsByClassName("letter-row")[state.guessCount];
+        let guessString = '';
+        let target = Array.from(saveableState.targetString);
+        const scores = [0, 0, 0, 0, 0];
 
-function perturb(scores) {
-    const newScores = scores;
-    const i = Math.floor(Math.random() * scores.length);
-    const oldVal = scores[i] + 3;
-    newScores[i] = (Math.random() < 0.5 ? oldVal - 1 : oldVal + 1) % 3;
-    changes.push([i, scores[i], newScores[i]]);
-
-    return newScores;
-}
-
-function shadeKeyboard(letter, color) {
-    for (const elem of document.getElementsByClassName("keyboard-button")) {
-        if (elem.textContent === letter) {
-            elem.style.backgroundColor = color;
-            break;
+        for (const val of state.currentGuess) {
+            guessString += val;
         }
-    }
-}
 
-document.addEventListener("keyup", (e) => {
-    // console.log('>> keyup');
-    let pressedKey = String(e.key);
-    if (pressedKey === "Backspace" && nextLetter !== 0) {
-        deleteLetter();
-        return;
-    }
-
-    if (pressedKey === "Enter") {
-        console.log(`pressed enter, currentTarget: ${ e.currentTarget }, target: ${ e.target }`);
-        if (ignoreEnter) {
-            ignoreEnter = false;
+        if (guessString.length !== 5) {
+            ignoreEnter = true;
             return;
         }
-        e.stopPropagation();
-        e.cancelBubble = true;
-        checkGuess();
-        return;
+
+        if (!WORDS.includes(guessString) && !OTHERWORDS.includes(guessString)) {
+            ignoreEnter = true;
+            alert(`Word ${guessString} not in word-list`);
+            return;
+        }
+
+        state.guessCount += 1;
+        saveableState.guessWords.push(guessString);
+
+        for (let i = 0; i < 5; i++) {
+            let letterColor = '';
+
+            let letterPosition = target.indexOf(state.currentGuess[i]);
+            // is letter in the correct guess
+            if (letterPosition === -1) {
+                letterColor = 'grey';
+            } else {
+                // now, letter is definitely in word
+                // if letter index and right guess index are the same
+                // letter is in the right position
+                if (state.currentGuess[i] === target[i]) {
+                    // shade green
+                    letterColor = 'green';
+                    scores[i] = 2;
+                } else {
+                    // shade box yellow
+                    letterColor = 'yellow';
+                    scores[i] = 1;
+                }
+
+                target[letterPosition] = "#"
+            }
+        }
+        const guessedIt = scores.every((x) => x === 2);
+        const newScores = guessedIt ? scores : perturb(scores);
+        saveableState.scores.push(newScores);
+        for (let i = 0; i < 5; i++) {
+            let box = row.children[i];
+            let letter = state.currentGuess[i];
+            const letterColor = ['grey', 'yellow', 'green'][newScores[i]];
+            let delay = 100 * i;
+
+            setTimeout(() => {
+                //shade box
+                box.style.backgroundColor = letterColor;
+                if (letterColor !== 'grey') {
+                    shadeKeyboard(letter, guessedIt ? 'green' : 'orange');
+                }
+            }, delay);
+        }
+
+        if (guessString === saveableState.targetString) {
+            setTimeout(() => {
+                alert(`You got it in ${state.guessCount} guess${ state.guessCount > 1 ? 'es' : ''}!`);
+            }, 1_000);
+            return;
+        } else {
+            state.currentGuess = [];
+            state.nextLetter = 0;
+            if (state.guessCount >= saveableState.numBoardRows) {
+                appendBoardRow();
+                saveableState.numBoardRows += 1;
+            }
+        }
     }
-    let found = pressedKey.match(/[a-z]/gi);
-    if (!found || found.length > 1) {
-        return;
-    } else {
-        insertLetter(pressedKey);
+
+    function deleteLetter() {
+        let row = document.getElementsByClassName("letter-row")[state.guessCount];
+        let box = row.children[state.nextLetter - 1];
+        box.textContent = "";
+        box.classList.remove("filled-box");
+        state.currentGuess.pop();
+        state.nextLetter -= 1;
     }
-});
+
+    function insertLetter(pressedKey) {
+        pressedKey = pressedKey.toLowerCase();
+
+        let row = document.getElementsByClassName("letter-row")[state.guessCount];
+        let box = row.children[state.nextLetter];
+        box.textContent = pressedKey;
+        box.classList.add("filled-box");
+        state.currentGuess.push(pressedKey);
+        state.nextLetter += 1;
+    }
+
+    function perturb(scores) {
+        const newScores = scores;
+        const i = Math.floor(Math.random() * scores.length);
+        const oldVal = scores[i] + 3;
+        newScores[i] = (Math.random() < 0.5 ? oldVal - 1 : oldVal + 1) % 3;
+        saveableState.changes.push([i, scores[i], newScores[i]]);
+
+        return newScores;
+    }
+
+    function shadeKeyboard(letter, color) {
+        for (const elem of document.getElementsByClassName("keyboard-button")) {
+            if (elem.textContent === letter) {
+                elem.style.backgroundColor = color;
+                break;
+            }
+        }
+    }
+
+    function beep() {
+        var snd = new Audio("data:audio/wav;base64,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qJrx4KOQjahZxWbcZgztj2c49nKmkId44S71j0c8eV9yDK6uPRzx5X18eDvjvQ6yKo9ZSS6l//8elePK/Lf//IInrOF/FvDoADYAGBMGb7FtErm5MXMlmPAJQVgWta7Zx2go+8xJ0UiCb8LHHdftWyLJE0QIAIsI+UbXu67dZMjmgDGCGl1H+vpF4NSDckSIkk7Vd+sxEhBQMRU8j/12UIRhzSaUdQ+rQU5kGeFxm+hb1oh6pWWmv3uvmReDl0UnvtapVaIzo1jZbf/pD6ElLqSX+rUmOQNpJFa/r+sa4e/pBlAABoAAAAA3CUgShLdGIxsY7AUABPRrgCABdDuQ5GC7DqPQCgbbJUAoRSUj+NIEig0YfyWUho1VBBBA//uQZB4ABZx5zfMakeAAAAmwAAAAF5F3P0w9GtAAACfAAAAAwLhMDmAYWMgVEG1U0FIGCBgXBXAtfMH10000EEEEEECUBYln03TTTdNBDZopopYvrTTdNa325mImNg3TTPV9q3pmY0xoO6bv3r00y+IDGid/9aaaZTGMuj9mpu9Mpio1dXrr5HERTZSmqU36A3CumzN/9Robv/Xx4v9ijkSRSNLQhAWumap82WRSBUqXStV/YcS+XVLnSS+WLDroqArFkMEsAS+eWmrUzrO0oEmE40RlMZ5+ODIkAyKAGUwZ3mVKmcamcJnMW26MRPgUw6j+LkhyHGVGYjSUUKNpuJUQoOIAyDvEyG8S5yfK6dhZc0Tx1KI/gviKL6qvvFs1+bWtaz58uUNnryq6kt5RzOCkPWlVqVX2a/EEBUdU1KrXLf40GoiiFXK///qpoiDXrOgqDR38JB0bw7SoL+ZB9o1RCkQjQ2CBYZKd/+VJxZRRZlqSkKiws0WFxUyCwsKiMy7hUVFhIaCrNQsKkTIsLivwKKigsj8XYlwt/WKi2N4d//uQRCSAAjURNIHpMZBGYiaQPSYyAAABLAAAAAAAACWAAAAApUF/Mg+0aohSIRobBAsMlO//Kk4soosy1JSFRYWaLC4qZBYWFRGZdwqKiwkNBVmoWFSJkWFxX4FFRQWR+LsS4W/rFRb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VEFHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU291bmRib3kuZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjAwNGh0dHA6Ly93d3cuc291bmRib3kuZGUAAAAAAAAAACU=");
+        snd.play();
+    }
+
+    document.addEventListener("keyup", (e) => {
+        // console.log('>> keyup');
+        let pressedKey = String(e.key);
+        if (pressedKey === "Backspace") {
+            if (state.nextLetter !== 0) {
+                deleteLetter();
+            } else {
+                beep();
+            }
+            return;
+        }
+        if (pressedKey === "Enter") {
+            console.log(`pressed enter, currentTarget: ${e.currentTarget}, target: ${e.target}`);
+            if (ignoreEnter) {
+                ignoreEnter = false;
+                return;
+            }
+            e.stopPropagation();
+            e.cancelBubble = true;
+            checkGuess();
+            return;
+        }
+        if (pressedKey.match(/^[a-z]$/i)) {
+            if (state.nextLetter === 5) {
+                beep();
+            } else {
+                insertLetter(pressedKey);
+            }
+        } else {
+            console.log(`Ignoring key event ${ pressedKey }`);
+        }
+    });
+
+    window.addEventListener('load', () => {
+        initialize();
+    });
+
+} catch(gex) {
+    alert(`Big error: ${ gex }`, gex);
+}
