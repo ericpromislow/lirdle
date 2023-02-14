@@ -1,4 +1,5 @@
 import { WORDS, OTHERWORDS } from "./words.js";
+import { POSITIONS } from "./numbers";
 
 const INIT_NUM_ROWS = 6;
 
@@ -31,6 +32,9 @@ try {
         }
     }
 
+    function updateSaveableState() {
+
+    }
 
     function defaultInitSavableState() {
         saveableState.changes = [];
@@ -56,6 +60,11 @@ try {
 
     function getWordNumber(dateNumber) {
         return Math.floor(Math.random() * WORDS.length);
+        const pos = POSITIONS[dateNumber % POSITIONS.length];
+        if (pos < WORDS.length) {
+            return pos;
+        }
+        console.log(`Can't find position ${ pos }, only have #{ WORDS.length } words`);
         // this cycles through the list sort of randomly but not really
         return ((dateNumber * 2 + 1) * 1793) % WORDS.length;
     }
