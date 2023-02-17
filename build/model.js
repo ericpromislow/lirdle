@@ -1,9 +1,10 @@
 import { WORDS, OTHERWORDS } from "./words.js";
 import { getDateNumber, getWordNumber, perturb } from "./numbers.js";
+import beep from "./beep.js";
 
 const INIT_NUM_ROWS = 6;
 
-export function Model(view) {
+export default function Model(view) {
     this.saveableState = {
         changes: [],
         date: null,
@@ -13,12 +14,10 @@ export function Model(view) {
         scores: [],
         targetString: '',
     };
-    this.state = {
-        board: null,
-        currentGuess: [],
-        guessCount: 0,
-        nextLetterPosition: 0,
-    };
+    this.currentGuess = [];
+    this.guessCount = 0;
+    this.nextLetterPosition = 0;
+
     this.view = view;
 }
 
@@ -41,7 +40,7 @@ Model.prototype = {
         const savedState = JSON.parse(localStorage.getItem('saveableState'));
         console.log(`savedState:`, savedState);
         if (savedState.date !== this.getDateNumber()) {
-            //TODO: Update stats for a giveup on the old date
+            //TODO: Update stats for a give-up on the old date
             throw new Error(`Ignoring unfinished work from ${savedState.date}`);
         }
         Object.assign(this.saveableState, savedState);
@@ -75,15 +74,14 @@ Model.prototype = {
         console.log(`Secret string is ${this.saveableState.targetString}`);
     },
 
-    initState(board) {
-        this.state.board = board;
-        this.state.currentGuess = [];
-        this.state.guessCount = 0;
-        this.state.nextLetterPosition = 0;
+    initState() {
+        this.currentGuess = [];
+        this.guessCount = 0;
+        this.nextLetterPosition = 0;
     },
 
     checkGuess() {
-        const guessString = this.state.currentGuess.join('');
+        const guessString = this.currentGuess.join('');
         if (guessString.length !== 5) {
             return;
         }
@@ -100,10 +98,10 @@ Model.prototype = {
         const scores = [0, 0, 0, 0, 0];
 
         for (let i = 0; i < 5; i++) {
-            let letterPosition = target.indexOf(this.state.currentGuess[i]);
+            let letterPosition = target.indexOf(this.currentGuess[i]);
             // is letter in the correct position?
             if (letterPosition !== -1) {
-                scores[i] = this.state.currentGuess[i] === target[i] ? 2 : 1;
+                scores[i] = this.currentGuess[i] === target[i] ? 2 : 1;
                 target[letterPosition] = "#"
             }
         }
@@ -116,38 +114,40 @@ Model.prototype = {
             newScores = scores;
         }
         this.saveableState.scores.push(newScores);
-        this.view.enterScoredGuess(guessString, newScores, this.state.guessCount, guessedIt);
-        this.state.guessCount += 1;
+        this.view.enterScoredGuess(guessString, newScores, this.guessCount, guessedIt);
+        this.guessCount += 1;
 
         if (guessedIt) {
             this.saveableState.finished = true;
             setTimeout(() => {
-                alert(`You got it in ${this.state.guessCount} guess${this.state.guessCount > 1 ? 'es' : ''}!`);
+                alert(`You got it in ${this.guessCount} guess${this.guessCount > 1 ? 'es' : ''}!`);
             }, 1_000);
         } else {
-            if (this.state.guessCount >= this.saveableState.numBoardRows) {
+            if (this.guessCount >= this.saveableState.numBoardRows) {
                 this.view.appendBoardRow();
                 this.saveableState.numBoardRows += 1;
             }
         }
-        this.state.currentGuess = [];
-        this.state.nextLetterPosition = 0;
+        this.currentGuess = [];
+        this.nextLetterPosition = 0;
         this.updateSaveableState();
     },
 
     deleteLetter() {
-        if (this.state.currentGuess === 0) {
-            this.view.beep();
+        if (this.currentGuess === 0) {
+            beep();
             return;
         }
-        this.view.deleteLetter(this.state.guessCount, this.state.nextLetterPosition - 1);
-        this.state.currentGuess.pop();
-        this.state.nextLetterPosition -= 1;
+        this.view.deleteLetter(this.guessCount, this.nextLetterPosition - 1);
+        this.currentGuess.pop();
+        this.nextLetterPosition -= 1;
     },
 
-    insertLetter(pressedKey, rowNum, colNum) {
+    insertLetter(pressedKey) {
+        const rowNum = this.guessCount;
+        const colNum = this.nextLetterPosition;
         this.view.insertLetter(pressedKey, rowNum, colNum);
-        this.state.currentGuess.push(pressedKey);
-        this.state.nextLetterPosition += 1;
+        this.currentGuess.push(pressedKey);
+        this.nextLetterPosition += 1;
     },
 };

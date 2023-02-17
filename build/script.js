@@ -8,9 +8,10 @@ function initialize() {
     view = new View();
     model = new Model(view);
     model.initialize();
+    view.setModel(model);
 
     document.addEventListener("keyup", (e) => {
-        view.keyHandler(e, model);
+        view.keyHandler(e);
     });
 }
 
