@@ -24,7 +24,6 @@ export default function Model(view) {
 Model.prototype = {
     initialize() {
         this.initState();
-        this.initBoard();
         setTimeout(() => {
             try {
                 this.loadLocalStorage();
@@ -33,13 +32,14 @@ Model.prototype = {
                 console.log(`Error loading local storage: ${ex}`);
                 this.defaultInitSavableState();
             }
+            this.view.initBoard(this.saveableState.numBoardRows);
         }, 0);
     },
 
     loadLocalStorage() {
         const savedState = JSON.parse(localStorage.getItem('saveableState'));
         console.log(`savedState:`, savedState);
-        if (savedState.date !== this.getDateNumber()) {
+        if (savedState.date !== getDateNumber()) {
             //TODO: Update stats for a give-up on the old date
             throw new Error(`Ignoring unfinished work from ${savedState.date}`);
         }
@@ -52,6 +52,7 @@ Model.prototype = {
             //TODO: Do something to show they finished it.
             alert("Nothing left to do here.");
         }
+        this.guessCount = this.saveableState.guessWords.length;
     },
 
     updateSaveableState() {
@@ -108,10 +109,10 @@ Model.prototype = {
         const guessedIt = guessString === this.saveableState.targetString;
         let newScores;
         if (guessedIt) {
+            newScores = scores;
+        } else {
             newScores = [].concat(scores);
             perturb(newScores, this.saveableState.changes);
-        } else {
-            newScores = scores;
         }
         this.saveableState.scores.push(newScores);
         this.view.enterScoredGuess(guessString, newScores, this.guessCount, guessedIt);

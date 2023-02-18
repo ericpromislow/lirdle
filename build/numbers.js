@@ -1,4 +1,4 @@
-import {WORDS} from "./words";
+import { WORDS } from "./words.js";
 
 
 export function getDateNumber() {

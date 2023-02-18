@@ -1,20 +1,30 @@
 import View from './view.js';
 import Model from './model.js';
 
-let view = null;
-let model = view;
+try {
+    console.log(`QQQ: >> script.js`);
 
-function initialize() {
-    view = new View();
-    model = new Model(view);
-    model.initialize();
-    view.setModel(model);
+    let view = null;
+    let model = view;
 
-    document.addEventListener("keyup", (e) => {
-        view.keyHandler(e);
+    function initialize() {
+        console.log(`ready are we initing`);
+        view = new View();
+        model = new Model(view);
+        model.initialize();
+        view.setModel(model);
+
+        document.addEventListener("keyup", (e) => {
+            if (view) view.keyHandler(e);
+            else console.log(`Not handling key ${ e.key }`);
+        });
+    }
+    console.log(`QQQ: << script.js`);
+
+    window.addEventListener('load', () => {
+        initialize();
     });
+    console.log(`QQQ: << script.js`);
+} catch(e) {
+    console.log(`QQQ: error reading script.js: ${ e }`, e);
 }
-
-window.addEventListener('load', () => {
-    initialize();
-});
