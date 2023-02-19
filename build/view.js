@@ -43,6 +43,19 @@ View.prototype = {
             row.appendChild(box);
         }
         this.board.appendChild(row);
+        const classNames = ["small1", "small2", "small3", "small4"];
+        const classList = this.board.classList;
+        const eltCount = this.board.childElementCount;
+        classList.remove(...classNames);
+        if (eltCount > 24) {
+            classList.add("small4");
+        } else if (eltCount > 18) {
+            classList.add("small3");
+        } else if (eltCount > 12) {
+            classList.add("small2");
+        } else if (eltCount > 6) {
+            classList.add("small1");
+        }
     },
 
     showWin(guessCount, changes) {
