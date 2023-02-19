@@ -3,6 +3,9 @@ import { getDateNumber } from "./numbers.js";
 
 export default function View() {
     this.board = document.getElementById("game-board");
+    for (const elem of document.getElementsByClassName("keyboard-button")) {
+        elem.style.backgroundColor = NEUTRAL_COLOR;
+    }
     this._ignoreEnter = false;
     this.model = null;
     this.wordIsInvalid = false;
@@ -17,6 +20,7 @@ function pad(val, minSize, padChar) {
 }
 
 const COLORS = ['grey', 'yellow', 'green'];
+const NEUTRAL_COLOR = 'white';
 
 View.prototype = {
     setModel(model) {

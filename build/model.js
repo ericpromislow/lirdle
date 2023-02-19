@@ -1,6 +1,7 @@
 import { WORDS, OTHERWORDS } from "./words.js";
 import { getDateNumber, getWordNumber, perturb } from "./numbers.js";
 import beep from "./beep.js";
+import Stats from "./stats.js";
 
 const INIT_NUM_ROWS = 6;
 
@@ -14,15 +15,10 @@ export default function Model(view) {
         scores: [],
         wordNumber: -1,
     };
-    this.currentGuess = [];
-    this.guessCount = 0;
-    this.nextLetterPosition = 0;
-    this.scoresByLetter = {};
-    this.targetString = '';
-    this.isInvalidWord = false;
-    this.allDone = false;
+    this.initState();
 
     this.view = view;
+    this.stats = new Stats();
 }
 
 Model.prototype = {
@@ -40,10 +36,18 @@ Model.prototype = {
     },
 
     loadLocalStorage() {
+        try {
+            const stats = JSON.parse(localStorage.getItem('stats'));
+            this.stats.initialize(stats);
+        } catch(e) {
+            console.log(`Couldn't read stats: ${ e }`);
+            this.stats.initialize(null);
+        }
         const savedState = JSON.parse(localStorage.getItem('saveableState'));
         console.log(`savedState:`, savedState);
         if (savedState.date !== getDateNumber()) {
             //TODO: Update stats for a give-up on the old date
+            this.stats.addUnfinishedGame(savedState.guessWords.length);
             throw new Error(`Ignoring unfinished work from ${savedState.date}`);
         }
         Object.assign(this.saveableState, savedState);
@@ -56,6 +60,7 @@ Model.prototype = {
             //TODO: Do something to show they finished it.
             if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
                 this.view.clearBoard();
+                this.initState();
                 throw new Error("Need replays for dev purposes.");
             } else {
                 this.allDone = true;
@@ -89,6 +94,10 @@ Model.prototype = {
         this.currentGuess = [];
         this.guessCount = 0;
         this.nextLetterPosition = 0;
+        this.scoresByLetter = {};
+        this.targetString = '';
+        this.isInvalidWord = false;
+        this.allDone = false;
     },
 
     checkGuess() {
@@ -123,6 +132,7 @@ Model.prototype = {
         let newScores;
         if (guessedIt) {
             newScores = scores;
+            this.stats.addFinishedGame(this.saveableState.guessWords.length);
         } else {
             newScores = [].concat(scores);
             perturb(newScores, this.saveableState.changes);
