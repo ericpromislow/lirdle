@@ -27,6 +27,11 @@ h1 {
   text-transform: uppercase;
 }
 
+.letter-box.invalid {
+  color: red;
+  background-color: antiquewhite;
+}
+
 .letter-box.actualgrey {
   border: 6px solid black;
 }

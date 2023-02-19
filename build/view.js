@@ -4,6 +4,7 @@ export default function View() {
     this.board = document.getElementById("game-board");
     this._ignoreEnter = false;
     this.model = null;
+    this.wordIsInvalid = false;
 }
 
 const COLORS = ['grey', 'yellow', 'green'];
@@ -50,6 +51,33 @@ View.prototype = {
             const box = row.children[change[0]];
             const actualColor = COLORS[change[1]];
             box.classList.add(`actual${ actualColor }`);
+        }
+    },
+
+    changeInvalidWordState(rowNum, wordIsInvalid) {
+        if (this.wordIsInvalid !== wordIsInvalid) {
+            if (!this.wordIsInvalid) {
+                this.markCurrentWordInvalid(rowNum);
+            } else {
+                this.markCurrentWordValid(rowNum);
+            }
+            this.wordIsInvalid = wordIsInvalid;
+        }
+    },
+
+    markCurrentWordInvalid(rowNum) {
+        const row = this.board.children[rowNum];
+        for (let i = 0; i < 5; i++) {
+            const box = row.children[i];
+            box.classList.add('invalid');
+        }
+    },
+
+    markCurrentWordValid(rowNum) {
+        const row = this.board.children[rowNum];
+        for (let i = 0; i < 5; i++) {
+            const box = row.children[i];
+            box.classList.remove('invalid');
         }
     },
 
@@ -151,8 +179,11 @@ View.prototype = {
             }
             e.stopPropagation();
             e.cancelBubble = true;
+            if (this.wordIsInvalid) {
+                beep();
+                return;
+            }
             this.model.checkGuess();
-            return;
         }
         if (pressedKey.match(/^[a-z]$/i)) {
             if (this.model.nextLetterPosition === 5) {

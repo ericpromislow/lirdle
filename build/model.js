@@ -19,6 +19,7 @@ export default function Model(view) {
     this.nextLetterPosition = 0;
     this.scoresByLetter = {};
     this.targetString = '';
+    this.isInvalidWord = false;
 
     this.view = view;
 }
@@ -92,10 +93,13 @@ Model.prototype = {
             return;
         }
 
+        if (this.isInvalidWord) {
+            return;
+        }
         if (!WORDS.includes(guessString) && !OTHERWORDS.includes(guessString)) {
-            //TODO: Stop using the alert thing
-            this.view.ignoreEnter(true);
-            alert(`Word ${guessString} not in word-list`);
+            // We shouldn't get here now
+            this.isInvalidWord = true;
+            this.view.changeInvalidWordState(this.guessCount, true);
             return;
         }
 
@@ -158,6 +162,10 @@ Model.prototype = {
         this.view.deleteLetter(this.guessCount, this.nextLetterPosition - 1);
         this.currentGuess.pop();
         this.nextLetterPosition -= 1;
+        if (this.nextLetterPosition === 4 && this.isInvalidWord) {
+            this.isInvalidWord = false;
+            this.view.changeInvalidWordState(this.guessCount, false);
+        }
     },
 
     insertLetter(pressedKey) {
@@ -166,5 +174,12 @@ Model.prototype = {
         this.view.insertLetter(pressedKey, rowNum, colNum);
         this.currentGuess.push(pressedKey);
         this.nextLetterPosition += 1;
+        if (this.nextLetterPosition === 5) {
+            const guessString = this.currentGuess.join('');
+            if (!WORDS.includes(guessString) && !OTHERWORDS.includes(guessString)) {
+                this.isInvalidWord = true;
+                this.view.changeInvalidWordState(this.guessCount, true);
+            }
+        }
     },
 };
