@@ -6,6 +6,8 @@ export default function View() {
     this.model = null;
 }
 
+const COLORS = ['grey', 'yellow', 'green'];
+
 View.prototype = {
     setModel(model) {
         this.model = model;
@@ -31,6 +33,24 @@ View.prototype = {
             row.appendChild(box);
         }
         this.board.appendChild(row);
+    },
+
+    /**
+     * changes: array of [index, actualResult, displayedResult]
+     * @param changes
+     */
+    showDeceptiveSquares(changes) {
+        for (let i = 0; i < changes.length; i++) {
+            const row = this.board.children[i];
+            if (!row) {
+                console.log(`showDeceptiveSquares: No row at entry ${ i }`);
+                break;
+            }
+            const change = changes[i];
+            const box = row.children[change[0]];
+            const actualColor = COLORS[change[1]];
+            box.classList.add(`actual${ actualColor }`);
+        }
     },
 
     ignoreEnter(val) {
@@ -65,7 +85,7 @@ View.prototype = {
             }
             const box = row.children[i];
             const letter = currentGuess[i]; // array or string
-            const letterColor = ['grey', 'yellow', 'green'][scores[i]];
+            const letterColor = COLORS[scores[i]];
             box.style.backgroundColor = letterColor;
             this.shadeKeyboard(letter, letterColor, guessedIt, this.model.scoresByLetter[letter]);
             if (immediate) {

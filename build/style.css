@@ -27,6 +27,16 @@ h1 {
   text-transform: uppercase;
 }
 
+.letter-box.actualgrey {
+  border: 6px solid black;
+}
+.letter-box.actualyellow {
+  border: 6px solid yellow;
+}
+.letter-box.actualgreen {
+  border: 6px solid green;
+}
+
 .filled-box {
   border: 2px solid black;
 }

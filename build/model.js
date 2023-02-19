@@ -128,6 +128,7 @@ Model.prototype = {
 
         if (guessedIt) {
             this.saveableState.finished = true;
+            this.view.showDeceptiveSquares(this.saveableState.changes);
             setTimeout(() => {
                 alert(`You got it in ${this.guessCount} guess${this.guessCount > 1 ? 'es' : ''}!`);
             }, 1_000);

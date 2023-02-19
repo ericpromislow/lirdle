@@ -31,7 +31,7 @@ export function perturb(scores, changes) {
     const i = Math.floor(Math.random() * scores.length);
     const oldVal = scores[i] + 3;
     scores[i] = (Math.random() < 0.5 ? oldVal - 1 : oldVal + 1) % 3;
-    changes.push([i, oldVal, scores[i]]);
+    changes.push([i, oldVal - 3, scores[i]]);
 }
 
 export const POSITIONS = [734, 1006, 1676, 1853, 1917, 1100, 816,
