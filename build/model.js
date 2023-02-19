@@ -20,6 +20,7 @@ export default function Model(view) {
     this.scoresByLetter = {};
     this.targetString = '';
     this.isInvalidWord = false;
+    this.allDone = false;
 
     this.view = view;
 }
@@ -31,7 +32,6 @@ Model.prototype = {
             try {
                 this.loadLocalStorage();
             } catch (ex) {
-                //alert(`Error loading local storage: ${ex}`);
                 console.log(`Error loading local storage: ${ex}`);
                 this.defaultInitSavableState();
             }
@@ -54,9 +54,13 @@ Model.prototype = {
         this.view.populateBoardFromSaveableState(this.saveableState.numBoardRows, this.saveableState.guessWords, this.saveableState.scores);
         if (this.saveableState.finished) {
             //TODO: Do something to show they finished it.
-            alert("Nothing left to do here.");
-            this.view.clearBoard();
-            throw new Error("Need replays for dev purposes.");
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                this.view.clearBoard();
+                throw new Error("Need replays for dev purposes.");
+            } else {
+                this.allDone = true;
+                this.view.showAllDone();
+            }
         }
         this.guessCount = this.saveableState.guessWords.length;
     },

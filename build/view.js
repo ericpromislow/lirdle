@@ -1,10 +1,19 @@
 import beep from "./beep.js";
+import { getDateNumber } from "./numbers.js";
 
 export default function View() {
     this.board = document.getElementById("game-board");
     this._ignoreEnter = false;
     this.model = null;
     this.wordIsInvalid = false;
+}
+
+function pad(val, minSize, padChar) {
+    let s = val.toString();
+    while (s.length < minSize) {
+        s = padChar + s;
+    }
+    return s;
 }
 
 const COLORS = ['grey', 'yellow', 'green'];
@@ -39,13 +48,14 @@ View.prototype = {
     showWin(guessCount, changes) {
         this.showWinningInfo(guessCount);
         this.showDeceptiveSquares(changes);
+        this.showAllDone();
     },
 
     showWinningInfo(guessCount) {
         const msg = `You got it in ${ guessCount } guess${ guessCount > 1 ? 'es' : ''}!`;
         const result = document.getElementById('result');
         if (!result) {
-            console.log(`Can't find result result`);
+            console.log(`Can't find result div`);
             setTimeout(() => {
                 alert(msg);
             }, 1_000);
@@ -54,6 +64,35 @@ View.prototype = {
         result.children[0].textContent = msg;
         result.classList.remove('hidden');
         result.classList.add('show');
+    },
+
+    showAllDone() {
+        const msg = `until next game`;
+        const allDone = document.getElementById('alldone');
+        if (!allDone) {
+            console.log(`Can't find div alldone`);
+            setTimeout(() => {
+                alert(msg);
+            }, 1_000);
+            return;
+        }
+        allDone.children[0].textContent = msg;
+        allDone.classList.remove('hidden');
+        allDone.classList.add('show');
+        const allDoneSpan = allDone.children[0];
+        const startDate = getDateNumber();
+        const setTimeLeft = () => {
+            const thisDate = getDateNumber();
+            if (thisDate > startDate) {
+                allDoneSpan.textContent = "You can refresh to get a new puzzle";
+                return;
+            }
+            const t1 = new Date();
+            const times = [24 - t1.getHours(), pad(60 - t1.getMinutes(), 2, '0'), pad(60 - t1.getSeconds(), 2, '0')];
+            allDoneSpan.textContent = `Next puzzle in ${ times.join(":") }`;
+            setTimeout(setTimeLeft, 1 * 1000);
+        }
+        setTimeout(setTimeLeft, 0);
     },
     /**
      * changes: array of [index, actualResult, displayedResult]

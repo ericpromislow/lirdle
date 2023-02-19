@@ -13,7 +13,7 @@ export function getDateNumber() {
 }
 
 export function getWordNumber(dateNumber) {
-    if (Math.random() > 0.0000000001) {
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
         return Math.floor(Math.random() * WORDS.length);
     } else {
         const pos = POSITIONS[dateNumber % POSITIONS.length];

@@ -74,16 +74,22 @@ h1 {
   text-transform: uppercase;
 }
 
-h2#result {
+h2.collapsible {
   visibility: collapse;
 }
 
-h2#result.show {
+h2.collapsible.show {
   text-align: center;
   visibility: visible;
 }
 
-h2#result.show span {
+h2.collapsible.show span {
   border: solid 4px #f7b538;
   padding: 2px 20px 2px 20px;
+}
+
+nothing {
+  font-color: #bfd200;
+  font-color: #f7b538;
+  font-color: #bdd5ea;
 }

@@ -13,11 +13,12 @@ try {
         model = new Model(view);
         model.initialize();
         view.setModel(model);
-
-        document.addEventListener("keyup", (e) => {
-            if (view) view.keyHandler(e);
-            else console.log(`Not handling key ${ e.key }`);
-        });
+        if (!model.allDone) {
+            document.addEventListener("keyup", (e) => {
+                if (view) view.keyHandler(e);
+                else console.log(`Not handling key ${e.key}`);
+            });
+        }
     }
     console.log(`QQQ: << script.js`);
 
