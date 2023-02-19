@@ -6,7 +6,6 @@ export default function View() {
     for (const elem of document.getElementsByClassName("keyboard-button")) {
         elem.style.backgroundColor = NEUTRAL_COLOR;
     }
-    this._ignoreEnter = false;
     this.model = null;
     this.wordIsInvalid = false;
 }
@@ -105,7 +104,7 @@ View.prototype = {
                 return;
             }
             const t1 = new Date();
-            const times = [24 - t1.getHours(), pad(60 - t1.getMinutes(), 2, '0'), pad(60 - t1.getSeconds(), 2, '0')];
+            const times = [23 - t1.getHours(), pad(59 - t1.getMinutes(), 2, '0'), pad(59 - t1.getSeconds(), 2, '0')];
             allDoneSpan.textContent = `Next puzzle in ${ times.join(":") }`;
             setTimeout(setTimeLeft, 1 * 1000);
         }
@@ -154,10 +153,6 @@ View.prototype = {
             const box = row.children[i];
             box.classList.remove('invalid');
         }
-    },
-
-    ignoreEnter(val) {
-        this._ignoreEnter = val;
     },
 
     initBoard(numNeededRows) {
@@ -238,7 +233,7 @@ View.prototype = {
     keyHandler(e) {
         // console.log('>> keyup');
         const pressedKey = String(e.key);
-        if (pressedKey === "Backspace") {
+        if (pressedKey === "Backspace" || pressedKey === "Del") {
             if (this.model.nextLetterPosition!== 0) {
                 this.model.deleteLetter();
             } else {
@@ -246,12 +241,8 @@ View.prototype = {
             }
             return;
         }
-        if (pressedKey === "Enter") {
+        if (pressedKey.toLowerCase() === "enter") {
             console.log(`pressed enter, currentTarget: ${e.currentTarget}, target: ${e.target}`);
-            if (this._ignoreEnter) {
-                this._ignoreEnter = false;
-                return;
-            }
             e.stopPropagation();
             e.cancelBubble = true;
             if (this.wordIsInvalid) {

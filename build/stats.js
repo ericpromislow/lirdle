@@ -20,10 +20,10 @@ Stats.prototype = {
         }
     },
     addFinishedGame(numGuesses) {
-        this.data.totalGames += 1;
-        this.data.totalFinishedGames += 1;
         this.data.totalGuesses += numGuesses;
+        this.data.totalFinishedGames += 1;
         this.data.runningAvg = this.data.totalGuesses / this.data.totalFinishedGames;
+        this.data.totalGames += 1;
         if (this.data.lowestScore > numGuesses) {
             this.data.lowestScore = numGuesses;
         }
@@ -31,10 +31,10 @@ Stats.prototype = {
             this.data.highestScore = numGuesses;
         }
     },
-    addUnfinishedGame(tries) {
-        this.data.totalGames += 1;
-        this.data.totalUnfinishedGames += 1;
+    addUnfinishedGame(numGuesses) {
         this.data.totalUnfinishedGuesses += numGuesses;
+        this.data.totalUnfinishedGames += 1;
         this.data.runningUnfinishedAvg = this.data.totalUnfinishedGuesses / this.data.totalUnfinishedGames;
+        this.data.totalGames += 1;
     },
 };
