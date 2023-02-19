@@ -73,3 +73,17 @@ h1 {
   cursor: pointer;
   text-transform: uppercase;
 }
+
+h2#result {
+  visibility: collapse;
+}
+
+h2#result.show {
+  text-align: center;
+  visibility: visible;
+}
+
+h2#result.show span {
+  border: solid 4px #f7b538;
+  padding: 2px 20px 2px 20px;
+}

@@ -132,10 +132,7 @@ Model.prototype = {
 
         if (guessedIt) {
             this.saveableState.finished = true;
-            this.view.showDeceptiveSquares(this.saveableState.changes);
-            setTimeout(() => {
-                alert(`You got it in ${this.guessCount} guess${this.guessCount > 1 ? 'es' : ''}!`);
-            }, 1_000);
+            this.view.showWin(this.guessCount, this.saveableState.changes);
         } else {
             if (this.guessCount >= this.saveableState.numBoardRows) {
                 this.view.appendBoardRow();

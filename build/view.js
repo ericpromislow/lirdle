@@ -36,6 +36,25 @@ View.prototype = {
         this.board.appendChild(row);
     },
 
+    showWin(guessCount, changes) {
+        this.showWinningInfo(guessCount);
+        this.showDeceptiveSquares(changes);
+    },
+
+    showWinningInfo(guessCount) {
+        const msg = `You got it in ${ guessCount } guess${ guessCount > 1 ? 'es' : ''}!`;
+        const result = document.getElementById('result');
+        if (!result) {
+            console.log(`Can't find result result`);
+            setTimeout(() => {
+                alert(msg);
+            }, 1_000);
+            return;
+        }
+        result.children[0].textContent = msg;
+        result.classList.remove('hidden');
+        result.classList.add('show');
+    },
     /**
      * changes: array of [index, actualResult, displayedResult]
      * @param changes
@@ -93,7 +112,7 @@ View.prototype = {
 
     clearBoard() {
         if (!this.board) {
-            alert("No board in clearBoard!");
+            console.log("No board in clearBoard!");
             return;
         }
         while (this.board.childElementCount) {
@@ -150,7 +169,7 @@ View.prototype = {
                     //TODO: Gradient these
                     elem.style.backgroundColor = "#bfd200";
                 } else if (numHitsForEachScore[1]) {
-                    elem.style.backgroundColor = "#ecf39e";
+                    elem.style.backgroundColor = "#f7b538";
                 } else if (numHitsForEachScore[0]) {
                     elem.style.backgroundColor = "#bdd5ea";
                 }
