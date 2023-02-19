@@ -14,9 +14,10 @@ View.prototype = {
         this.initBoard(numNeededRows);
         for (let i = 0; i < guessWords.length; i++) {
             for (let j = 0; j < guessWords[i].length; j++) {
+                this.model.addColorHit(guessWords[i][j], scores[i][j]);
                 this.insertLetter(guessWords[i][j], i, j);
             }
-            this.enterScoredGuess(guessWords[i], scores[i], i, false);
+            this.enterScoredGuess(guessWords[i], scores[i], i, false, true);
         }
     },
 
@@ -42,22 +43,38 @@ View.prototype = {
         }
     },
 
-    enterScoredGuess(currentGuess, scores, guessCount, guessedIt) {
-        const row = document.getElementsByClassName("letter-row")[guessCount];
-        for (let i = 0; i < 5; i++) {
-            let box = row.children[i];
-            let letter = currentGuess[i]; // array or string
-            const letterColor = ['grey', 'yellow', 'green'][scores[i]];
-            let delay = 100 * i;
-
-            setTimeout(() => {
-                //shade box
-                box.style.backgroundColor = letterColor;
-                if (letterColor !== 'grey') {
-                    this.shadeKeyboard(letter, guessedIt ? 'green' : 'orange');
-                }
-            }, delay);
+    clearBoard() {
+        if (!this.board) {
+            alert("No board in clearBoard!");
+            return;
         }
+        while (this.board.childElementCount) {
+            this.board.removeChild(this.board.lastChild);
+        }
+        for (const elem of document.getElementsByClassName("keyboard-button")) {
+            elem.style.backgroundColor = 'white';
+        }
+    },
+
+    enterScoredGuess(currentGuess, scores, guessCount, guessedIt, immediate) {
+        const row = document.getElementsByClassName("letter-row")[guessCount];
+        const limit = 5;
+        const enterScoredGuessForEntry = (i) => {
+            if (i >= limit) {
+                return;
+            }
+            const box = row.children[i];
+            const letter = currentGuess[i]; // array or string
+            const letterColor = ['grey', 'yellow', 'green'][scores[i]];
+            box.style.backgroundColor = letterColor;
+            this.shadeKeyboard(letter, letterColor, guessedIt, this.model.scoresByLetter[letter]);
+            if (immediate) {
+                enterScoredGuessForEntry(i + 1);
+            } else {
+                setTimeout(enterScoredGuessForEntry, 100, i + 1);
+            }
+        };
+        enterScoredGuessForEntry(0);
     },
 
     deleteLetter(rowNum, colNum) {
@@ -76,10 +93,19 @@ View.prototype = {
         box.classList.add("filled-box");
     },
 
-    shadeKeyboard(letter, color) {
+    shadeKeyboard(letter, color, guessIt, numHitsForEachScore) {
         for (const elem of document.getElementsByClassName("keyboard-button")) {
             if (elem.textContent === letter) {
-                elem.style.backgroundColor = color;
+                if (guessIt) {
+                    elem.style.backgroundColor = color;
+                } else if (numHitsForEachScore[2]) {
+                    //TODO: Gradient these
+                    elem.style.backgroundColor = "#bfd200";
+                } else if (numHitsForEachScore[1]) {
+                    elem.style.backgroundColor = "#ecf39e";
+                } else if (numHitsForEachScore[0]) {
+                    elem.style.backgroundColor = "#bdd5ea";
+                }
                 break;
             }
         }

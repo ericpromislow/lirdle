@@ -12,11 +12,13 @@ export default function Model(view) {
         guessWords: [],
         numBoardRows: INIT_NUM_ROWS,
         scores: [],
-        targetString: '',
+        wordNumber: -1,
     };
     this.currentGuess = [];
     this.guessCount = 0;
     this.nextLetterPosition = 0;
+    this.scoresByLetter = {};
+    this.targetString = '';
 
     this.view = view;
 }
@@ -44,6 +46,7 @@ Model.prototype = {
             throw new Error(`Ignoring unfinished work from ${savedState.date}`);
         }
         Object.assign(this.saveableState, savedState);
+        this.targetString = WORDS[this.saveableState.wordNumber];
         if (this.saveableState.numBoardRows < this.saveableState.guessWords.length) {
             this.saveableState.numBoardRows = this.saveableState.guessWords.length;
         }
@@ -51,6 +54,8 @@ Model.prototype = {
         if (this.saveableState.finished) {
             //TODO: Do something to show they finished it.
             alert("Nothing left to do here.");
+            this.view.clearBoard();
+            throw new Error("Need replays for dev purposes.");
         }
         this.guessCount = this.saveableState.guessWords.length;
     },
@@ -67,12 +72,12 @@ Model.prototype = {
     defaultInitSavableState() {
         this.saveableState.changes = [];
         this.saveableState.date = getDateNumber();
-        const targetNum = getWordNumber(this.saveableState.date);
         this.saveableState.guessWords = [];
         this.saveableState.numBoardRows = INIT_NUM_ROWS;
         this.saveableState.scores = [];
-        this.saveableState.targetString = WORDS[targetNum];
-        console.log(`Secret string is ${this.saveableState.targetString}`);
+        this.saveableState.wordNumber = getWordNumber(this.saveableState.date);
+        this.targetString = WORDS[this.saveableState.wordNumber];
+        // console.log(`Secret string is ${this.targetString}`);
     },
 
     initState() {
@@ -95,7 +100,7 @@ Model.prototype = {
         }
 
         this.saveableState.guessWords.push(guessString);
-        let target = Array.from(this.saveableState.targetString);
+        let target = Array.from(this.targetString);
         const scores = [0, 0, 0, 0, 0];
 
         for (let i = 0; i < 5; i++) {
@@ -106,7 +111,7 @@ Model.prototype = {
                 target[letterPosition] = "#"
             }
         }
-        const guessedIt = guessString === this.saveableState.targetString;
+        const guessedIt = guessString === this.targetString;
         let newScores;
         if (guessedIt) {
             newScores = scores;
@@ -114,8 +119,11 @@ Model.prototype = {
             newScores = [].concat(scores);
             perturb(newScores, this.saveableState.changes);
         }
+        for (let i = 0; i < 5; i++) {
+            this.addColorHit(this.currentGuess[i], newScores[i]);
+        }
         this.saveableState.scores.push(newScores);
-        this.view.enterScoredGuess(guessString, newScores, this.guessCount, guessedIt);
+        this.view.enterScoredGuess(guessString, newScores, this.guessCount, guessedIt, false);
         this.guessCount += 1;
 
         if (guessedIt) {
@@ -132,6 +140,13 @@ Model.prototype = {
         this.currentGuess = [];
         this.nextLetterPosition = 0;
         this.updateSaveableState();
+    },
+
+    addColorHit(letter, score) {
+        if (!(letter in this.scoresByLetter)) {
+            this.scoresByLetter[letter] = [0, 0, 0];
+        }
+        this.scoresByLetter[letter][score] += 1;
     },
 
     deleteLetter() {
