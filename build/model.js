@@ -5,7 +5,7 @@ import Stats from "./stats.js";
 
 const INIT_NUM_ROWS = 6;
 const EMOJI_BLACK = String.fromCodePoint(0x25fc);
-const EMOJI_RIGHT_ARROW = String.fromCodePoint(0x27A1);
+const EMOJI_RIGHT_ARROW = String.fromCodePoint(0x2192);
 const EMOJI_YELLOW = String.fromCodePoint(0x1f7e8);
 const EMOJI_GREEN = String.fromCodePoint(0x1f7e9);
 const EMOJI_COLORS = [EMOJI_BLACK, EMOJI_YELLOW, EMOJI_GREEN];
@@ -200,16 +200,15 @@ Model.prototype = {
     getShareText() {
         const gameNumber = (getDateNumber() % WORDS.length) + 1;
         const scores = this.saveableState.scores;
-        // changes.push([i, oldVal - 3, scores[i]]);
         const changes = this.saveableState.changes;
         const scoreLines = scores.map((scoreLine, i) => {
             const changeLine = changes[i] ?? [-1];
             const emojiBits = scoreLine.flatMap((scoreBit, j) => {
                 if (changeLine[0] === j) {
-                    return [' |',
+                    return ['|',
                         EMOJI_COLORS[changeLine[1]],
                         EMOJI_RIGHT_ARROW,
-                        EMOJI_COLORS[changeLine[2]], '| '];
+                        EMOJI_COLORS[changeLine[2]], '|'];
                 } else {
                     return EMOJI_COLORS[scores[i][j]];
                 }
@@ -222,6 +221,6 @@ Model.prototype = {
             '',
             scoreLines.join('\n'),
             '',
-            'http://bentframe.org/lirdle - the lying word game'].join('\n');
+            'bentframe.org/lirdle - the lying word game'].join('\n');
     }
 };
