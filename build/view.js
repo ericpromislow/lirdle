@@ -61,7 +61,7 @@ View.prototype = {
         }
     },
 
-    showWin(guessCount, changes) {
+    showTheWin(guessCount, changes) {
         this.showWinningInfo(guessCount);
         this.showDeceptiveSquares(changes);
         this.showAllDone();

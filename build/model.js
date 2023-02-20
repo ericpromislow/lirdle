@@ -1,5 +1,5 @@
 import { WORDS, OTHERWORDS } from "./words.js";
-import { getDateNumber, getWordNumber, perturb } from "./numbers.js";
+import { devMode, getDateNumber, getWordNumber, perturb } from "./numbers.js";
 import beep from "./beep.js";
 import Stats from "./stats.js";
 
@@ -62,14 +62,13 @@ Model.prototype = {
         }
         this.view.populateBoardFromSaveableState(this.saveableState.numBoardRows, this.saveableState.guessWords, this.saveableState.scores);
         if (this.saveableState.finished) {
-            //TODO: Do something to show they finished it.
-            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            if (devMode()) {
                 this.view.clearBoard();
                 this.initState();
                 throw new Error("Need replays for dev purposes.");
             } else {
                 this.allDone = true;
-                this.view.showAllDone();
+                this.view.showTheWin(this.saveableState.guessWords.length, this.saveableState.changes);
             }
         }
         this.guessCount = this.saveableState.guessWords.length;
@@ -151,7 +150,7 @@ Model.prototype = {
 
         if (guessedIt) {
             this.saveableState.finished = true;
-            this.view.showWin(this.guessCount, this.saveableState.changes);
+            this.view.showTheWin(this.guessCount, this.saveableState.changes);
         } else {
             if (this.guessCount >= this.saveableState.numBoardRows) {
                 this.view.appendBoardRow();
