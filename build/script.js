@@ -11,11 +11,12 @@ function initialize() {
     model.initialize();
     view.setModel(model);
     if (!model.allDone) {
+        const keyboard = document.getElementById("keyboard-cont");
         document.addEventListener("keyup", (e) => {
             if (view) view.keyHandler(e);
             else console.log(`Not handling key ${e.key}`);
         });
-        document.getElementById("keyboard-cont").addEventListener("click", (e) => {
+        keyboard.addEventListener("click", (e) => {
             if (!view) {
                 console.log(`Not handling click event on ${ e.target.nodeName }`);
             } else if (e.target.nodeName === "BUTTON") {
@@ -28,8 +29,20 @@ function initialize() {
                 }
             }
             console.log(`Ignoring click on non-button ${ e.target.nodeName }`);
-        })
+        });
+        keyboard.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+        });
     }
+    const button = document.getElementById('shareResults');
+    button.addEventListener('click', async (e) => {
+        const shareText = model.getShareText();
+        try {
+            await navigator.clipboard.writeText(shareText);
+        } catch(e) {
+            console.log(`Trying to share failed; ${e}`);
+        }
+    })
 }
 window.addEventListener('load', () => {
     initialize();
