@@ -221,6 +221,6 @@ Model.prototype = {
             '',
             scoreLines.join('\n'),
             '',
-            'bentframe.org/lirdle - the lying word game'].join('\n');
+            'lirdle.com - the lying word game'].join('\n');
     }
 };
