@@ -36,8 +36,7 @@ function initialize() {
             e.stopPropagation();
         });
     }
-    const button = document.getElementById('shareResults');
-    button.addEventListener('click', (e) => {
+    document.getElementById('shareResults').addEventListener('click', (e) => {
         const shareText = model.getShareText();
         try {
             copyTextToClipboard(shareText);
