@@ -1,3 +1,5 @@
+// Copyright (C) 2023 Bovination Productions, MIT License
+
 import beep from "./beep.js";
 import { getDateNumber } from "./numbers.js";
 

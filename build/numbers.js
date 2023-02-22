@@ -1,5 +1,6 @@
-import { WORDS } from "./words.js";
+// Copyright (C) 2023 Bovination Productions, MIT License
 
+import { WORDS } from "./words.js";
 
 export function getDateNumber() {
     const d = new Date();

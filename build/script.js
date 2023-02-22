@@ -1,3 +1,5 @@
+// Copyright (C) 2023 Bovination Productions, MIT License
+
 import View from './view.js';
 import Model from './model.js';
 

@@ -1,3 +1,5 @@
+// Copyright (C) 2023 Bovination Productions, MIT License
+
 export default function Stats() {
     this.data = {};
 }

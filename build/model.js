@@ -1,3 +1,5 @@
+// Copyright (C) 2023 Bovination Productions, MIT License
+
 import { WORDS, OTHERWORDS } from "./words.js";
 import { devMode, getDateNumber, getWordNumber, perturb } from "./numbers.js";
 import beep from "./beep.js";
