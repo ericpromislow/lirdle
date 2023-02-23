@@ -195,7 +195,11 @@ Model.prototype = {
             const guessString = this.currentGuess.join('');
             if (!WORDS.includes(guessString) && !OTHERWORDS.includes(guessString)) {
                 this.isInvalidWord = true;
-                this.view.changeInvalidWordState(this.guessCount, true);
+                this.view.changeInvalidWordState(this.guessCount, true, '');
+            } else if (this.saveableState.guessWords.includes(guessString)) {
+                // Have more to do
+                this.isInvalidWord = true;
+                this.view.changeInvalidWordState(this.guessCount, true, guessString);
             }
         }
     },

@@ -5,6 +5,7 @@ import { getDateNumber } from "./numbers.js";
 
 export default function View() {
     this.board = document.getElementById("game-board");
+    this.dupWord = document.getElementById("dupWord");
     for (const elem of document.getElementsByClassName("keyboard-button")) {
         elem.style.backgroundColor = NEUTRAL_COLOR;
     }
@@ -148,12 +149,19 @@ View.prototype = {
         }
     },
 
-    changeInvalidWordState(rowNum, wordIsInvalid) {
+    changeInvalidWordState(rowNum, wordIsInvalid, guessString) {
         if (this.wordIsInvalid !== wordIsInvalid) {
             if (!this.wordIsInvalid) {
                 this.markCurrentWordInvalid(rowNum);
+                if (guessString) {
+                    this.dupWord.querySelector('#dupWordContents').textContent = guessString;
+                    this.dupWord.classList.remove('hidden');
+                    this.dupWord.classList.add('show');
+                }
             } else {
                 this.markCurrentWordValid(rowNum);
+                this.dupWord.classList.remove('show');
+                this.dupWord.classList.add('hidden');
             }
             this.wordIsInvalid = wordIsInvalid;
         }
