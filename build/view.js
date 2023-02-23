@@ -1,7 +1,7 @@
 // Copyright (C) 2023 Bovination Productions, MIT License
 
 import beep from "./beep.js";
-import { getDateNumber } from "./numbers.js";
+import { devMode, getDateNumber, getYesterdaysWord } from "./numbers.js";
 
 export default function View() {
     this.board = document.getElementById("game-board");
@@ -27,6 +27,7 @@ const NEUTRAL_COLOR = 'white';
 View.prototype = {
     setModel(model) {
         this.model = model;
+        this.showYesterdaysWord();
     },
     populateBoardFromSaveableState(numNeededRows, guessWords, scores) {
         this.initBoard(numNeededRows);
@@ -288,6 +289,15 @@ View.prototype = {
             }
         } else {
             console.log(`Ignoring key event ${pressedKey}`);
+        }
+    },
+    showYesterdaysWord() {
+        if (!devMode()) {
+            const yesterdaysWord = getYesterdaysWord();
+            const yesterdaysWordElt = document.getElementById('yesterdaysWord');
+            yesterdaysWordElt.querySelector('span#theAnswer').textContent = yesterdaysWord;
+            yesterdaysWordElt.classList.remove('hidden');
+            yesterdaysWordElt.classList.add('show');
         }
     }
 }

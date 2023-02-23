@@ -13,6 +13,11 @@ export function getDateNumber() {
     return parseInt(`${year}${month}${date}`, 10);
 }
 
+export function getYesterdaysWord() {
+    const num = getWordNumber(getDateNumber() - 1);
+    return WORDS[num];
+}
+
 export function getWordNumber(dateNumber) {
     if (devMode()) {
         return Math.floor(Math.random() * WORDS.length);

@@ -151,3 +151,10 @@ nothing {
 #dupWord.show {
   visibility: visible;
 }
+
+#yesterdaysWord.hidden{
+  visibility: hidden;
+}
+#yesterdaysWord.show {
+  visibility: visible;
+}
