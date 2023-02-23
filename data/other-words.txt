@@ -3641,6 +3641,7 @@ gowks
 gowls
 gowns
 goxes
+goyim
 goyle
 graal
 grabs
@@ -4618,7 +4619,6 @@ keens
 keeps
 keets
 keeve
-kefir
 kehua
 keirs
 kelep
@@ -4742,8 +4742,6 @@ klieg
 kliks
 klong
 kloof
-kluge
-klutz
 knags
 knaps
 knarl
@@ -4751,7 +4749,6 @@ knars
 knaur
 knawe
 knees
-knell
 knish
 knits
 knive
@@ -4924,7 +4921,6 @@ lames
 lamia
 lammy
 lamps
-lanai
 lanas
 lanch
 lande
@@ -4948,7 +4944,6 @@ larns
 larnt
 larum
 lased
-laser
 lases
 lassi
 lassu
@@ -4957,11 +4952,9 @@ lasts
 latah
 lated
 laten
-latex
 lathi
 laths
 lathy
-latke
 latus
 lauan
 lauch
@@ -5064,7 +5057,6 @@ leuco
 leuds
 leugh
 levas
-levee
 leves
 levin
 levis
@@ -5304,7 +5296,6 @@ ludos
 luffa
 luffs
 luged
-luger
 luges
 lulls
 lulus
@@ -5350,7 +5341,6 @@ lyart
 lyase
 lycea
 lycee
-lycra
 lymes
 lynes
 lyres
@@ -5528,7 +5518,6 @@ mbira
 meads
 meals
 meane
-means
 meany
 meare
 mease
@@ -5549,7 +5538,6 @@ meiny
 meith
 mekka
 melas
-melba
 melds
 melic
 melik
@@ -6014,7 +6002,6 @@ nashi
 natch
 nates
 natis
-natty
 nauch
 naunt
 navar
@@ -6477,7 +6464,6 @@ padle
 padma
 padre
 padri
-paean
 paedo
 paeon
 paged
@@ -7102,7 +7088,6 @@ puked
 puker
 pukes
 pukey
-pukka
 pukus
 pulao
 pulas
@@ -7242,7 +7227,6 @@ racks
 racon
 radge
 radix
-radon
 raffs
 rafts
 ragas
@@ -7411,7 +7395,6 @@ reeky
 reels
 reens
 reest
-reeve
 refed
 refel
 reffo
@@ -7451,7 +7434,6 @@ remap
 remen
 remet
 remex
-remix
 renay
 rends
 reney
@@ -7825,7 +7807,6 @@ salue
 salut
 saman
 samas
-samba
 sambo
 samek
 samel
@@ -8166,7 +8147,6 @@ shott
 showd
 shows
 shoyu
-shred
 shris
 shrow
 shtik
@@ -8252,7 +8232,6 @@ sisal
 sises
 sista
 sists
-sitar
 sited
 sites
 sithe
@@ -8288,7 +8267,6 @@ skees
 skeet
 skegg
 skegs
-skein
 skelf
 skell
 skelm
@@ -8663,7 +8641,6 @@ spods
 spoom
 spoor
 spoot
-spork
 sposh
 spots
 sprad
@@ -8824,7 +8801,6 @@ sucre
 sudds
 sudor
 sudsy
-suede
 suent
 suers
 suete
@@ -9073,7 +9049,6 @@ tatus
 taube
 tauld
 tauon
-taupe
 tauts
 tavah
 tavas
@@ -9287,7 +9262,6 @@ tines
 tinge
 tings
 tinks
-tinny
 tints
 tinty
 tipis
@@ -9379,7 +9353,6 @@ topoi
 topos
 toppy
 toque
-torah
 toran
 toras
 torcs
@@ -9392,8 +9365,6 @@ torrs
 torse
 torsi
 torsk
-torta
-torte
 torts
 tosas
 tosed
@@ -9455,7 +9426,6 @@ treif
 treks
 trema
 trems
-tress
 trest
 trets
 trews
@@ -9470,7 +9440,6 @@ trigo
 trigs
 trike
 trild
-trill
 trims
 trine
 trins
@@ -9549,6 +9518,7 @@ tuner
 tunes
 tungs
 tunny
+tupac
 tupek
 tupik
 tuple
@@ -9641,7 +9611,6 @@ ulyie
 ulzie
 umami
 umbel
-umber
 umble
 umbos
 umbre
@@ -9724,7 +9693,6 @@ upbow
 upbye
 updos
 updry
-upend
 upjet
 uplay
 upled
@@ -9771,16 +9739,13 @@ users
 usnea
 usque
 usure
-usury
 uteri
 uveal
 uveas
-uvula
 vacua
 vaded
 vades
 vagal
-vagus
 vails
 vaire
 vairs
@@ -9839,12 +9804,10 @@ veins
 veiny
 velar
 velds
-veldt
 veles
 vells
 velum
 venae
-venal
 vends
 vendu
 veney
@@ -10139,7 +10102,6 @@ whear
 wheen
 wheep
 wheft
-whelk
 whelm
 whens
 whets
@@ -10167,7 +10129,6 @@ whoof
 whoot
 whops
 whore
-whorl
 whort
 whoso
 whows
@@ -10308,7 +10269,6 @@ wytes
 xebec
 xenia
 xenic
-xenon
 xeric
 xerox
 xerus
@@ -10475,7 +10435,6 @@ ysame
 ytost
 yuans
 yucas
-yucca
 yucch
 yucko
 yucks
