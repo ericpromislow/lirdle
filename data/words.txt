@@ -2364,6 +2364,7 @@ emacs
 emote
 ethyl
 gnarl
+guano
 haiku
 hertz
 hygge
