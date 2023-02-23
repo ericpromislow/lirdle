@@ -124,3 +124,13 @@ nothing {
   font-color: #f7b538;
   font-color: #bdd5ea;
 }
+
+#dupWord {
+  display: inline;
+}
+#dupWord.hidden {
+  visibility: hidden;
+}
+#dupWord.show {
+  visibility: visible;
+}
