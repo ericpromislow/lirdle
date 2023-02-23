@@ -77,6 +77,23 @@ h1 {
   border: 2px solid black;
 }
 
+.filled-box.background-yellow {
+  background-color: yellow;
+}
+
+.filled-box.background-green {
+  background-color: green;
+}
+
+.filled-box.background-grey {
+  background-color: grey;
+}
+
+.filled-box.show-lie {
+  font-family: "Comic Sans", "Comic Sans MS", "Apple Chancery", "Bradley Hand", "papyrus", serif;
+  color: #ed9121;
+}
+
 .letter-row {
   display: flex;
 }
