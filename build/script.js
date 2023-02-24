@@ -41,7 +41,7 @@ function initialize() {
         try {
             copyTextToClipboard(shareText);
         } catch(e) {
-            console.log(`Trying to share failed; ${ err }`);
+            console.log(`Trying to share failed: ${ err }`);
         }
     })
 }
