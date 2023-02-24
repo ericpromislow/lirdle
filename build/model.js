@@ -204,7 +204,8 @@ Model.prototype = {
         }
     },
     getShareText() {
-        const gameNumber = (getDateNumber() % WORDS.length) + 1;
+        // We started on Feb. 18
+        const gameNumber = ((getDateNumber() - 20230218) % WORDS.length) + 1;
         const scores = this.saveableState.scores;
         const changes = this.saveableState.changes;
         const scoreLines = scores.map((scoreLine, i) => {
