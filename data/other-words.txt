@@ -4243,8 +4243,10 @@ ileac
 ileal
 ileum
 ileus
+iliac
 iliad
 ilial
+ilium
 iller
 illth
 imago

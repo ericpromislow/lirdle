@@ -293,7 +293,8 @@ View.prototype = {
     },
     showYesterdaysWord() {
         if (!devMode()) {
-            const yesterdaysWord = getYesterdaysWord();
+            const todaysDateNumber = getDateNumber();
+            const yesterdaysWord = todaysDateNumber === 20230224 ? "floor" : getYesterdaysWord();
             const yesterdaysWordElt = document.getElementById('yesterdaysWord');
             yesterdaysWordElt.querySelector('span#theAnswer').textContent = yesterdaysWord;
             yesterdaysWordElt.classList.remove('hidden');
