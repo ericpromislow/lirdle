@@ -13072,5 +13072,6 @@ export const OTHERWORDS = [
   'zygal',
   'zygon',
   'zymes',
-  'zymic'
+  'zymic',
+  'april'
 ];
