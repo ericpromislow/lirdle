@@ -153,8 +153,32 @@ nothing {
 }
 
 #yesterdaysWord.hidden{
-  visibility: hidden;
+  visibility: collapse;
 }
 #yesterdaysWord.show {
   visibility: visible;
+}
+
+footer {
+  padding: 0;
+}
+
+div#whats-new {
+  margin-bottom: 0px;
+}
+
+div#promos {
+  margin-top: 0px;
+}
+
+div#promos .hidden {
+  visibility: collapse;
+}
+
+div#promos div {
+  margin-top: 0px;
+}
+
+div#promos div a {
+  margin-top: 0px;
 }

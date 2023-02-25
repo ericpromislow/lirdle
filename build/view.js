@@ -300,5 +300,27 @@ View.prototype = {
             yesterdaysWordElt.classList.remove('hidden');
             yesterdaysWordElt.classList.add('show');
         }
+    },
+    doBlurbs() {
+        const useragent = navigator.userAgent.toLowerCase();
+        const vendor = navigator.vendor;
+        const blacklist = [
+            /\bipad\b/,
+            /\biphone os\b/,
+            /\bsamsung.*mobile safari\b/,
+        ];
+        if (blacklist.some(t => t.test(useragent))) {
+            // do nothing
+        } else if (useragent.match(/\bmozilla\b.*\bfirefox\b/)) {
+            const div = document.querySelector('div#promos div.for-firefox');
+            if (div) {
+                div.classList.remove('hidden');
+            }
+        } else if (vendor.startsWith('Google') && useragent.match(/\bmozilla\b.*\bchrome\b/)) {
+            const div = document.querySelector('div#promos div.for-chrome');
+            if (div) {
+                div.classList.remove('hidden');
+            }
+        }
     }
 }

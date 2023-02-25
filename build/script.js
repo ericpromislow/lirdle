@@ -43,7 +43,8 @@ function initialize() {
         } catch(e) {
             console.log(`Trying to share failed: ${ err }`);
         }
-    })
+    });
+    view.doBlurbs();
 }
 window.addEventListener('load', () => {
     initialize();
