@@ -6,9 +6,10 @@ body {
   font-family: sans-serif;
 }
 
-
 h1 {
   text-align: center;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
 }
 
 #game-board {
@@ -122,8 +123,10 @@ h1 {
   text-transform: uppercase;
 }
 
-h2.collapsible {
+h2.collapsible.hidden {
   visibility: collapse;
+  margin: 0;
+  padding: 0;
 }
 
 h2.collapsible.show {
@@ -146,7 +149,7 @@ nothing {
   display: inline;
 }
 #dupWord.hidden {
-  visibility: hidden;
+  visibility: collapse;
 }
 #dupWord.show {
   visibility: visible;
