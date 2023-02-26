@@ -197,9 +197,17 @@ div#statistics {
 div#statistics.hidden {
   visibility: collapse;
 }
-/*div#statistics .hidden {*/
-/*  visibility: collapse;*/
-/*}*/
+
+div#statistics h3 {
+  text-align: left;
+  font-size: smaller;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+div#statistics button#shareStats {
+  float: left;
+}
 
 div#statistics button#closeStats {
   float: right;

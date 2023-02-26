@@ -38,12 +38,24 @@ function initialize() {
     } else {
         view.showStats();
     }
-    // Always set up the stats close-button
+    // Always set up the stats buttons
     const statsDiv = document.querySelector('div#statistics')
     if (statsDiv) {
-        const button = statsDiv.querySelector('div#closeRow button#closeStats');
-        button.addEventListener('click', () => {
+        const closeButton = statsDiv.querySelector('div#closeRow button#closeStats');
+        closeButton.addEventListener('click', () => {
             statsDiv.classList.add('hidden');
+        });
+        const shareButton = statsDiv.querySelector('div#closeRow button#shareStats');
+        shareButton.addEventListener('click', () => {
+            const statsBody = statsDiv.querySelector('div#statsBody');
+            if (statsBody) {
+                const shareText = statsBody.textContent;
+                try {
+                    copyTextToClipboard(shareText);
+                } catch (e) {
+                    console.log(`Trying to share failed: ${err}`);
+                }
+            }
         });
     }
 
