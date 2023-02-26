@@ -2317,7 +2317,7 @@ export const WORDS = [
   'zesty',
   'zonal',
   'adder',
-  'adieu',
+  'phish',
   'adios',
   'adman',
   'admen',
@@ -13073,5 +13073,5 @@ export const OTHERWORDS = [
   'zygon',
   'zymes',
   'zymic',
-  'phish'
+  'adieu'
 ];
