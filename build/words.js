@@ -2384,7 +2384,7 @@ export const WORDS = [
   'melba',
   'natty',
   'paean',
-  'phish',
+  'april',
   'pukka',
   'radon',
   'bebop',
@@ -13073,5 +13073,5 @@ export const OTHERWORDS = [
   'zygon',
   'zymes',
   'zymic',
-  'april'
+  'phish'
 ];
