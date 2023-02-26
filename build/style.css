@@ -182,3 +182,22 @@ div#promos div {
 div#promos div a {
   margin-top: 0px;
 }
+
+div#statistics {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  border: #f7b538 2px dashed;
+  padding: 3px;
+}
+
+div#statistics.hidden {
+  visibility: collapse;
+}
+/*div#statistics .hidden {*/
+/*  visibility: collapse;*/
+/*}*/
+
+div#statistics button#closeStats {
+  float: right;
+}

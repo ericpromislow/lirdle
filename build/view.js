@@ -131,6 +131,9 @@ View.prototype = {
             setTimeout(setTimeLeft, 1 * 1000);
         }
         setTimeout(setTimeLeft, 0);
+        setTimeout(() => {
+            this.showStats()
+        }, 1000);
     },
     /**
      * changes: array of [index, actualResult, displayedResult]
@@ -148,6 +151,19 @@ View.prototype = {
             const actualColor = COLORS[change[1]];
             box.classList.add(`actual${ actualColor }`);
         }
+    },
+
+    showStats() {
+        const statsDiv = document.getElementById('statistics');
+        if (!statsDiv) {
+            console.log("Can't find the stats div");
+            return;
+        }
+        const statsBody = statsDiv.querySelector('div#statsBody');
+        if (statsBody) {
+            statsBody.innerHTML = this.model.stats.getStatsSummary();
+        }
+        statsDiv.classList.remove('hidden');
     },
 
     changeInvalidWordState(rowNum, wordIsInvalid, guessString) {
@@ -269,9 +285,7 @@ View.prototype = {
             } else {
                 beep();
             }
-            return;
-        }
-        if (pressedKey.toLowerCase() === "enter") {
+        } else if (pressedKey.toLowerCase() === "enter") {
             console.log(`pressed enter, currentTarget: ${e.currentTarget}, target: ${e.target}`);
             e.stopPropagation();
             e.cancelBubble = true;
@@ -280,15 +294,14 @@ View.prototype = {
                 return;
             }
             this.model.checkGuess();
-        }
-        if (pressedKey.match(/^[a-z]$/i)) {
+        } else if (pressedKey.match(/^[a-z]$/i)) {
             if (this.model.nextLetterPosition === 5) {
                 beep();
             } else {
                 this.model.insertLetter(pressedKey);
             }
         } else {
-            console.log(`Ignoring key event ${pressedKey}`);
+            console.log(`lirdle: ignoring key event ${pressedKey}`);
         }
     },
     showYesterdaysWord() {

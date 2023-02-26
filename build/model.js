@@ -53,8 +53,8 @@ Model.prototype = {
         const savedState = JSON.parse(localStorage.getItem('saveableState'));
         console.log(`savedState:`, savedState);
         if (savedState.date !== getDateNumber()) {
-            //TODO: Update stats for a give-up on the old date
             this.stats.addUnfinishedGame(savedState.guessWords.length);
+            this.saveStats();
             throw new Error(`Ignoring unfinished work from ${savedState.date}`);
         }
         Object.assign(this.saveableState, savedState);
@@ -82,6 +82,13 @@ Model.prototype = {
         } catch (ex) {
             console.log(`can't set local storage: ${ex}`);
             alert(`can't set local storage: ${ex}`);
+        }
+    },
+    saveStats() {
+        try {
+            localStorage.setItem('stats', JSON.stringify(this.stats));
+        } catch (ex) {
+            console.log(`can't set local storage: ${ex}`);
         }
     },
 
@@ -139,6 +146,7 @@ Model.prototype = {
         if (guessedIt) {
             newScores = scores;
             this.stats.addFinishedGame(this.saveableState.guessWords.length);
+            this.saveStats();
         } else {
             newScores = [].concat(scores);
             perturb(newScores, this.saveableState.changes);

@@ -35,7 +35,18 @@ function initialize() {
         keyboard.addEventListener('dblclick', (e) => {
             e.stopPropagation();
         });
+    } else {
+        view.showStats();
     }
+    // Always set up the stats close-button
+    const statsDiv = document.querySelector('div#statistics')
+    if (statsDiv) {
+        const button = statsDiv.querySelector('div#closeRow button#closeStats');
+        button.addEventListener('click', () => {
+            statsDiv.classList.add('hidden');
+        });
+    }
+
     document.getElementById('shareResults').addEventListener('click', (e) => {
         const shareText = model.getShareText();
         try {
