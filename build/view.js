@@ -154,6 +154,10 @@ View.prototype = {
     },
 
     showStats() {
+        const stats = this.model.stats;
+        if (stats.totalUnfinishedGames === 0 && stats.totalFinishedGames === 0) {
+            return;
+        }
         const statsDiv = document.getElementById('statistics');
         if (!statsDiv) {
             console.log("Can't find the stats div");
@@ -161,7 +165,7 @@ View.prototype = {
         }
         const statsBody = statsDiv.querySelector('div#statsBody');
         if (statsBody) {
-            statsBody.innerHTML = this.model.stats.getStatsSummary();
+            statsBody.innerHTML = stats.getStatsSummary();
         }
         statsDiv.classList.remove('hidden');
     },
