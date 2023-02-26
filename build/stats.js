@@ -59,12 +59,16 @@ Stats.prototype = {
         } else {
             lines.push(`No games finished yet`);
         }
+        lines.push('<hr>');
         if (this.totalUnfinishedGames > 0) {
             lines.push(`Games you forgot to finish: ${ this.totalUnfinishedGames }`);
             lines.push(`Average #tries before stopping: ${ this.round2(this.totalUnfinishedGuesses /this.totalUnfinishedGames) }`);
         } else {
             lines.push(`Congratulations! You've gotten them all so far!`);
         }
+        lines.push('');
+        lines.push('<hr>');
+        lines.push('Stats are current as of Feb. 25, 2023')
         return lines.join(' <br> \n');
     },
     round2(n) {
