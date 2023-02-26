@@ -22,18 +22,30 @@ Stats.prototype = {
         }
     },
     migrate(oldStats) {
-        if (!('data' in oldStats) || !('totalGames' in oldStats.data)) {
-            return oldStats;
+        if (('data' in oldStats) || ('totalGames' in oldStats)) {
+            oldStats = {
+                version: 2,
+                totalFinishedGames: oldStats.data.totalFinishedGames ?? 0,
+                totalFinishedGuesses: oldStats.data['totalGuesses'] ?? 0,
+                totalUnfinishedGames: oldStats.data.totalUnfinishedGames ?? 0,
+                totalUnfinishedGuesses: oldStats.data.totalUnfinishedGuesses ?? 0,
+                lowestScore: oldStats.data.lowestScore ?? 0,
+                highestScore: oldStats.data.highestScore ?? 0
+            }
         }
-        return {
-            version: 2,
-            totalFinishedGames: oldStats.data.totalFinishedGames ?? 0,
-            totalFinishedGuesses: oldStats.data['totalGuesses'] ?? 0,
-            totalUnfinishedGames: oldStats.data.totalUnfinishedGames ?? 0,
-            totalUnfinishedGuesses: oldStats.data.totalUnfinishedGuesses ?? 0,
-            lowestScore: oldStats.data.lowestScore ?? 0,
-            highestScore: oldStats.data.highestScore ?? 0
-        };
+        if (oldStats.version === 2) {
+            oldStats.version = 3;
+            if (oldStats.totalFinishedGames > oldStats.totalFinishedGuesses) {
+                // Got this wrong
+                oldStats.totalFinishedGames = oldStats.totalFinishedGuesses = 0;
+            }
+            if (oldStats.totalUnfinishedGames > 0 &&
+                (oldStats.totalUnfinishedGuesses * 1.0) / oldStats.totalUnfinishedGames <= 5.0) {
+                // Doesn't really make sense either
+                oldStats.totalUnfinishedGames = oldStats.totalUnfinishedGuesses = 0;
+            }
+        }
+        return oldStats;
     },
     addFinishedGame(numGuesses) {
         this.totalFinishedGuesses += numGuesses;
@@ -68,7 +80,7 @@ Stats.prototype = {
         }
         lines.push('');
         lines.push('<hr>');
-        lines.push('Stats are current as of Feb. 25, 2023')
+        lines.push('Stats are from late February, 2023');
         return lines.join(' <br> \n');
     },
     round2(n) {

@@ -51,10 +51,12 @@ Model.prototype = {
             this.stats.initialize(null);
         }
         const savedState = JSON.parse(localStorage.getItem('saveableState'));
-        console.log(`savedState:`, savedState);
+        // console.log(`savedState:`, savedState);
         if (savedState.date !== getDateNumber()) {
-            this.stats.addUnfinishedGame(savedState.guessWords.length);
-            this.saveStats();
+            if (!savedState.finished) {
+                this.stats.addUnfinishedGame(savedState.guessWords.length);
+                this.saveStats();
+            }
             throw new Error(`Ignoring unfinished work from ${savedState.date}`);
         }
         Object.assign(this.saveableState, savedState);

@@ -155,7 +155,7 @@ View.prototype = {
 
     showStats() {
         const stats = this.model.stats;
-        if (stats.totalUnfinishedGames === 0 && stats.totalFinishedGames === 0) {
+        if (stats.totalUnfinishedGames <= 2 || stats.totalFinishedGames <= 2) {
             return;
         }
         const statsDiv = document.getElementById('statistics');
