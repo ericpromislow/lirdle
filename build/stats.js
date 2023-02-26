@@ -33,6 +33,9 @@ Stats.prototype = {
                 highestScore: oldStats.data.highestScore ?? 0
             }
         }
+        if (!('version' in oldStats)) {
+            oldStats.version = 2;
+        }
         if (oldStats.version === 2) {
             oldStats.version = 3;
             if (oldStats.totalFinishedGames > oldStats.totalFinishedGuesses) {
@@ -40,7 +43,7 @@ Stats.prototype = {
                 oldStats.totalFinishedGames = oldStats.totalFinishedGuesses = 0;
             }
             if (oldStats.totalUnfinishedGames > 0 &&
-                (oldStats.totalUnfinishedGuesses * 1.0) / oldStats.totalUnfinishedGames <= 5.0) {
+                (oldStats.totalUnfinishedGuesses * 1.0 / oldStats.totalUnfinishedGames <= 5.0)) {
                 // Doesn't really make sense either
                 oldStats.totalUnfinishedGames = oldStats.totalUnfinishedGuesses = 0;
             }
@@ -80,7 +83,7 @@ Stats.prototype = {
         }
         lines.push('');
         lines.push('<hr>');
-        lines.push('Stats are from late February, 2023');
+        lines.push('Stats start around late February, 2023');
         return lines.join(' <br> \n');
     },
     round2(n) {
