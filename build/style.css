@@ -177,13 +177,21 @@ div#promos {
 div#promos .hidden {
   visibility: collapse;
 }
-
-div#promos div {
-  margin-top: 0px;
+div#promos .hidden h6 {
+  visibility: collapse;
 }
 
-div#promos div a {
-  margin-top: 0px;
+div#promos .tight {
+  margin: 0;
+  padding: 0;
+}
+div#promos .tight h6 {
+  margin: 0;
+  padding: 0;
+}
+div#promos .tight a {
+  margin: 0;
+  padding: 0;
 }
 
 div#statistics {
@@ -211,4 +219,7 @@ div#statistics button#shareStats {
 
 div#statistics button#closeStats {
   float: right;
+}
+footer div.tight {
+  margin: 0px;
 }
