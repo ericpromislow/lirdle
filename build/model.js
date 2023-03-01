@@ -54,6 +54,7 @@ Model.prototype = {
         // console.log(`savedState:`, savedState);
         if (savedState.date !== getDateNumber()) {
             if (!savedState.finished) {
+                doFetch('unfinished', { count: savedState.guessCount, date: savedState.date });
                 this.stats.addUnfinishedGame(savedState.guessWords.length);
                 this.saveStats();
             }
@@ -74,6 +75,8 @@ Model.prototype = {
                 this.allDone = true;
                 this.view.showTheWin(this.saveableState.guessWords.length, this.saveableState.changes);
             }
+        } else {
+            doFetch('continue', { count: savedState.guessCount, date: savedState.date });
         }
         this.guessCount = this.saveableState.guessWords.length;
     },
@@ -102,6 +105,7 @@ Model.prototype = {
         this.saveableState.scores = [];
         this.saveableState.wordNumber = getWordNumber(this.saveableState.date);
         this.targetString = WORDS[this.saveableState.wordNumber];
+        doFetch('start', { date: this.saveableState });
         // console.log(`Secret string is ${this.targetString}`);
     },
 
@@ -163,6 +167,7 @@ Model.prototype = {
         if (guessedIt) {
             this.saveableState.finished = true;
             this.view.showTheWin(this.guessCount, this.saveableState.changes);
+            doFetch('finished', { date: this.saveableState, count: this.guessCount });
         } else {
             if (this.guessCount >= this.saveableState.numBoardRows) {
                 this.view.appendBoardRow();
@@ -241,3 +246,11 @@ Model.prototype = {
             'lirdle.com - the lying word game'].join('\n');
     }
 };
+
+function doFetch(endpoint, options) {
+    fetch(`${ endpoint }?${ new URLSearchParams(options) }`).then((response) => {
+        // ignore the response
+    }).catch((err) => {
+        // yeah, ignore this too
+    });
+}
