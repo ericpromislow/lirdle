@@ -74,9 +74,10 @@ Model.prototype = {
             } else {
                 this.allDone = true;
                 this.view.showTheWin(this.saveableState.guessWords.length, this.saveableState.changes);
+                doFetch('waiting', { date: savedState.date });
             }
         } else {
-            doFetch('continue', { count: savedState.guessCount, date: savedState.date });
+            doFetch('continue', { count: savedState.guessWords.length, date: savedState.date });
         }
         this.guessCount = this.saveableState.guessWords.length;
     },
@@ -167,7 +168,7 @@ Model.prototype = {
         if (guessedIt) {
             this.saveableState.finished = true;
             this.view.showTheWin(this.guessCount, this.saveableState.changes);
-            doFetch('finished', { date: this.saveableState, count: this.guessCount });
+            doFetch('finished', { date: this.saveableState.date, count: this.guessCount });
         } else {
             if (this.guessCount >= this.saveableState.numBoardRows) {
                 this.view.appendBoardRow();
@@ -249,6 +250,9 @@ Model.prototype = {
 };
 
 function doFetch(endpoint, options) {
+    if (('date' in options) && typeof(options.date) == 'number' && options.date > 20230218) {
+        options.date -= 20230218;
+    }
     fetch(`/usage/${ endpoint }?${ new URLSearchParams(options) }`).then((response) => {
         // ignore the response
     }).catch((err) => {

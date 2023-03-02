@@ -39,7 +39,7 @@ export function getWordNumber(dateNumber) {
 }
 
 export function devMode() {
-    return (location.hostname === "localhost" || location.hostname === "127.0.0.1") && Math.random() < 0.00000001;
+    return (location.hostname === "localhost" || location.hostname === "127.0.0.1");// && Math.random() < 0.00000001;
 }
 
 // Modifies both arguments
