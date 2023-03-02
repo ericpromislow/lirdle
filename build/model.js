@@ -54,7 +54,7 @@ Model.prototype = {
         // console.log(`savedState:`, savedState);
         if (savedState.date !== getDateNumber()) {
             if (!savedState.finished) {
-                doFetch('unfinished', { count: savedState.guessCount, date: savedState.date });
+                doFetch('unfinished', { count: savedState.guessWords.length, date: savedState.date });
                 this.stats.addUnfinishedGame(savedState.guessWords.length);
                 this.saveStats();
             }
@@ -105,7 +105,7 @@ Model.prototype = {
         this.saveableState.scores = [];
         this.saveableState.wordNumber = getWordNumber(this.saveableState.date);
         this.targetString = WORDS[this.saveableState.wordNumber];
-        doFetch('start', { date: this.saveableState });
+        doFetch('start', { date: this.saveableState.date });
         // console.log(`Secret string is ${this.targetString}`);
     },
 
@@ -173,6 +173,7 @@ Model.prototype = {
                 this.view.appendBoardRow();
                 this.saveableState.numBoardRows += 1;
             }
+            doFetch('guess', { date: this.saveableState.date, count: this.guessCount, guess: guessString });
         }
         this.currentGuess = [];
         this.nextLetterPosition = 0;
@@ -248,7 +249,7 @@ Model.prototype = {
 };
 
 function doFetch(endpoint, options) {
-    fetch(`${ endpoint }?${ new URLSearchParams(options) }`).then((response) => {
+    fetch(`/usage/${ endpoint }?${ new URLSearchParams(options) }`).then((response) => {
         // ignore the response
     }).catch((err) => {
         // yeah, ignore this too
