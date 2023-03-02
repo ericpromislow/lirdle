@@ -95,6 +95,11 @@ h1 {
   color: #ed9121;
 }
 
+.filled-box.show-perceived-truth {
+  font-family: "Comic Sans", "Comic Sans MS", "Apple Chancery", "Bradley Hand", "papyrus", serif;
+  color: #04d9ff;
+}
+
 .letter-row {
   display: flex;
 }
