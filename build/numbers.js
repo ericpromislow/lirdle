@@ -10,7 +10,13 @@ export function getDateNumber() {
     if (month.length === 1) {
         month = '0' + month;
     }
-    return parseInt(`${year}${month}${date}`, 10);
+    if (date.length == 1) {
+        date = '0' + date;
+    }
+    const d2 = Date.parse(`${ year }-${ month }-${ date }T04:00:00`);
+    const d1 = Date.parse('2023-02-18');
+    const numDaysSince = Math.floor((d2 - d1)/(1000.0 * 24 * 3600));
+    return 20230218 + numDaysSince;
 }
 
 export function getYesterdaysWord() {
