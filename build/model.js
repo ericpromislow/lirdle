@@ -174,7 +174,7 @@ Model.prototype = {
                 this.view.appendBoardRow();
                 this.saveableState.numBoardRows += 1;
             }
-            doFetch('guess', { date: this.saveableState.date, count: this.guessCount, guess: guessString });
+            doFetch('guess', { date: this.saveableState.date, count: this.guessCount });
         }
         this.currentGuess = [];
         this.nextLetterPosition = 0;
