@@ -51,13 +51,9 @@ View.prototype = {
         } else if (target.classList.contains('show-perceived-truth')) {
             target.classList.remove('show-perceived-truth');
         } else {
+            // We avoid constraints on number of marked letters
+            // due to complexity and individual preferences
             const row = target.parentElement;
-            /* avoids assuming how users leverage the color highlighting
-            const list = row.querySelectorAll('.filled-box.show-lie');
-            for (const node of list) {
-                node.classList.remove('show-lie');
-            }
-            */
             target.classList.add('show-lie');
         }
     },
