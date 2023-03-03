@@ -33,6 +33,7 @@ function initialize() {
         });
         keyboard.addEventListener('dblclick', (e) => {
             e.stopPropagation();
+            e.preventDefault();
         });
     } else {
         view.showStats();

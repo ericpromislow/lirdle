@@ -56,6 +56,7 @@ View.prototype = {
             const row = target.parentElement;
             target.classList.add('show-lie');
         }
+        e.preventDefault();
     },
 
     appendBoardRow() {
@@ -235,7 +236,6 @@ View.prototype = {
             const letter = currentGuess[i]; // array or string
             const letterColor = COLORS[scores[i]];
             box.classList.add(`background-${ letterColor }`)
-            // box.style.backgroundColor = letterColor;
             this.shadeKeyboard(letter, letterColor, guessedIt, this.model.scoresByLetter[letter]);
             if (immediate) {
                 enterScoredGuessForEntry(i + 1);
@@ -250,7 +250,7 @@ View.prototype = {
         let row = document.getElementsByClassName("letter-row")[rowNum];
         let box = row.children[colNum];
         box.textContent = "";
-        box.classList.remove("filled-box");
+        box.classList.remove("filled-box", "show-lie", "show-perceived-truth");
     },
 
     insertLetter(pressedKey, rowNum, colNum) {
