@@ -7,7 +7,6 @@ let view = null;
 let model = view;
 
 function initialize() {
-    console.log(`ready are we initing`);
     view = new View();
     model = new Model(view);
     model.initialize();
