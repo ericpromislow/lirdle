@@ -1,9 +1,20 @@
 /*
 // Copyright (C) 2023 Bovination Productions, MIT License
 */
+:root {
+  --green: green;
+  --red: red;
+  --yellow: yellow;
+  --gray: gray;
+  --orange: #ed9121;
+  --blue: #04d9ff;
+  --white: white;
+  --black: black;
+}
 
 body {
   font-family: sans-serif;
+  background-color: var(--white);
 }
 
 h1 {
@@ -19,7 +30,7 @@ h1 {
 }
 
 .letter-box {
-  border: 2px solid gray;
+  border: 2px solid var(--gray);
   border-radius: 3px;
   margin: 2px;
   font-size: 2.5rem;
@@ -60,43 +71,43 @@ h1 {
 }
 
 .letter-box.invalid {
-  color: red;
-  background-color: antiquewhite;
+  color: var(--red);
+  background-color: var(--white);
 }
 
 .letter-box.actualgrey {
-  border: 6px solid black;
+  border: 6px solid var(--black);
 }
 .letter-box.actualyellow {
-  border: 6px solid yellow;
+  border: 6px solid var(--yellow);
 }
 .letter-box.actualgreen {
-  border: 6px solid green;
+  border: 6px solid var(--green);
 }
 
 .filled-box {
-  border: 2px solid black;
+  border: 2px solid var(--black);
 }
 
 .filled-box.background-yellow {
-  background-color: yellow;
+  background-color: var(--yellow);
 }
 
 .filled-box.background-green {
-  background-color: green;
+  background-color: var(--green);
 }
 
 .filled-box.background-grey {
-  background-color: grey;
+  background-color: var(--gray);
 }
 
 .filled-box.show-lie {
   font-family: "Comic Sans", "Comic Sans MS", "Apple Chancery", "Bradley Hand", "papyrus", serif;
-  color: #ed9121;
+  color: var(--orange);
 }
 
 .filled-box.show-perceived-truth {
-  color: #04d9ff;
+  color: var(--blue);
 }
 
 .letter-row {
@@ -139,14 +150,14 @@ h2.collapsible.show {
 }
 
 h2.collapsible.show span {
-  border: solid 4px #f7b538;
+  border: solid 4px var(--orange);
   padding: 2px 20px 2px 20px;
 }
 
 nothing {
-  font-color: #bfd200;
-  font-color: #f7b538;
-  font-color: #bdd5ea;
+  font-color: var(--green);
+  font-color: var(--orange);
+  font-color: var(--blue);
 }
 
 #dupWord {
@@ -194,7 +205,7 @@ div#statistics {
   position: fixed;
   top: 30px;
   left: 30px;
-  border: #f7b538 2px dashed;
+  border: var(--orange) 2px dashed;
   padding: 3px;
 }
 

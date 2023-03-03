@@ -269,9 +269,9 @@ View.prototype = {
                     elem.style.backgroundColor = color;
                 } else if (numHitsForEachScore[2]) {
                     //TODO: Gradient these
-                    elem.style.backgroundColor = "#bfd200";
+                    elem.style.backgroundColor = "var(--green)";
                 } else if (numHitsForEachScore[1]) {
-                    elem.style.backgroundColor = "#f7b538";
+                    elem.style.backgroundColor = "var(--yellow)";
                 } else if (numHitsForEachScore[0]) {
                     elem.style.backgroundColor = "#bdd5ea";
                 }
