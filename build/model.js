@@ -54,7 +54,7 @@ Model.prototype = {
         // console.log(`savedState:`, savedState);
         if (savedState.date !== getDateNumber()) {
             if (!savedState.finished) {
-                doFetch('unfinished', { count: savedState.guessWords.length, date: savedState.date });
+                doFetch('unfinished', { date: savedState.date, count: savedState.guessWords.length });
                 this.stats.addUnfinishedGame(savedState.guessWords.length);
                 this.saveStats();
             }
@@ -77,7 +77,7 @@ Model.prototype = {
                 doFetch('waiting', { date: savedState.date });
             }
         } else {
-            doFetch('continue', { count: savedState.guessWords.length, date: savedState.date });
+            doFetch('continue', { date: savedState.date, count: savedState.guessWords.length });
         }
         this.guessCount = this.saveableState.guessWords.length;
     },
