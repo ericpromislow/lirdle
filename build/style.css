@@ -95,6 +95,10 @@ h1 {
   color: #ed9121;
 }
 
+.filled-box.show-perceived-truth {
+  color: #04d9ff;
+}
+
 .letter-row {
   display: flex;
 }
