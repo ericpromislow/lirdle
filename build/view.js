@@ -340,5 +340,27 @@ View.prototype = {
                 div.classList.remove('hidden');
             }
         }
-    }
+    },
+    // CSS Themes go here
+    secretPinkMode() {
+        var pink = new URLSearchParams(window.location.search).get('pink')
+        if (pink) {
+            document.getElementsByTagName("head")[0].insertAdjacentHTML(
+                "beforeend",
+                "<link rel=\"stylesheet\" href=\"pink.css\" />");
+            this.swapCssLinks();
+        }
+    },
+    swapCssLinks() {
+        const toPink = document.querySelector('li#to-pink');
+        const andBack = document.querySelector('li#to-classic');
+        if (toPink) {
+            toPink.classList.add('hidden');
+            toPink.classList.remove('show');
+        }
+        if (andBack) {
+            andBack.classList.add('show');
+            andBack.classList.remove('hidden');
+        }
+}
 }

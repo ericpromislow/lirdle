@@ -68,9 +68,11 @@
             Click again to mark it as truthful.<br>
             Click again if you change your mind.<br>
             Repeat as needed.</li>
-            <li>Promoted about 100 words from the secondary list.<br>
-                Hope you're up on your noble gases and esoteric food ingredients.
-            </li>
+            <li id="to-pink" class="css-link show"><a href="?pink=1">Prefer to play in pink mode?</a></li>
+            <!--
+            An empty string changes nothing, so let's put in something logical
+            -->
+            <li id="to-classic" class="css-link hidden"><a href="?classic=1">Actually I prefer the green/yellow theme</a></li>
             <li>Testimonial of the week: "I feel more like I've defeated an enemy that has been actively thwarting me than just solved a puzzle."</li>
         </ul>
         <div id="yesterdaysWord" class="hidden">Yesterday's word was "<span id="theAnswer"></span>".</div>

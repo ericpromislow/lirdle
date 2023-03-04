@@ -114,6 +114,14 @@ h1 {
   display: flex;
 }
 
+li.css-link.hidden {
+  visibility: collapse;
+}
+
+li.css-link.show {
+  visibility: visible;
+}
+
 #keyboard-cont {
   margin: 1rem 0;
   display: flex;

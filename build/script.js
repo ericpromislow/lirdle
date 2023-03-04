@@ -68,20 +68,11 @@ function initialize() {
         }
     });
     view.doBlurbs();
-    secretPinkMode();
+    view.secretPinkMode();
 }
 window.addEventListener('load', () => {
     initialize();
 });
-
-function secretPinkMode() {
-    var pink = new URLSearchParams(window.location.search).get('pink')
-    if (pink) {
-        document.getElementsByTagName("head")[0].insertAdjacentHTML(
-        "beforeend",
-        "<link rel=\"stylesheet\" href=\"pink.css\" />");
-    }
-}
 
 function fallbackCopyTextToClipboard(text) {
     const textArea = document.createElement("textarea");
