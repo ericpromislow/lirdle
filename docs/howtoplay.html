@@ -1,0 +1,58 @@
+<h1>Intro to Lirdle</h1>
+
+<h2>An overview of how to play Lirdle, along with my current strategy.</h2>
+
+<p>At startup, you're presented with a blank screen. If you're mystified by this, I would
+recommend you play Wordle for a few days first, and then come back here. This game really
+assumes familiarity with Wordle and the other 5-letter-word guessing games.</p>
+
+<p><img src="https://user-images.githubusercontent.com/108392/222923026-ff71a11f-02f8-4fd2-97db-8a499597154a.png" alt="shot01" title="" /></p>
+
+<p>So you're ready to enter your first word. If you're on a phone or tablet, you'll probably need to use the keyboard under the letter grid. Keyboards work as expected, along with standard operations for the Backspace and Enter key. Most non-alphabetic keys, like <code>$</code> are ignored.</p>
+
+<p>Now, when I used to play other word games, my first word was usually <code>ORATE</code> or <code>ADIEU</code> -- the idea being to try to hit the most common letters used in English.</p>
+
+<p>Lirdle is different. Lirdle is going to put exactly one lie in each line, so I start off with words that contain the less popular letters, hoping that Lirdle will lie about one of them and I can get some early truthful hits.</p>
+
+<p>So I type this:</p>
+
+<p><img src="https://user-images.githubusercontent.com/108392/222923159-0ef11242-10fa-4ea1-9868-62d4f9fd19c8.png" alt="shot02" title="" /></p>
+
+<p>press Return, and Lirdle responds with this:</p>
+
+<p><img src="https://user-images.githubusercontent.com/108392/222923178-cdf8099a-41a8-4481-8646-125533e29fb9.png" alt="shot03" title="" /></p>
+
+<p>Awesome! I would say there's a 90% chance it's lying about the <code>J</code>. I should mention here that the lying algorithm is uniformly random: it chooses one of the characters to lie about, each with a 1/5 chance, and then it flips a virtual coin to determine which way to lie. If I was the human setting this game and answering questions, and in fact there's no <code>J</code> in this word but there is an <code>O</code>, I would be more likely to paint the <code>O</code> black to throw off my opponent. (As a useful aside, I don't think this was what Jagger and Richards had in mind with their song "Paint it Black".)</p>
+
+<p>Let's go add the next four words I usually rely on to cover the alphabet:</p>
+
+<p><img src="https://user-images.githubusercontent.com/108392/222923352-84c8e2e9-4761-4aa5-84e3-1e471e4d54ea.png" alt="shot04" title="" /></p>
+
+<p>At this point, I start clicking on the tiles to start marking which ones you think are wrong. It's not required, but lots of people have reported this helps. Click once to mark a letter a lie. Click again to mark it as true. Click it once more to clear it. Of course you can use your own assignments (like the first click marks it as true, the second as neutral, unmarked as a lie), but that would be totally bizarre. Don't do it.</p>
+
+<p>So at this point I'm  pretty sure there's no <code>J</code>, there is an <code>O</code>, there's no <code>F</code>, <code>R</code>, or <code>D</code>. Lines 2 and 3 are hard -- either there are no letters in each of those lines, or there are two, and it's miscolored one of them black. We'll need more info to decide (at least I will).</p>
+
+<p>The 4th line is basically a Lirdle freebie. It's colored the <code>Q</code> yellow and left the <code>U</code> black. It is possibly lying about the <code>U</code>, but then we would need a word with <code>Q</code>, <code>U</code>, <code>I</code> and <code>O</code>, and the <code>Q</code> can't be at the start. I can't think of such a word. So we mark the <code>Q</code> as the lie and go with the rest of the letters.</p>
+
+<p><img src="https://user-images.githubusercontent.com/108392/222923531-ce1eb6d9-0039-4bbc-9a01-f5dac829bf81.png" alt="shot05" title="" /></p>
+
+<p>So my preference is not to bother marking the black letters. I figure if a black letter isn't marked as a lie, that letter probably isn't in the target word.</p>
+
+<p>I'm still stuck, so I come up with a word that probes <code>WALTZ</code> to determine where the lie is:</p>
+
+<p><img src="https://user-images.githubusercontent.com/108392/222923614-6eb83409-3655-4100-a1cc-6534320afd48.png" alt="shot06" title="" /></p>
+
+<p>A green <code>W</code> at a different spot: at least one of these is incorrect. I'm going to assume that there's no <code>W</code>.</p>
+
+<p>So I need a word with <code>O E L</code> and no other letters from any of the words. I'm now thinking that there's a repeated
+letter here, which makes all these guessing games harder. Time for another probe, ignoring the evidence at line 2:</p>
+
+<p><img src="https://user-images.githubusercontent.com/108392/222923744-7dffa60d-2c73-49c7-a4ed-a042be9ae6d8.png" alt="shot07" title="" /></p>
+
+<p>It's likely lying about the second <code>L</code>, so I haven't missed anything. Notice that there are now seven rows! Lirdle will keep giving you a new blank line as long as you need it. (There's no giving up in Lirdle, but if you put it aside and come back tomorrow, you'll see what yesterday's word was. This is how newspaper crossword puzzles worked for 100 years or so and no one ever complained that they couldn't call the editor the same day for an answer. We're sticking with tradition here.)</p>
+
+<p>I notice from the keyboard that there are still two letters I haven't tried yet. Sometimes I type <code>GROVE</code> to bring in the <code>G</code> and the <code>V</code>, but I'm thinking <code>GLOVE</code> or <code>OLIVE</code>.  <code>GLOVE</code> doesn't fit with the first line, because we know the <code>O</code> is in the word but at a different position. So let's try <code>OLIVE</code>:</p>
+
+<p><img src="https://user-images.githubusercontent.com/108392/222923841-3d8afc03-fdc4-42b6-9a30-32f452f73fba.png" alt="shot08" title="" /></p>
+
+<p>It's your turn now.</p>
