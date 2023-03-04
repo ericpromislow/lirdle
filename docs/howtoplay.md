@@ -12,7 +12,7 @@ So you're ready to enter your first word. If you're on a phone or tablet, you'll
 
 Now, when I used to play other word games, my first word was usually `ORATE` or `ADIEU` -- the idea being to try to hit the most common letters used in English.
 
-Lirdle is different. Lirdle is going to put exactly one line in each line, so I start off with words that contain the less popular letters, hoping that Lirdle will lie about one of them and I can get some early truthful hits.
+Lirdle is different. Lirdle is going to put exactly one lie in each line, so I start off with words that contain the less popular letters, hoping that Lirdle will lie about one of them and I can get some early truthful hits.
 
 So I type this:
 
@@ -22,13 +22,13 @@ press Return, and Lirdle responds with this:
 
 ![shot03](https://user-images.githubusercontent.com/108392/222923178-cdf8099a-41a8-4481-8646-125533e29fb9.png)
 
-Awesome! I would say there's a 90% chance it's lying about the `J`. I should mention here that the lying algorithm is uniformly random: it chooses one of the characters to lie about, each with a 1/5 chance, and then it flips a virtual coin to determine which way to lie. If I was the human setting this game and answering questions, and in fact there's no `J` in this word but there is an `O`, I would be more likely to paint the `O` black to throw off my opponent. Unfortunately, I don't think this was what Jagger and Richards had in mind with their song "Paint it Black".
+Awesome! I would say there's a 90% chance it's lying about the `J`. I should mention here that the lying algorithm is uniformly random: it chooses one of the characters to lie about, each with a 1/5 chance, and then it flips a virtual coin to determine which way to lie. If I was the human setting this game and answering questions, and in fact there's no `J` in this word but there is an `O`, I would be more likely to paint the `O` black to throw off my opponent. (As a useful aside, I don't think this was what Jagger and Richards had in mind with their song "Paint it Black".)
 
 Let's go add the next four words I usually rely on to cover the alphabet:
 
 ![shot04](https://user-images.githubusercontent.com/108392/222923352-84c8e2e9-4761-4aa5-84e3-1e471e4d54ea.png)
 
-At this point, you can click on the tiles to start marking which ones you think are wrong. It's not required, but lots of people have reported this helps. Click once to mark a letter a lie. Click again to mark it as true. Click it once more to clear it. Of course you can use your own assignments (like the first click marks it as true, the second as neutral, unmarked as a lie, but that would be totally bizarre. Don't do it.
+At this point, I start clicking on the tiles to start marking which ones you think are wrong. It's not required, but lots of people have reported this helps. Click once to mark a letter a lie. Click again to mark it as true. Click it once more to clear it. Of course you can use your own assignments (like the first click marks it as true, the second as neutral, unmarked as a lie), but that would be totally bizarre. Don't do it.
 
 So at this point I'm  pretty sure there's no `J`, there is an `O`, there's no `F`, `R`, or `D`. Lines 2 and 3 are hard -- either there are no letters in each of those lines, or there are two, and it's miscolored one of them black. We'll need more info to decide (at least I will).
 
@@ -56,4 +56,4 @@ I notice from the keyboard that there are still two letters I haven't tried yet.
 
 ![shot08](https://user-images.githubusercontent.com/108392/222923841-3d8afc03-fdc4-42b6-9a30-32f452f73fba.png)
 
-And I got it in a reasonable 8 guesses.
+It's your turn now.
