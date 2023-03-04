@@ -49,7 +49,7 @@ letter here, which makes all these guessing games harder. Time for another probe
 
 ![shot07](https://user-images.githubusercontent.com/108392/222923744-7dffa60d-2c73-49c7-a4ed-a042be9ae6d8.png)
 
-It's likely lying about the second `L`, so I haven't missed anything. Notice that there are now seven rows! Lirdle will keep giving you a new blank line as long as you need it. (There's no giving up in Lirdle, but if you put it aside and come back tomorrow, you'll see what yesterday's word was. This is how newspaper crossword puzzles worked for 100 years or so and no one ever complained that they couldn't call the editor the same day for a answer. We're sticking with tradition here.)
+It's likely lying about the second `L`, so I haven't missed anything. Notice that there are now seven rows! Lirdle will keep giving you a new blank line as long as you need it. (There's no giving up in Lirdle, but if you put it aside and come back tomorrow, you'll see what yesterday's word was. This is how newspaper crossword puzzles worked for 100 years or so and no one ever complained that they couldn't call the editor the same day for an answer. We're sticking with tradition here.)
 
 I notice from the keyboard that there are still two letters I haven't tried yet. Sometimes I type `GROVE` to bring in the `G` and the `V`, but I'm thinking `GLOVE` or `OLIVE`.  `GLOVE` doesn't fit with the first line, because we know the `O` is in the word but at a different position. So let's try `OLIVE`:
 
