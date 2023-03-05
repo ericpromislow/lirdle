@@ -343,12 +343,19 @@ View.prototype = {
     },
     // CSS Themes go here
     secretPinkMode() {
-        var pink = new URLSearchParams(window.location.search).get('pink')
+        const pink = new URLSearchParams(window.location.search).get('pink')
         if (pink) {
             document.getElementsByTagName("head")[0].insertAdjacentHTML(
                 "beforeend",
                 "<link rel=\"stylesheet\" href=\"pink.css\" />");
             this.swapCssLinks();
+        } else {
+            const dark = new URLSearchParams(window.location.search).get('dark');
+            if (dark) {
+                document.getElementsByTagName("head")[0].insertAdjacentHTML(
+                    "beforeend",
+                    "<link rel=\"stylesheet\" href=\"dark.css\" />");
+            }
         }
     },
     swapCssLinks() {
