@@ -28,6 +28,7 @@ View.prototype = {
     setModel(model) {
         this.model = model;
         this.showYesterdaysWord();
+        this.initializeTheme(this.model.prefs.theme);
     },
     populateBoardFromSaveableState(numNeededRows, guessWords, scores) {
         this.initBoard(numNeededRows);
@@ -341,33 +342,31 @@ View.prototype = {
             }
         }
     },
-    // CSS Themes go here
-    secretPinkMode() {
-        const pink = new URLSearchParams(window.location.search).get('pink')
-        if (pink) {
-            document.getElementsByTagName("head")[0].insertAdjacentHTML(
-                "beforeend",
-                "<link rel=\"stylesheet\" href=\"pink.css\" />");
-            this.swapCssLinks();
-        } else {
-            const dark = new URLSearchParams(window.location.search).get('dark');
-            if (dark) {
-                document.getElementsByTagName("head")[0].insertAdjacentHTML(
-                    "beforeend",
-                    "<link rel=\"stylesheet\" href=\"dark.css\" />");
-            }
+    initializeTheme(theme) {
+        document.querySelector('#theme-select').value = theme;
+        if (theme != 'classic') {
+            this.changeTheme(theme);
         }
     },
-    swapCssLinks() {
-        const toPink = document.querySelector('li#to-pink');
-        const andBack = document.querySelector('li#to-classic');
-        if (toPink) {
-            toPink.classList.add('hidden');
-            toPink.classList.remove('show');
+    changeThemeHandler(e) {
+        const value = e.target.value;
+        if (!['classic', 'dark', 'pink'].includes(value)) {
+            console.log(`Can't process theme ${ value }`);
+            return;
         }
-        if (andBack) {
-            andBack.classList.add('show');
-            andBack.classList.remove('hidden');
+        this.changeTheme(value);
+    },
+    changeTheme(theme) {
+        const elts = Array.from(document.querySelectorAll('link.theme')).
+        filter(elt => elt.classList.contains('theme'));
+        for (const elt of elts) {
+            if (elt.getAttribute('href') !== `${ theme }.css`) {
+                elt.parentElement.removeChild(elt);
+            }
         }
-}
+        document.getElementsByTagName("head")[0].insertAdjacentHTML(
+            "beforeend",
+            `<link rel="stylesheet" class="theme" href="${ theme }.css" />`);
+        this.model.changeTheme(theme);
+    }
 }

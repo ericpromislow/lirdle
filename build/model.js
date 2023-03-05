@@ -31,18 +31,24 @@ export default function Model(view) {
 Model.prototype = {
     initialize() {
         this.initState();
-        setTimeout(() => {
-            try {
-                this.loadLocalStorage();
-            } catch (ex) {
-                console.log(`Error loading local storage: ${ex}`);
-                this.defaultInitSavableState();
-            }
-            this.view.initBoard(this.saveableState.numBoardRows);
-        }, 0);
+        try {
+            this.loadLocalStorage();
+        } catch (ex) {
+            console.log(`Error loading local storage: ${ex}`);
+            this.defaultInitSavableState();
+        }
+        this.view.initBoard(this.saveableState.numBoardRows);
     },
 
     loadLocalStorage() {
+        try {
+            this.prefs = JSON.parse(localStorage.getItem('prefs'));
+        } catch {
+            this.prefs = null;
+        }
+        if (!this.prefs) {
+            this.prefs = { theme: 'classic' };
+        }
         try {
             const stats = JSON.parse(localStorage.getItem('stats'));
             this.stats.initialize(stats);
@@ -93,6 +99,18 @@ Model.prototype = {
     saveStats() {
         try {
             localStorage.setItem('stats', JSON.stringify(this.stats));
+        } catch (ex) {
+            console.log(`can't set local storage: ${ex}`);
+        }
+    },
+    changeTheme(theme) {
+        this.prefs.theme = theme;
+        this.savePrefs();
+        doFetch('changeTheme', { date: this.saveableState.date, theme: theme });
+    },
+    savePrefs() {
+        try {
+            localStorage.setItem('prefs', JSON.stringify(this.prefs));
         } catch (ex) {
             console.log(`can't set local storage: ${ex}`);
         }

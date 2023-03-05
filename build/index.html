@@ -14,6 +14,7 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
      />
+    <link rel="stylesheet" class="theme" href="classic.css">
 </head>
 <body>
     <h1>Lirdle: One Lie Per Line</h1>
@@ -68,15 +69,19 @@
             Click again to mark it as truthful.<br>
             Click again if you change your mind.<br>
             Repeat as needed.</li>
-            <li id="to-pink" class="css-link show"><a href="?pink=1">Try the pink theme</a></li>
-            <!--
-            An empty string in an href target just refreshes the tab, so let's put in something logical
-            -->
-            <li id="to-classic" class="css-link hidden"><a href="?classic=1">Actually I prefer the green/yellow theme</a></li>
+            <li>Support for more themes</li>
             <li>Fixed a bug that sometimes added a second lie. This game is hard enough.</li>
             <li>Testimonial of the week: "I feel more like I've defeated an enemy that has been actively thwarting me than just solved a puzzle."</li>
         </ul>
         <div id="yesterdaysWord" class="hidden">Yesterday's word was "<span id="theAnswer"></span>".</div>
+        <div id="themeSwitcher">
+            <label for="theme-select">Switch theme:</label>
+            <select name="themes" id="theme-select">
+                <option value="classic">Classic</option>
+                <option value="dark">Dark</option>
+                <option value="pink">Pink</option>
+            </select>
+        </div>
     </div>
     <div id="statistics" class="hidden">
         <div id="closeRow">

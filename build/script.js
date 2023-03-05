@@ -67,8 +67,12 @@ function initialize() {
             console.log(`Trying to share failed: ${ err }`);
         }
     });
+    document.getElementById('theme-select').addEventListener('input', (e) => {
+        view.changeThemeHandler(e);
+    });
+
+
     view.doBlurbs();
-    view.secretPinkMode();
 }
 window.addEventListener('load', () => {
     initialize();
