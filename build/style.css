@@ -115,11 +115,7 @@ h1 {
 }
 
 li.css-link.hidden {
-  visibility: collapse;
-}
-
-li.css-link.show {
-  visibility: visible;
+  display: none;
 }
 
 #keyboard-cont {
