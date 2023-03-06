@@ -1,7 +1,7 @@
 // Copyright (C) 2023 Bovination Productions, MIT License
 
 import { WORDS, OTHERWORDS } from "./words.js";
-import { devMode, getDateNumber, getWordNumber, perturb } from "./numbers.js";
+import {devMode, getDateNumber, getInternalDateNumber, getWordNumber, perturb} from "./numbers.js";
 import beep from "./beep.js";
 import Stats from "./stats.js";
 
@@ -57,10 +57,11 @@ Model.prototype = {
             this.stats.initialize(null);
         }
         const savedState = JSON.parse(localStorage.getItem('saveableState'));
+        const currentDate = getDateNumber();
         // console.log(`savedState:`, savedState);
         if (savedState.date !== getDateNumber()) {
             if (!savedState.finished) {
-                doFetch('unfinished', { date: savedState.date, count: savedState.guessWords.length });
+                doFetch('unfinished', { date: currentDate, from: getInternalDateNumber(savedState.date), count: savedState.guessWords.length });
                 this.stats.addUnfinishedGame(savedState.guessWords.length);
                 this.saveStats();
             }
@@ -278,8 +279,8 @@ Model.prototype = {
 };
 
 function doFetch(endpoint, options) {
-    if (('date' in options) && typeof(options.date) == 'number' && options.date > 20230218) {
-        options.date -= 20230218;
+    if (('date' in options) && typeof(options.date) == 'number') {
+        options.date = getInternalDateNumber(options.date);
     }
     fetch(`/usage/${ endpoint }?${ new URLSearchParams(options) }`).then((response) => {
         // ignore the response

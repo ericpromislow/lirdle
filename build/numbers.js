@@ -19,6 +19,10 @@ export function getDateNumber() {
     return 20230218 + numDaysSince;
 }
 
+export function getInternalDateNumber(dateNumber) {
+    return dateNumber - 20230218;
+}
+
 export function getYesterdaysWord() {
     const num = getWordNumber(getDateNumber() - 1);
     return WORDS[num];
