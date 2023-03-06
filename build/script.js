@@ -9,8 +9,9 @@ let model = view;
 function initialize() {
     view = new View();
     model = new Model(view);
-    model.initialize();
     view.setModel(model);
+    model.initialize();
+    view.setModelContinue();
     if (!model.allDone) {
         const keyboard = document.getElementById("keyboard-cont");
         document.addEventListener("keyup", (e) => {
@@ -68,7 +69,10 @@ function initialize() {
         }
     });
     document.getElementById('theme-select').addEventListener('input', (e) => {
-        view.changeThemeHandler(e);
+        const themeName = view.changeThemeHandler(e);
+        if (themeName) {
+            model.changeTheme(themeName);
+        }
     });
 
 

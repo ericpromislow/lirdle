@@ -27,6 +27,8 @@ const NEUTRAL_COLOR = 'white';
 View.prototype = {
     setModel(model) {
         this.model = model;
+    },
+    setModelContinue() {
         this.showYesterdaysWord();
         this.initializeTheme(this.model.prefs.theme);
     },
@@ -355,6 +357,7 @@ View.prototype = {
             return;
         }
         this.changeTheme(value);
+        return value;
     },
     changeTheme(theme) {
         const elts = Array.from(document.querySelectorAll('link.theme')).
@@ -367,6 +370,5 @@ View.prototype = {
         document.getElementsByTagName("head")[0].insertAdjacentHTML(
             "beforeend",
             `<link rel="stylesheet" class="theme" href="${ theme }.css" />`);
-        this.model.changeTheme(theme);
     }
 }

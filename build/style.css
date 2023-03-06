@@ -124,6 +124,7 @@ li.css-link.hidden {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: var(--white);
 }
 
 #keyboard-cont div {
@@ -141,6 +142,7 @@ li.css-link.hidden {
   margin: 0 2px;
   cursor: pointer;
   text-transform: uppercase;
+  color: var(--black);
 }
 
 h2.collapsible.hidden {
