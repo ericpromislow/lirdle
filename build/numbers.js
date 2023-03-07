@@ -10,7 +10,7 @@ export function getDateNumber() {
     if (month.length === 1) {
         month = '0' + month;
     }
-    if (date.length == 1) {
+    if (date.length === 1) {
         date = '0' + date;
     }
     const d2 = Date.parse(`${ year }-${ month }-${ date }T04:00:00`);

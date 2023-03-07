@@ -1,7 +1,7 @@
 // Copyright (C) 2023 Bovination Productions, MIT License
 
 import { WORDS, OTHERWORDS } from "./words.js";
-import {devMode, getDateNumber, getInternalDateNumber, getWordNumber, perturb} from "./numbers.js";
+import { devMode, getDateNumber, getInternalDateNumber, getWordNumber, perturb } from "./numbers.js";
 import beep from "./beep.js";
 import Stats from "./stats.js";
 
@@ -59,7 +59,7 @@ Model.prototype = {
         const savedState = JSON.parse(localStorage.getItem('saveableState'));
         const currentDate = getDateNumber();
         // console.log(`savedState:`, savedState);
-        if (savedState.date !== getDateNumber()) {
+        if (savedState.date === currentDate) {
             if (!savedState.finished) {
                 doFetch('unfinished', { date: currentDate, from: getInternalDateNumber(savedState.date), count: savedState.guessWords.length });
                 this.stats.addUnfinishedGame(savedState.guessWords.length);
