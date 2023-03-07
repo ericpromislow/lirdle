@@ -1,7 +1,7 @@
 // Copyright (C) 2023 Bovination Productions, MIT License
 
 import { WORDS, OTHERWORDS } from "./words.js";
-import { devMode, getDateNumber, getInternalDateNumber, getWordNumber, perturb } from "./numbers.js";
+import { devMode, getDateNumber, getWordNumber, perturb } from "./numbers.js";
 import beep from "./beep.js";
 import Stats from "./stats.js";
 
@@ -287,4 +287,8 @@ function doFetch(endpoint, options) {
     }).catch((err) => {
         // yeah, ignore this too
     });
+}
+
+function getInternalDateNumber(dateNumber) {
+    return dateNumber - 20230218;
 }
