@@ -1,13 +1,28 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
+
+options = {}
+
+OptionParser.new do |opts|
+  opts.on('-t', '--text')
+  opts.on('-j', '--json')
+  opts.on('-d NUM', '--dateNum', Integer)
+end.parse!(into: options)
+
+
 def usage(msg=nil)
-  puts "Usage: #{$0} dateNum"
+  puts "Usage: #{$0} [-t | --text | -j | --json] [-d | --dateNum] dateNum"
   puts msg if msg
   exit 1
 end
 
-usage() if ARGV.size == 0
-dateNum = ARGV[0]
+if !options.has_key?(:dateNum)
+  usage("No date-num given")
+elsif options.has_key?(:text) && options.has_key?(:json)
+  usage("Specified both text and json")
+end
+dateNum = options[:dateNum].to_s
 
 LOG='/opt/nginx/logs'
 
@@ -72,19 +87,50 @@ def avg(a)
   sum.to_f / a.size
 end
 
-puts "Loaded game: #{ started }"
-puts "Started: #{ startedGame }"
-puts "Finished: #{ finished }"
+usage = {
+  loaded: started,
+  started: startedGame,
+  finished: finished,
+  unfinished: unfinished,
+  waiting: waiting,
+  continuing: continuing
+}
+
+def combineStats(guesses)
+  return ({
+    lowest: guesses.min,
+    highest: guesses.max,
+    average: avg(guesses),
+  })
+end
+
 if finished > 0
-  puts "Lowest: #{ guessesNeeded.min }"
-  puts "Highest: #{ guessesNeeded.max }"
-  puts "Average: #{ avg(guessesNeeded) }"
+  usage[:finishedDetails] = combineStats(guessesNeeded)
 end
-puts "Unfinished: #{ unfinished }"
 if unfinished > 0
-  puts "Lowest: #{ unfinishedGuessesNeeded.min }"
-  puts "Highest: #{ unfinishedGuessesNeeded.max }"
-  puts "Average: #{ avg(unfinishedGuessesNeeded) }"
+  usage[:unfinishedDetails] = combineStats(unfinishedGuessesNeeded)
 end
-puts "Waiting: #{ waiting }"
-puts "Continuing: #{ continuing }"
+
+if options[:json]
+  require 'json'
+
+  puts usage.to_json({object_nl:"\n"})
+else
+  puts "Loaded game: #{ usage[:loaded] }"
+  puts "Started: #{ usage[:started] }"
+  puts "Finished: #{ usage[:finished] }"
+  puts "Percent finished: #{ (100.0 * usage[:finished] / usage[:started]).round }%" if usage[:started] > 0
+  if usage[:finished] > 0
+    puts "  Lowest: #{ usage[:finishedDetails][:lowest] }"
+    puts "  Highest: #{ usage[:finishedDetails][:highest] }"
+    puts "  Average: #{ "%.02f" % usage[:finishedDetails][:average] }"
+  end
+  puts "Unfinished: #{ usage[:unfinished] }"
+  if unfinished > 0
+    puts "  Lowest: #{ usage[:unfinishedDetails][:lowest] }"
+    puts "  Highest: #{ usage[:unfinishedDetails][:highest] }"
+    puts "  Average: #{ "%.02f" % usage[:unfinishedDetails][:average] }"
+  end
+  puts "Waiting: #{ usage[:waiting] }"
+  puts "Continuing: #{ usage[:continuing] }"
+end
