@@ -324,12 +324,35 @@ View.prototype = {
     },
     showYesterdaysWord() {
         if (!devMode()) {
-            const todaysDateNumber = getDateNumber();
-            const yesterdaysWord = todaysDateNumber === 20230224 ? "floor" : getYesterdaysWord();
+            const yesterdaysWord = getYesterdaysWord();
             const yesterdaysWordElt = document.getElementById('yesterdaysWord');
+            const answerStatsElt = yesterdaysWordElt.querySelector('span#answerStats');
             yesterdaysWordElt.querySelector('span#theAnswer').textContent = yesterdaysWord;
             yesterdaysWordElt.classList.remove('hidden');
             yesterdaysWordElt.classList.add('show');
+            if (!answerStatsElt) {
+                return;
+            }
+            // I really need to fix this
+            const currentDateNumber = getDateNumber() - 20230218;
+            let failureCount = 0;
+            const intervalPID = setInterval(async() => {
+                fetch(`stats/day${ pad(currentDateNumber, 4, '0') }.json`).
+                    then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        const fractionFinished = (data.finished * 1.0) / data.started;
+                        const fractionFinishedDisplay = Math.round(100 * fractionFinished);
+                        const avgTriesDisplay = Math.round(100 * data.finishedDetails.average) / 100.0;
+                        answerStatsElt.textContent = ` (${ fractionFinishedDisplay }% finished, avg tries: ${ avgTriesDisplay })`;
+                }).catch((err) => {
+                    console.log(`Error fetching - ${ err }`);
+                    failureCount += 1;
+                    if (failureCount > 10) {
+                        clearInterval(intervalPID);
+                    }
+                });
+            }, 1000);
         }
     },
     doBlurbs() {
