@@ -26,6 +26,9 @@ export default function Model(view) {
 
     this.view = view;
     this.stats = new Stats();
+    this.doneFunc = () => {
+        console.log("Lirdle: doneFunc not done set");
+    }
 }
 
 Model.prototype = {
@@ -59,7 +62,7 @@ Model.prototype = {
         const savedState = JSON.parse(localStorage.getItem('saveableState'));
         const currentDate = getDateNumber();
         // console.log(`savedState:`, savedState);
-        if (savedState.date === currentDate) {
+        if (savedState.date !== currentDate) {
             if (!savedState.finished) {
                 doFetch('unfinished', { date: currentDate, from: getInternalDateNumber(savedState.date), count: savedState.guessWords.length });
                 this.stats.addUnfinishedGame(savedState.guessWords.length);
@@ -197,6 +200,7 @@ Model.prototype = {
         if (guessedIt) {
             this.saveableState.finished = true;
             this.view.showTheWin(this.guessCount, this.saveableState.changes);
+            this.doneFunc();
             doFetch('finished', { date: this.saveableState.date, count: this.guessCount });
         } else {
             if (this.guessCount >= this.saveableState.numBoardRows) {

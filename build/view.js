@@ -11,6 +11,7 @@ export default function View() {
     }
     this.model = null;
     this.wordIsInvalid = false;
+    this.gameFinished = false;
 }
 
 function pad(val, minSize, padChar) {
@@ -44,6 +45,11 @@ View.prototype = {
     },
 
     handleLetterBoxClick(e) {
+        if (this.gameFinished) {
+            e.stopPropagation();
+            e.preventDefault();
+            return;
+        }
         const target = e.target;
         if (!target.classList.contains('filled-box')) {
             return;
@@ -69,7 +75,7 @@ View.prototype = {
         for (let j = 0; j < 5; j++) {
             let box = document.createElement("div");
             box.className = "letter-box";
-            box.addEventListener('click', this.handleLetterBoxClick);
+            box.addEventListener('click', this.handleLetterBoxClick.bind(this));
             row.appendChild(box);
         }
         this.board.appendChild(row);
@@ -92,6 +98,10 @@ View.prototype = {
         this.showWinningInfo(guessCount);
         this.showDeceptiveSquares(changes);
         this.showAllDone();
+        this.gameFinished = true;
+        Array.from(document.querySelectorAll('#keyboard-cont button.keyboard-button')).forEach(elt => {
+            elt.setAttribute('disabled', true);
+        });
     },
 
     showWinningInfo(guessCount) {
@@ -294,7 +304,7 @@ View.prototype = {
                 beep();
             }
         } else if (pressedKey.toLowerCase() === "enter") {
-            console.log(`pressed enter, currentTarget: ${e.currentTarget}, target: ${e.target}`);
+            // console.log(`pressed enter, currentTarget: ${e.currentTarget}, target: ${e.target}`);
             e.stopPropagation();
             e.cancelBubble = true;
             if (this.wordIsInvalid) {
@@ -309,7 +319,7 @@ View.prototype = {
                 this.model.insertLetter(pressedKey);
             }
         } else {
-            console.log(`lirdle: ignoring key event ${pressedKey}`);
+            console.log(`Lirdle: ignoring key event ${pressedKey}`);
         }
     },
     showYesterdaysWord() {

@@ -12,13 +12,27 @@ function initialize() {
     view.setModel(model);
     model.initialize();
     view.setModelContinue();
+    let gameFinished = false;
+    model.doneFunc = () => {
+        gameFinished = true;
+    }
     if (!model.allDone) {
         const keyboard = document.getElementById("keyboard-cont");
         document.addEventListener("keyup", (e) => {
+            if (gameFinished) {
+                e.stopPropagation();
+                e.preventDefault();
+                return;
+            }
             if (view) view.keyHandler(e);
             else console.log(`Not handling key ${e.key}`);
         });
         keyboard.addEventListener("click", (e) => {
+            if (gameFinished) {
+                e.stopPropagation();
+                e.preventDefault();
+                return;
+            }
             if (!view) {
                 console.log(`Not handling click event on ${ e.target.nodeName }`);
             } else if (e.target.nodeName === "BUTTON") {
@@ -33,6 +47,11 @@ function initialize() {
             console.log(`Ignoring click on non-button ${ e.target.nodeName }`);
         });
         keyboard.addEventListener('dblclick', (e) => {
+            if (gameFinished) {
+                e.stopPropagation();
+                e.preventDefault();
+                return;
+            }
             e.stopPropagation();
             e.preventDefault();
         });
