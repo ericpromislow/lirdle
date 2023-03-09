@@ -333,26 +333,28 @@ View.prototype = {
             if (!answerStatsElt) {
                 return;
             }
-            // I really need to fix this
+            // TODO: treat Feb 18/23 as 0 and drop all uses of the 8-digit num except to calc the position
             const currentDateNumber = getDateNumber() - 20230218;
             let failureCount = 0;
-            const intervalPID = setInterval(async() => {
-                fetch(`stats/day${ pad(currentDateNumber, 4, '0') }.json`).
-                    then((response) => {
-                        return response.json();
-                    }).then((data) => {
-                        const fractionFinished = (data.finished * 1.0) / data.started;
-                        const fractionFinishedDisplay = Math.round(100 * fractionFinished);
-                        const avgTriesDisplay = Math.round(100 * data.finishedDetails.average) / 100.0;
-                        answerStatsElt.textContent = ` (${ fractionFinishedDisplay }% finished, avg tries: ${ avgTriesDisplay })`;
+            let intervalPID = 0;
+            const fetchFunc = () => {
+                fetch(`stats/day${pad(currentDateNumber, 4, '0')}.json`).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    const fractionFinished = (data.finished * 1.0) / data.started;
+                    const fractionFinishedDisplay = Math.round(100 * fractionFinished);
+                    const avgTriesDisplay = Math.round(100 * data.finishedDetails.average) / 100.0;
+                    answerStatsElt.textContent = ` (${fractionFinishedDisplay}% finished, avg tries: ${avgTriesDisplay})`;
                 }).catch((err) => {
-                    console.log(`Error fetching - ${ err }`);
+                    console.log(`Error fetching - ${err}`);
                     failureCount += 1;
                     if (failureCount > 10) {
                         clearInterval(intervalPID);
                     }
                 });
-            }, 1000);
+            };
+            fetchFunc();
+            intervalPID = setInterval(fetchFunc, 10 * 60_000);
         }
     },
     doBlurbs() {
