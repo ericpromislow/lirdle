@@ -177,10 +177,10 @@ nothing {
   visibility: visible;
 }
 
-#yesterdaysWord.hidden{
+div.summary.hidden{
   visibility: collapse;
 }
-#yesterdaysWord.show {
+div.summary.show {
   visibility: visible;
 }
 

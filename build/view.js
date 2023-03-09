@@ -98,6 +98,7 @@ View.prototype = {
         this.showWinningInfo(guessCount);
         this.showDeceptiveSquares(changes);
         this.showAllDone();
+        this.showTodaysStats();
         this.gameFinished = true;
         Array.from(document.querySelectorAll('#keyboard-cont button.keyboard-button')).forEach(elt => {
             elt.setAttribute('disabled', true);
@@ -327,14 +328,14 @@ View.prototype = {
             const yesterdaysWord = getYesterdaysWord();
             const yesterdaysWordElt = document.getElementById('yesterdaysWord');
             const answerStatsElt = yesterdaysWordElt.querySelector('span#answerStats');
-            yesterdaysWordElt.querySelector('span#theAnswer').textContent = yesterdaysWord;
-            yesterdaysWordElt.classList.remove('hidden');
-            yesterdaysWordElt.classList.add('show');
             if (!answerStatsElt) {
                 return;
             }
+            yesterdaysWordElt.querySelector('span#theAnswer').textContent = yesterdaysWord;
+            yesterdaysWordElt.classList.remove('hidden');
+            yesterdaysWordElt.classList.add('show');
             // TODO: treat Feb 18/23 as 0 and drop all uses of the 8-digit num except to calc the position
-            const currentDateNumber = getDateNumber() - 20230218;
+            const currentDateNumber = getDateNumber() - 20230218 - 1;
             let failureCount = 0;
             let intervalPID = 0;
             const fetchFunc = () => {
@@ -356,6 +357,51 @@ View.prototype = {
             fetchFunc();
             intervalPID = setInterval(fetchFunc, 10 * 60_000);
         }
+    },
+    showTodaysStats() {
+        let numTriesNeededHere = this.model.saveableState.guessWords.length ?? 0;
+        const todaysStatsElt = document.getElementById('todaysStats');
+        const todaysPctFinishedSoFarElt = todaysStatsElt.querySelector('span#todaysPctFinishedSoFar');
+        const todaysAvgSoFarElt = todaysStatsElt.querySelector('span#todaysAvgSoFar');
+        let needToRevealTodaysElt = true;
+        // TODO: treat Feb 18/23 as 0 and drop all uses of the 8-digit num except to calc the position
+        const currentDateNumber = getDateNumber() - 20230218;
+        let failureCount = 0;
+        let intervalPID = 0;
+        if (numTriesNeededHere === 0) {
+            return;
+        }
+        const fetchFunc = () => {
+            fetch(`stats/day${pad(currentDateNumber, 4, '0')}.json`)
+            .then((response) => {
+                return response.json();
+            }).then((data) => {
+                if (data.finished === 0) {
+                    // We've got an early finisher, so assume their result hasn't been picked up yet.
+                    data.finished += 1;
+                    data.started += 1;
+                    data.finishedDetails = {average: numTriesNeededHere};
+                }
+                const fractionFinished = (data.finished * 1.0) / data.started;
+                const fractionFinishedDisplay = Math.round(100 * fractionFinished);
+                const avgTriesDisplay = Math.round(100 * data.finishedDetails.average) / 100.0;
+                todaysPctFinishedSoFarElt.textContent = fractionFinishedDisplay.toString();
+                todaysAvgSoFarElt.textContent = avgTriesDisplay.toString();
+                if (needToRevealTodaysElt) {
+                    todaysStatsElt.classList.remove('hidden');
+                    todaysStatsElt.classList.add('show');
+                    needToRevealTodaysElt = false;
+                }
+            }).catch((err) => {
+                console.log(`Error fetching - ${err}`);
+                failureCount += 1;
+                if (failureCount > 10) {
+                    clearInterval(intervalPID);
+                }
+            });
+	    };
+        fetchFunc();
+        intervalPID = setInterval(fetchFunc, 1 * 60_000);
     },
     doBlurbs() {
         const useragent = navigator.userAgent.toLowerCase();
