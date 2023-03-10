@@ -147,9 +147,7 @@ View.prototype = {
             setTimeout(setTimeLeft, 1 * 1000);
         }
         setTimeout(setTimeLeft, 0);
-        setTimeout(() => {
-            this.showStats()
-        }, 1000);
+        this.showStats();
     },
     /**
      * changes: array of [index, actualResult, displayedResult]
@@ -184,6 +182,7 @@ View.prototype = {
             statsBody.innerHTML = stats.getStatsSummary();
         }
         statsDiv.classList.remove('hidden');
+        statsDiv.classList.add('show');
     },
 
     changeInvalidWordState(rowNum, wordIsInvalid, guessString) {

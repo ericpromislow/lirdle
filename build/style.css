@@ -192,32 +192,25 @@ div#whats-new {
   margin-bottom: 0px;
 }
 
-div#promos {
-  margin-top: 0px;
-}
-
-div#promos .hidden {
-  visibility: collapse;
-}
-
-div#promos div {
-  margin-top: 0px;
-}
-
-div#promos div a {
-  margin-top: 0px;
+div#themeSwitcher {
+  margin-top: 4px;
 }
 
 div#statistics {
-  position: fixed;
-  top: 30px;
-  left: 30px;
+  /*position: fixed;*/
+  /*top: 30px;*/
+  /*left: 30px;*/
   border: var(--orange) 2px dashed;
   padding: 3px;
 }
 
 div#statistics.hidden {
   visibility: collapse;
+  display: none;
+}
+div#statistics.show {
+  margin-top: 12px;
+  max-width: 20em;
 }
 
 div#statistics h3 {
@@ -233,4 +226,21 @@ div#statistics button#shareStats {
 
 div#statistics button#closeStats {
   float: right;
+}
+
+div#promos {
+  margin-top: 0px;
+}
+
+div#promos .hidden {
+  visibility: collapse;
+  display: none;
+}
+
+div#promos div {
+  margin-top: 0px;
+}
+
+div#promos div a {
+  margin-top: 0px;
 }
