@@ -354,7 +354,7 @@ View.prototype = {
                 });
             };
             fetchFunc();
-            intervalPID = setInterval(fetchFunc, 10 * 60_000);
+            intervalPID = setInterval(fetchFunc, 30 * 60_000);
         }
     },
     showTodaysStats() {
@@ -400,7 +400,7 @@ View.prototype = {
             });
 	    };
         fetchFunc();
-        intervalPID = setInterval(fetchFunc, 1 * 60_000);
+        intervalPID = setInterval(fetchFunc, 10 * 60_000);
     },
     doBlurbs() {
         const useragent = navigator.userAgent.toLowerCase();
