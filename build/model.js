@@ -12,6 +12,13 @@ const EMOJI_YELLOW = String.fromCodePoint(0x1f7e8);
 const EMOJI_GREEN = String.fromCodePoint(0x1f7e9);
 const EMOJI_COLORS = [EMOJI_BLACK, EMOJI_YELLOW, EMOJI_GREEN];
 
+const DUPLICATE_WORD_INTERVAL = 8;
+const NON_WORD_INTERVAL = 12;
+
+const CHARGE_NONE = 0;
+const CHARGE_DUPLICATE = 1;
+const CHARGE_NON_WORD = 2;
+
 export default function Model(view) {
     this.saveableState = {
         changes: [],
@@ -21,6 +28,8 @@ export default function Model(view) {
         numBoardRows: INIT_NUM_ROWS,
         scores: [],
         wordNumber: -1,
+        numDuplicateWordsEarned: 0,
+        numNonWordsEarned: 0,
     };
     this.initState();
 
@@ -46,11 +55,19 @@ Model.prototype = {
     loadLocalStorage() {
         try {
             this.prefs = JSON.parse(localStorage.getItem('prefs'));
+            const hints = document.getElementById('toggle-hints');
+            if (hints) {
+                hints.labels[0].textContent = `Hints are ${ this.prefs.hints ? 'on' : 'off'}`;
+            }
         } catch {
             this.prefs = null;
         }
         if (!this.prefs) {
-            this.prefs = { theme: 'classic' };
+            this.prefs = { theme: 'classic', hints: false }; // , hints: document.getElementById() };
+            const hints = document.getElementById('toggle-hints');
+            if (hints) {
+                hints.checked = false;
+            }
         }
         try {
             const stats = JSON.parse(localStorage.getItem('stats'));
@@ -127,6 +144,8 @@ Model.prototype = {
         this.saveableState.numBoardRows = INIT_NUM_ROWS;
         this.saveableState.scores = [];
         this.saveableState.wordNumber = getWordNumber(this.saveableState.date);
+        this.saveableState.numDuplicateWordsEarned  = 0;
+        this.saveableState.numNonWordsEarned  = 0;
         this.targetString = WORDS[this.saveableState.wordNumber];
         doFetch('start', { date: this.saveableState.date });
         // console.log(`Secret string is ${this.targetString}`);
@@ -139,6 +158,7 @@ Model.prototype = {
         this.scoresByLetter = {};
         this.targetString = '';
         this.isInvalidWord = false;
+        this.chargeInvalidWord = 0; // 1: charge dup, 2: charge non-word
         this.allDone = false;
     },
 
@@ -148,10 +168,29 @@ Model.prototype = {
             return;
         }
 
-        if (this.isInvalidWord) {
+        if (this.chargeInvalidWord === CHARGE_DUPLICATE && this.saveableState.numDuplicateWordsEarned > 0) {
+            doFetch('chargeDuplicateHint', {
+                date: this.saveableState.date,
+                count: this.guessCount,
+                savings: this.saveableState.numDuplicateWordsEarned
+            });
+            this.saveableState.numDuplicateWordsEarned -= 1;
+            this.chargeInvalidWord = CHARGE_NONE
+            this.view.clearInvalidWordPrompt('dupWordHint');
+            this.view.updateHintCounts({numDuplicateWordsEarned: this.saveableState.numDuplicateWordsEarned});
+        } else if (this.chargeInvalidWord === CHARGE_NON_WORD && this.saveableState.numNonWordsEarned > 0) {
+            doFetch('chargeNonWordHint', {
+                date: this.saveableState.date,
+                count: this.guessCount,
+                savings: this.saveableState.numNonWordsEarned
+            });
+            this.saveableState.numNonWordsEarned -= 1;
+            this.chargeInvalidWord = CHARGE_NONE;
+            this.view.clearInvalidWordPrompt('nonWordHint');
+            this.view.updateHintCounts({numNonWordsEarned: this.saveableState.numNonWordsEarned});
+        } else if (this.isInvalidWord) {
             return;
-        }
-        if (!WORDS.includes(guessString) && !OTHERWORDS.includes(guessString)) {
+        } else if (!WORDS.includes(guessString) && !OTHERWORDS.includes(guessString)) {
             // We shouldn't get here now
             this.isInvalidWord = true;
             this.view.changeInvalidWordState(this.guessCount, true);
@@ -208,6 +247,18 @@ Model.prototype = {
                 this.saveableState.numBoardRows += 1;
             }
             doFetch('guess', { date: this.saveableState.date, count: this.guessCount });
+            const intervalUpdates = {};
+            if (this.guessCount % DUPLICATE_WORD_INTERVAL === 0) {
+                this.saveableState.numDuplicateWordsEarned += 1;
+                intervalUpdates.numDuplicateWordsEarned = this.saveableState.numDuplicateWordsEarned;
+            }
+            if (this.guessCount % NON_WORD_INTERVAL === 0) {
+                this.saveableState.numNonWordsEarned += 1;
+                intervalUpdates.numNonWordsEarned = this.saveableState.numNonWordsEarned;
+            }
+            if (Object.keys(intervalUpdates).length > 0) {
+                this.view.updateHintCounts(intervalUpdates);
+            }
         }
         this.currentGuess = [];
         this.nextLetterPosition = 0;
@@ -229,9 +280,14 @@ Model.prototype = {
         this.view.deleteLetter(this.guessCount, this.nextLetterPosition - 1);
         this.currentGuess.pop();
         this.nextLetterPosition -= 1;
-        if (this.nextLetterPosition === 4 && this.isInvalidWord) {
-            this.isInvalidWord = false;
-            this.view.changeInvalidWordState(this.guessCount, false);
+        if (this.nextLetterPosition === 4) {
+            if (this.isInvalidWord) {
+                this.isInvalidWord = false;
+                this.view.changeInvalidWordState(this.guessCount, false);
+            } else if (this.chargeInvalidWord !== CHARGE_NONE) {
+                this.view.clearInvalidWordPrompt();
+                this.chargeInvalidWord = CHARGE_NONE;
+            }
         }
     },
 
@@ -244,12 +300,21 @@ Model.prototype = {
         if (this.nextLetterPosition === 5) {
             const guessString = this.currentGuess.join('');
             if (!WORDS.includes(guessString) && !OTHERWORDS.includes(guessString)) {
-                this.isInvalidWord = true;
-                this.view.changeInvalidWordState(this.guessCount, true, '');
+                if (this.prefs.hints && this.saveableState.numNonWordsEarned > 0) {
+                    this.chargeInvalidWord = CHARGE_NON_WORD;
+                    this.view.showInvalidWordPrompt("nonWordHint");
+                } else {
+                    this.isInvalidWord = true;
+                    this.view.changeInvalidWordState(this.guessCount, true, '');
+                }
             } else if (this.saveableState.guessWords.includes(guessString)) {
-                // Have more to do
-                this.isInvalidWord = true;
-                this.view.changeInvalidWordState(this.guessCount, true, guessString);
+                if (this.prefs.hints && this.saveableState.numDuplicateWordsEarned > 0) {
+                    this.chargeInvalidWord = CHARGE_DUPLICATE;
+                    this.view.showInvalidWordPrompt("dupWordHint");
+                } else {
+                    this.isInvalidWord = true;
+                    this.view.changeInvalidWordState(this.guessCount, true, guessString);
+                }
             }
         }
     },
@@ -279,7 +344,12 @@ Model.prototype = {
             scoreLines.join('\n'),
             '',
             'lirdle.com - the lying word game'].join('\n');
-    }
+    },
+    updateHintStatus(value) {
+        this.prefs.hints = value;
+        this.savePrefs();
+        doFetch('toggleHintStatus', { date: this.saveableState.date, checked: value });
+    },
 };
 
 function doFetch(endpoint, options) {

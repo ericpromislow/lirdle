@@ -167,13 +167,13 @@ nothing {
   font-color: var(--blue);
 }
 
-#dupWord {
+.wordProblemPrompt {
   display: inline;
 }
-#dupWord.hidden {
+.wordProblemPrompt.hidden {
   visibility: collapse;
 }
-#dupWord.show {
+.wordProblemPrompt.show {
   visibility: visible;
 }
 
@@ -194,6 +194,11 @@ div#whats-new {
 
 div#themeSwitcher {
   margin-top: 4px;
+}
+
+div#hintsBlock {
+  margin-top: 4px;
+  max-width: 20em;
 }
 
 div#statistics {

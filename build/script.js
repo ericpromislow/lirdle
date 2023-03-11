@@ -59,7 +59,7 @@ function initialize() {
         view.showStats();
     }
     // Always set up the stats buttons
-    const statsDiv = document.querySelector('div#statistics')
+    const statsDiv = document.querySelector('div#statistics');
     if (statsDiv) {
         const closeButton = statsDiv.querySelector('div#closeRow button#closeStats');
         closeButton.addEventListener('click', () => {
@@ -76,6 +76,15 @@ function initialize() {
                     console.log(`Trying to share failed: ${err}`);
                 }
             }
+        });
+    }
+    const hintsButton = document.querySelector('div#hintsBlock input#toggle-hints');
+    if (hintsButton) {
+        hintsButton.addEventListener('click', (e) => {
+            const button = e.target;
+            const checked = button.checked;
+            button.labels[0].textContent = `Hints are ${ checked ? 'on' : 'off'}`;
+            model.updateHintStatus(checked);
         });
     }
 

@@ -203,6 +203,24 @@ View.prototype = {
         }
     },
 
+    showInvalidWordPrompt(promptID) {
+        const elt = document.getElementById(promptID);
+        if (elt) {
+            elt.classList.remove('hidden')
+            elt.classList.add('show');
+        }
+    },
+
+    clearInvalidWordPrompt(promptID="") {
+        const elts = promptID ? [document.getElementById(promptID)] : Array.from(document.querySelectorAll('div.wordProblemPrompt.show'));
+        for (const elt of elts) {
+            if (elt) {
+                elt.classList.remove('show')
+                elt.classList.add('hidden');
+            }
+        }
+    },
+
     markCurrentWordInvalid(rowNum) {
         const row = this.board.children[rowNum];
         for (let i = 0; i < 5; i++) {
@@ -450,5 +468,16 @@ View.prototype = {
         document.getElementsByTagName("head")[0].insertAdjacentHTML(
             "beforeend",
             `<link rel="stylesheet" class="theme" href="${ theme }.css" />`);
+    },
+    updateHintCounts(values) {
+        const hintsBlock = document.querySelector('div#hintsBlock');
+        if (hintsBlock) {
+            for (const k in values) {
+                const span = hintsBlock.querySelector(`span#${k}`);
+                if (span) {
+                    span.textContent = values[k].toString();
+                }
+            }
+        }
     }
 }
