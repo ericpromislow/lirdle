@@ -192,7 +192,8 @@ Model.prototype = {
             doFetch('chargeNonWordHint', {
                 date: this.saveableState.date,
                 count: this.guessCount,
-                savings: this.saveableState.numNonWordsEarned
+                savings: this.saveableState.numNonWordsEarned,
+                word: guessString,
             });
             this.saveableState.numNonWordsEarned -= 1;
             this.chargeInvalidWord = CHARGE_NONE;
