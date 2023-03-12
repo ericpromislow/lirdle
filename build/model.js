@@ -55,9 +55,15 @@ Model.prototype = {
     loadLocalStorage() {
         try {
             this.prefs = JSON.parse(localStorage.getItem('prefs'));
-            const hints = document.getElementById('toggle-hints');
-            if (hints) {
-                hints.labels[0].textContent = `Hints are ${ this.prefs.hints ? 'on' : 'off'}`;
+            if (this.prefs) {
+                if (!('hints' in this.prefs)) {
+                    this.prefs.hints = false; // they're opt-in
+                }
+                const hints = document.getElementById('toggle-hints');
+                if (hints) {
+                    hints.labels[0].textContent = `Hints are ${this.prefs.hints ? 'on' : 'off'}`;
+                    hints.checked = this.prefs.hints;
+                }
             }
         } catch {
             this.prefs = null;
@@ -105,6 +111,10 @@ Model.prototype = {
             }
         } else {
             doFetch('continue', { date: savedState.date, count: savedState.guessWords.length });
+            this.view.updateHintCounts({
+                numDuplicateWordsEarned: this.saveableState.numDuplicateWordsEarned,
+                numNonWordsEarned: this.saveableState.numNonWordsEarned,
+            });
         }
         this.guessCount = this.saveableState.guessWords.length;
     },
