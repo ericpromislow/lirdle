@@ -11921,6 +11921,7 @@ export const OTHERWORDS = [
   'tubed',
   'tubes',
   'tucks',
+  'tudor',
   'tufas',
   'tuffe',
   'tuffs',

@@ -103,7 +103,7 @@ function initialize() {
         }
     });
 
-
+    view.showTestimonial();
     view.doBlurbs();
 }
 window.addEventListener('load', () => {

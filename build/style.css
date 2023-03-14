@@ -204,6 +204,12 @@ div#themeSwitcher {
   margin-top: 4px;
 }
 
+li.tofw.hidden {
+  display: none;
+}
+lif.tofw.show {
+  display: block;
+}
 div#hintsBlock {
   margin-top: 4px;
   max-width: 20em;
