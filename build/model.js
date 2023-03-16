@@ -30,6 +30,7 @@ export default function Model(view) {
         wordNumber: -1,
         numDuplicateWordsEarned: 0,
         numNonWordsEarned: 0,
+        markers: [],
     };
     this.initState();
 
@@ -98,7 +99,7 @@ Model.prototype = {
         if (this.saveableState.numBoardRows < this.saveableState.guessWords.length) {
             this.saveableState.numBoardRows = this.saveableState.guessWords.length;
         }
-        this.view.populateBoardFromSaveableState(this.saveableState.numBoardRows, this.saveableState.guessWords, this.saveableState.scores);
+        this.view.populateBoardFromSaveableState(this.saveableState.numBoardRows, this.saveableState.guessWords, this.saveableState.scores, this.saveableState.markers);
         if (this.saveableState.finished) {
             if (devMode()) {
                 this.view.clearBoard();
@@ -120,6 +121,30 @@ Model.prototype = {
     },
 
     updateSaveableState() {
+        try {
+            const rows = this.view.board.querySelectorAll('div.letter-row');
+            const numRows = rows.length;
+            const markers = [];
+            for (let i = 0; i < numRows; i++) {
+                markers.push([]);
+                const theseMarkers = markers[i];
+                const currentRow = rows.item(i);
+                const boxes = currentRow.querySelectorAll('div.letter-box');
+                for (let j = 0; j < boxes.length; j++) {
+                    const boxClassList = boxes.item(j).classList;
+                    if (boxClassList.contains("show-lie")) {
+                        theseMarkers.push("show-lie");
+                    } else if (boxClassList.contains("show-perceived-truth")) {
+                        theseMarkers.push("show-perceived-truth");
+                    } else {
+                        theseMarkers.push('');
+                    }
+                }
+            }
+            this.saveableState.markers = markers;
+        } catch(e) {
+            console.error(e);
+        }
         try {
             localStorage.setItem('saveableState', JSON.stringify(this.saveableState));
         } catch (ex) {

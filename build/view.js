@@ -33,14 +33,28 @@ View.prototype = {
         this.showYesterdaysWord();
         this.initializeTheme(this.model.prefs.theme);
     },
-    populateBoardFromSaveableState(numNeededRows, guessWords, scores) {
+    populateBoardFromSaveableState(numNeededRows, guessWords, scores, markers) {
         this.initBoard(numNeededRows);
+        const rows = this.board.querySelectorAll('div.letter-row');
         for (let i = 0; i < guessWords.length; i++) {
             for (let j = 0; j < guessWords[i].length; j++) {
                 this.model.addColorHit(guessWords[i][j], scores[i][j]);
                 this.insertLetter(guessWords[i][j], i, j);
             }
             this.enterScoredGuess(guessWords[i], scores[i], i, false, true);
+            try {
+                if (markers && markers[i] && markers[i].some(x => x != '')) {
+                    const row = rows[i];
+                    const boxes = Array.from(row.querySelectorAll('div.letter-box'));
+                    for (let j = 0; j < boxes.length; j++) {
+                        if (markers[i][j]) {
+                            boxes[j].classList.add(markers[i][j]);
+                        }
+                    }
+                }
+            } catch(e) {
+                console.error(e);
+            }
         }
     },
 
@@ -66,6 +80,7 @@ View.prototype = {
             target.classList.add('show-lie');
         }
         e.preventDefault();
+        this.model.updateSaveableState();
     },
 
     appendBoardRow() {
@@ -441,7 +456,7 @@ View.prototype = {
                 }
             })
             .then((txt) => {
-                if (txt.length === 0) {
+                if (!txt || txt.length === 0) {
                     this.showOnOff(liNoTOTW, liTOTW);
                 } else {
                     liTOTW.querySelector('span#tofw-body').innerHTML = this.sanitize(txt);
