@@ -55,6 +55,14 @@ function initialize() {
             e.stopPropagation();
             e.preventDefault();
         });
+        const clearMarkersButton = document.getElementById("clear-markers");
+        if (clearMarkersButton) {
+            clearMarkersButton.addEventListener("click", (event) => {
+                model.clearMarkers(event);
+            });
+            clearMarkersButton.disabled = true;
+        }
+        model.clearMarkersButton = clearMarkersButton;
     } else {
         view.showStats();
     }

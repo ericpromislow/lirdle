@@ -56,6 +56,12 @@ View.prototype = {
                 console.error(e);
             }
         }
+        if (this.board.querySelector('div.letter-row div.letter-box.show-lie') ||
+            this.board.querySelector('div.letter-row div.letter-box.show-perceived-truth')) {
+            setTimeout(() => {
+                document.getElementById("clear-markers").disabled = false;
+            }, 0);
+        }
     },
 
     handleLetterBoxClick(e) {

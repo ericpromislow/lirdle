@@ -120,11 +120,30 @@ Model.prototype = {
         this.guessCount = this.saveableState.guessWords.length;
     },
 
+    clearMarkers(event) {
+        try {
+            let madeChange = false;
+            for (const cls of ["show-lie", "show-perceived-truth"]) {
+                for (const elt of Array.from(this.view.board.querySelectorAll(`div.letter-row div.letter-box.${ cls }`))) {
+                    elt.classList.remove(cls);
+                    madeChange = true;
+                }
+            }
+            if (madeChange) {
+                this.updateSaveableState();
+                event.target.disabled = true;
+            }
+        } catch(e) {
+            console.log(`Error clearing markers: ${ e }`)
+        }
+    },
+
     updateSaveableState() {
         try {
             const rows = this.view.board.querySelectorAll('div.letter-row');
             const numRows = rows.length;
             const markers = [];
+            let sawAMarker = false;
             for (let i = 0; i < numRows; i++) {
                 markers.push([]);
                 const theseMarkers = markers[i];
@@ -134,14 +153,17 @@ Model.prototype = {
                     const boxClassList = boxes.item(j).classList;
                     if (boxClassList.contains("show-lie")) {
                         theseMarkers.push("show-lie");
+                        sawAMarker = true;
                     } else if (boxClassList.contains("show-perceived-truth")) {
                         theseMarkers.push("show-perceived-truth");
+                        sawAMarker = true;
                     } else {
                         theseMarkers.push('');
                     }
                 }
             }
             this.saveableState.markers = markers;
+            this.clearMarkersButton.disabled = !sawAMarker;
         } catch(e) {
             console.error(e);
         }
