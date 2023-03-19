@@ -4,7 +4,7 @@
   "description": "Wordle with one lie per response",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,10 @@
   "homepage": "https://github.com/ericpromislow/lirdle#readme",
   "dependencies": {
     "live-server": "^1.2.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.20.2",
+    "babel-jest": "^29.5.0",
+    "jest": "^29.5.0"
   }
 }

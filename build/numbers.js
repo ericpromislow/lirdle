@@ -1,6 +1,7 @@
 // Copyright (C) 2023 Bovination Productions, MIT License
 
 import { WORDS } from "./words.js";
+import * as perturb from './perturb.js';
 
 export function getDateNumber() {
     const d = new Date();
@@ -43,10 +44,10 @@ export function devMode() {
 }
 
 // Modifies both arguments
-export function perturb(scores, changes) {
-    const i = Math.floor(Math.random() * scores.length);
+export function lie(guessWord, scores, changes) {
+    const [i, direction] = perturb.perturb(guessWord, scores, []);
     const oldVal = scores[i] + 3;
-    scores[i] = (Math.random() < 0.5 ? oldVal - 1 : oldVal + 1) % 3;
+    scores[i] = (oldVal + direction) % 3;
     changes.push([i, oldVal - 3, scores[i]]);
 }
 
