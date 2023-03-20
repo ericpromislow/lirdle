@@ -1,7 +1,7 @@
 // Copyright (C) 2023 Bovination Productions, MIT License
 
 import { WORDS, OTHERWORDS } from "./words.js";
-import { devMode, getDateNumber, getWordNumber, perturb } from "./numbers.js";
+import { devMode, getDateNumber, getWordNumber, lie } from "./numbers.js";
 import beep from "./beep.js";
 import Stats from "./stats.js";
 
@@ -217,6 +217,7 @@ Model.prototype = {
         this.isInvalidWord = false;
         this.chargeInvalidWord = 0; // 1: charge dup, 2: charge non-word
         this.allDone = false;
+        this.lettersByPosition = ["", "", "", "", ""]; // only green right now
     },
 
     checkGuess() {
@@ -285,10 +286,11 @@ Model.prototype = {
             this.saveStats();
         } else {
             newScores = [].concat(scores);
-            perturb(newScores, this.saveableState.changes);
+            lie(guessString, newScores, this.lettersByPosition, this.saveableState.changes);
         }
         for (let i = 0; i < 5; i++) {
             this.addColorHit(this.currentGuess[i], newScores[i]);
+            this.addLetterPosition(i, guessString[i], newScores[i]);
         }
         this.saveableState.scores.push(newScores);
         this.view.enterScoredGuess(guessString, newScores, this.guessCount, guessedIt, false);
@@ -328,6 +330,14 @@ Model.prototype = {
             this.scoresByLetter[letter] = [0, 0, 0];
         }
         this.scoresByLetter[letter][score] += 1;
+    },
+
+    addLetterPosition(j, letter, score) {
+        if (score === 2) {
+            if (!this.lettersByPosition[j].includes(letter)) {
+                this.lettersByPosition[j] += letter;
+            }
+        }
     },
 
     deleteLetter() {

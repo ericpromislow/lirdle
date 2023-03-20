@@ -39,6 +39,7 @@ View.prototype = {
         for (let i = 0; i < guessWords.length; i++) {
             for (let j = 0; j < guessWords[i].length; j++) {
                 this.model.addColorHit(guessWords[i][j], scores[i][j]);
+                this.model.addLetterPosition(j, guessWords[i][j], scores[i][j]);
                 this.insertLetter(guessWords[i][j], i, j);
             }
             this.enterScoredGuess(guessWords[i], scores[i], i, false, true);

@@ -2,7 +2,7 @@
  * returns a good answer, tries not to give away too much too often
  * @param guessWord
  * @param scores
- * @param greenLettersByPosition
+ * @param greenLettersByPosition - array of strings
  * @return [position, direction (-1 or +1)
  */
 
@@ -48,7 +48,8 @@ export function scoreContradiction(guessWord, scores, greenLettersByPosition, di
     }
     switch(currentGreensAtPosn.length) {
         case 1:
-            return 5;
+            // Weight this too high and it makes it likelier the second green is truthful
+            return 3;
         case 2:
             return 7;
         default:

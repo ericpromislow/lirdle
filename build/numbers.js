@@ -44,8 +44,8 @@ export function devMode() {
 }
 
 // Modifies both arguments
-export function lie(guessWord, scores, changes) {
-    const [i, direction] = perturb.perturb(guessWord, scores, []);
+export function lie(guessWord, scores, lettersByPosition, changes) {
+    const [i, direction] = perturb.perturb(guessWord, scores, lettersByPosition);
     const oldVal = scores[i] + 3;
     scores[i] = (oldVal + direction) % 3;
     changes.push([i, oldVal - 3, scores[i]]);

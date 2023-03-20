@@ -103,6 +103,7 @@ describe('perturbation tests', () => {
             const greenLettersByPosition = ['mno'];
             let numGreenGs = 0;
             let numBlackGs = 0;
+            const t1 = new Date().valueOf();
             for (let i = 0; i < 10000; i++) {
                 const [posn, direction] = perturb.perturb(guessWord, scores, greenLettersByPosition);
                 if (posn === 0) {
@@ -113,7 +114,9 @@ describe('perturbation tests', () => {
                     }
                 }
             }
-            console.log(`numGreenGs: ${ numGreenGs }, numBlackGs: ${ numBlackGs }`)
+            const t2 = new Date().valueOf();
+            console.log(`delta: ${ (t2 - t1)  } msec; numGreenGs: ${ numGreenGs }, numBlackGs: ${ numBlackGs }`)
+            // console.log(`delta: ${ 1000 * (t2 - t1) / 10000  } microsec/op`)
             expect(numGreenGs).toBeGreaterThan(0);
             expect(numGreenGs).toBeLessThan(20);
             expect(numBlackGs).toBeGreaterThan(666);
