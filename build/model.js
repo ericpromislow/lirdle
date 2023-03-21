@@ -217,7 +217,11 @@ Model.prototype = {
         this.isInvalidWord = false;
         this.chargeInvalidWord = 0; // 1: charge dup, 2: charge non-word
         this.allDone = false;
-        this.lettersByPosition = ["", "", "", "", ""]; // only green right now
+        this.lettersByPosition = {
+            black: {}, yellow: {},  // hash of letter to # occurrences (don't deal with duplicates)
+            green: ["", "", "", "", ""],
+            assignments: {}, // hash of a word to an array of directives
+            };
     },
 
     checkGuess() {
@@ -333,10 +337,17 @@ Model.prototype = {
     },
 
     addLetterPosition(j, letter, score) {
-        if (score === 2) {
-            if (!this.lettersByPosition[j].includes(letter)) {
-                this.lettersByPosition[j] += letter;
-            }
+        switch(score) {
+            case 0:
+                this.lettersByPosition.black[letter] = null;
+                break;
+            case 1:
+                this.lettersByPosition.yellow[letter] = null;
+                break;
+            case 2:
+                if (!this.lettersByPosition.green[j].includes(letter)) {
+                    this.lettersByPosition.green[j] += letter;
+                }
         }
     },
 

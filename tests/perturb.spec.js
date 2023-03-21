@@ -6,44 +6,44 @@ describe('perturbation tests', () => {
             const guessWord = 'ghijk';
             const scores = [1, 0, 0, 0, 0];
             test('finds no contradiction when no greens have been found', () => {
-                const greenLettersByPosition = [];
+                const lettersByPosition = {};
                 const directive = [0, 1];
-                expect(perturb.scoreContradiction(guessWord, scores, greenLettersByPosition, directive)).toBe(0);
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(0);
             });
             test('finds no contradictions with other greens', () => {
-                const greenLettersByPosition = ['', 'n', 'm', 'p', 'pq'];
+                const lettersByPosition = { green: ['', 'n', 'm', 'p', 'pq']};
                 const directive = [0, 1];
-                expect(perturb.scoreContradiction(guessWord, scores, greenLettersByPosition, directive)).toBe(0);
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(0);
             });
             test("doesn't care about black scores right now", () => {
-                const greenLettersByPosition = ['ghi', 'm', 'n', 'p', 'pq'];
+                const lettersByPosition = { green: ['ghi', 'm', 'n', 'p', 'pq'] };
                 const directive = [0, -1];
-                expect(perturb.scoreContradiction(guessWord, scores, greenLettersByPosition, directive)).toBe(0);
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(0);
             });
             test("doesn't care about yellow scores right now", () => {
-                const greenLettersByPosition =  ['ghi', 'm', 'n', 'p', 'pq'];
+                const lettersByPosition = { green: ['ghi', 'm', 'n', 'p', 'pq'] };
                 const directive = [1, 1];
-                expect(perturb.scoreContradiction(guessWord, scores, greenLettersByPosition, directive)).toBe(0);
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(0);
             });
             test('finds a level-1 contradiction', () => {
-                const greenLettersByPosition = ['m'];
+                const lettersByPosition = { green: ['m'] };
                 const directive = [0, 1];
-                expect(perturb.scoreContradiction(guessWord, scores, greenLettersByPosition, directive)).toBe(5);
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(3);
             });
             test('finds a level-1 contradiction', () => {
-                const greenLettersByPosition = ['mn'];
+                const lettersByPosition = { green: ['mn'] };
                 const directive = [0, 1];
-                expect(perturb.scoreContradiction(guessWord, scores, greenLettersByPosition, directive)).toBe(7);
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(7);
             });
             test('finds a level-2 contradiction', () => {
-                const greenLettersByPosition = ['mno'];
+                const lettersByPosition = { green: ['mno'] };
                 const directive = [0, 1];
-                expect(perturb.scoreContradiction(guessWord, scores, greenLettersByPosition, directive)).toBe(9);
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(9);
             });
             test('and there are no higher-level contradictions', () => {
-                const greenLettersByPosition = ['mnop'];
+                const lettersByPosition = { green: ['mnop'] };
                 const directive = [0, 1];
-                expect(perturb.scoreContradiction(guessWord, scores, greenLettersByPosition, directive)).toBe(9);
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(9);
             });
         });
     });
@@ -54,11 +54,11 @@ describe('perturbation tests', () => {
             // 9 out of 10 times the first hit is ok
             // for the one contradiction, we have 10 * 9 hits, and 5 for the contradiction.
             // So we'll see a green in posn 1 about 5/950 ~= 1 out of 200 times
-            const greenLettersByPosition = ['m'];
+            const lettersByPosition = { green: ['m'] };
             let numGreenGs = 0;
             let numBlackGs = 0;
             for (let i = 0; i < 1000; i++) {
-                const [posn, direction] = perturb.perturb(guessWord, scores, greenLettersByPosition);
+                const [posn, direction] = perturb.perturb(guessWord, scores, lettersByPosition);
                 if (posn === 0) {
                     if (direction === 1) {
                         numGreenGs += 1;
@@ -77,11 +77,11 @@ describe('perturbation tests', () => {
             // 9 out of 10 times the first hit is ok
             // for the one contradiction, we have 10 * 9 hits, and 5 for the contradiction.
             // So we'll see a green in posn 1 about 5/950 ~= 1 out of 200 times
-            const greenLettersByPosition = ['mn'];
+            const lettersByPosition = { green: ['mn'] };
             let numGreenGs = 0;
             let numBlackGs = 0;
             for (let i = 0; i < 1000; i++) {
-                const [posn, direction] = perturb.perturb(guessWord, scores, greenLettersByPosition);
+                const [posn, direction] = perturb.perturb(guessWord, scores, lettersByPosition);
                 if (posn === 0) {
                     if (direction === 1) {
                         numGreenGs += 1;
@@ -100,12 +100,12 @@ describe('perturbation tests', () => {
             // 9 out of 10 times the first hit is ok
             // for the one contradiction, we have 10 * 9 hits, and 5 for the contradiction.
             // So we'll see a green in posn 1 about 1/950 ~= 1 out of 1000 times
-            const greenLettersByPosition = ['mno'];
+            const lettersByPosition = { green: ['mno'] };
             let numGreenGs = 0;
             let numBlackGs = 0;
             const t1 = new Date().valueOf();
             for (let i = 0; i < 10000; i++) {
-                const [posn, direction] = perturb.perturb(guessWord, scores, greenLettersByPosition);
+                const [posn, direction] = perturb.perturb(guessWord, scores, lettersByPosition);
                 if (posn === 0) {
                     if (direction === 1) {
                         numGreenGs += 1;
@@ -121,6 +121,56 @@ describe('perturbation tests', () => {
             expect(numGreenGs).toBeLessThan(20);
             expect(numBlackGs).toBeGreaterThan(666);
             expect(numBlackGs).toBeLessThan(1333);
+        });
+    });
+    describe('duplicate words', () => {
+        test('favors greens over duplicate assignments', () => {
+            const guessWord = 'abcde';
+            const scores = [1, 0, 0, 0, 0]
+            const lettersByPosition = {
+                green: ['a'],
+                assignments: {abcde: [[0, -1], [1, -1], [1, 1], [2, -1], [2, 1], [3, -1], [3, 1], [4, -1], [4, 1]]},
+            };
+            // The only assignment for 'abcde' we haven't seen yet is [0, +1], but we should still pick 7 of them
+            // and 1 of the other 9, so odds of picking it are 7/(7 + 9) => 7/16
+            let greenAt0 = 0;
+            let otherDirective = 0;
+            const lim = 1000;
+            for (let i = 0; i < lim; i++) {
+                const [posn, direction] = perturb.perturb(guessWord, scores, lettersByPosition);
+                // console.log(`Run ${i}: posn:${posn}, direction:${ direction }`);
+                if (posn === 0 && direction === 1) {
+                    greenAt0 += 1;
+                } else {
+                    otherDirective += 1;
+                }
+            }
+            // console.log(`greenAt0: ${ greenAt0 }, numBlackGs: ${ otherDirective }`)
+            // picking 7 green "a"s and 9 others
+            expect(greenAt0).toBeGreaterThan((5.0 * lim) / 16);
+            expect(greenAt0).toBeLessThan((9.0 * lim) / 16);
+        });
+        test("ignores duplicate words when they're all in use", () => {
+            const guessWord = 'abcde';
+            const scores = [1, 0, 0, 0, 0]
+            const lettersByPosition = {
+                green: ['x'],
+                assignments: {abcde: [[0, -1], [0, 1], [1, -1], [1, 1], [2, -1], [2, 1], [3, -1], [3, 1], [4, -1], [4, 1]]},
+            };
+            let greenAt0 = 0;
+            let otherDirective = 0;
+            for (let i = 0; i < 1000; i++) {
+                const [posn, direction] = perturb.perturb(guessWord, scores, lettersByPosition);
+                // console.log(`Run ${i}: posn:${posn}, direction:${ direction }`);
+                if (posn === 0 && direction === 1) {
+                    greenAt0 += 1;
+                } else {
+                    otherDirective += 1;
+                }
+            }
+            // console.log(`greenAt0: ${ greenAt0 }, numBlackGs: ${ otherDirective }`)
+            expect(greenAt0).toBeGreaterThan(66);
+            expect(greenAt0).toBeLessThan(134);
         });
     });
 });

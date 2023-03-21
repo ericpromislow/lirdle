@@ -49,6 +49,9 @@ export function lie(guessWord, scores, lettersByPosition, changes) {
     const oldVal = scores[i] + 3;
     scores[i] = (oldVal + direction) % 3;
     changes.push([i, oldVal - 3, scores[i]]);
+
+    lettersByPosition.assignments[guessWord] ??= [];
+    lettersByPosition.assignments[guessWord].push([i, direction]);
 }
 
 export const POSITIONS = [2253, 191, 608, 45, 1461, 706, 264, 2012, 1404, 1244,
