@@ -50,7 +50,9 @@ export function lie(guessWord, scores, lettersByPosition, changes) {
     scores[i] = (oldVal + direction) % 3;
     changes.push([i, oldVal - 3, scores[i]]);
 
-    lettersByPosition.assignments[guessWord] ??= [];
+    if (!(guessWord in lettersByPosition.assignments)) {
+        lettersByPosition.assignments[guessWord] = [];
+    }
     lettersByPosition.assignments[guessWord].push([i, direction]);
 }
 
