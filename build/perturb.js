@@ -21,7 +21,10 @@ export function perturb(guessWord, scores, lettersByPosition) {
         directives.push([i, +1]);
     }
     for (let i = 0; i < directives.length; i++) {
-        const score = scoreContradiction(guessWord, scores, lettersByPosition, directives[i]);
+        let score = scoreContradiction(guessWord, scores, lettersByPosition, directives[i]);
+        if (score < 0) {
+            score = 0;
+        }
         let numIters = 10 - score;
         for (let j = 0; j < numIters; j++) {
             indices.push(i);
@@ -41,11 +44,14 @@ export function perturb(guessWord, scores, lettersByPosition) {
 export function scoreContradiction(guessWord, scores, lettersByPosition, directive) {
     const greenLettersByPosition = lettersByPosition.green; // array of strings
     const directivesByWord = lettersByPosition.assignments; // hash of string => array of directives
-    if (!greenLettersByPosition && !directivesByWord) {
+    const blackPositions = lettersByPosition.black || {};
+    const yellowPositions = lettersByPosition.yellow || {};
+    if (!greenLettersByPosition && !directivesByWord && !blackPositions && !yellowPositions)  {
+	    // console.log(`QQQ: no directives, no green letters`);
         return 0;
     }
     const directives = directivesByWord && directivesByWord[guessWord];
-    //console.log(`QQQ: can we find ${ directive } in ${ directives }?`)
+    // console.log(`QQQ: can we find ${ directive } in ${ directives }?`)
     if (directives && directives.find(dir => dir[0] === directive[0] && dir[1] === directive[1])) {
         // console.log(`QQQ: found directive [${ directive }], don't want it`);
         return 9;
@@ -53,17 +59,27 @@ export function scoreContradiction(guessWord, scores, lettersByPosition, directi
     const [posn, direction] = directive;
     const oldVal = scores[posn] + 3;
     const newVal = (oldVal + direction) % 3;
+    const c = guessWord[posn];
     if (newVal !== 2) {
+        const [otherPositions, samePositions] = newVal === 0 ? [yellowPositions, blackPositions] : [blackPositions, yellowPositions];
+        const delta = (otherPositions[c] || 0) - (samePositions[c] || 0);
+        if (delta > 0) {
+            return delta >= 9 ? 9 : delta;
+        }
         // console.log(`QQQ: got newVal = ${ newVal }, contradiction score 0`)
         return 0;
     }
-    const c = guessWord[posn];
+    if (!greenLettersByPosition) {
+        return 0;
+    }
     // console.log(`QQQ: posn ${ posn }, newVal 2, char ${ c }`);
     // console.log(`QQQ: lettersByPosition.green: ${ lettersByPosition.green }`);
     const currentGreensAtPosn = lettersByPosition.green[posn];
     // console.log(`QQQ: currentGreensAtPosn: ${ currentGreensAtPosn }`);
-    // console.log(`QQQ: currentGreensAtPosn.includes(c): ${ currentGreensAtPosn.includes(c) }`);
-    if (!currentGreensAtPosn|| !currentGreensAtPosn.includes(c)) {
+    // if (currentGreensAtPosn) {
+    //     console.log(`QQQ: currentGreensAtPosn.includes(c): ${currentGreensAtPosn.includes(c)}`);
+    // }
+    if (!currentGreensAtPosn || currentGreensAtPosn.includes(c)) {
         // console.log(`QQQ: no green here, contradiction score 0`)
         return 0;
     }

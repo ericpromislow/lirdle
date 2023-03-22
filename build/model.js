@@ -339,10 +339,16 @@ Model.prototype = {
     addLetterPosition(j, letter, score) {
         switch(score) {
             case 0:
-                this.lettersByPosition.black[letter] = null;
+                if (!(letter in this.lettersByPosition.black)) {
+                    this.lettersByPosition.black[letter] = 0;
+                }
+                this.lettersByPosition.black[letter] += 1;
                 break;
             case 1:
-                this.lettersByPosition.yellow[letter] = null;
+                if (!(letter in this.lettersByPosition.yellow)) {
+                    this.lettersByPosition.yellow[letter] = 0;
+                }
+                this.lettersByPosition.yellow[letter] += 1;
                 break;
             case 2:
                 if (!this.lettersByPosition.green[j].includes(letter)) {

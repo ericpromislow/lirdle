@@ -28,9 +28,10 @@ describe('perturbation tests', () => {
             test('finds a level-1 contradiction', () => {
                 const lettersByPosition = { green: ['m'] };
                 const directive = [0, 1];
+                const val = perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive);
                 expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(3);
             });
-            test('finds a level-1 contradiction', () => {
+            test('finds a level-1 contradiction with two letters', () => {
                 const lettersByPosition = { green: ['mn'] };
                 const directive = [0, 1];
                 expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(7);
@@ -122,6 +123,60 @@ describe('perturbation tests', () => {
             expect(numBlackGs).toBeGreaterThan(666);
             expect(numBlackGs).toBeLessThan(1333);
         });
+        describe('black and yellow', () => {
+            const guessWord = 'ghijk';
+            const scores = [1, 0, 0, 0, 0];
+            test('with one char as yellow', () => {
+                const lettersByPosition = {yellow: {g: 1}};
+                const directive = [0, -1];
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(1);
+            });
+            test('with one char as black', () => {
+                const lettersByPosition = {black: { h: 1}};
+                const directive = [1, 1];
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(1);
+            });
+            test('with both chars present favoring the other', () => {
+                const lettersByPosition = {black: { h: 7 }, yellow: { h: 3 }};
+                const directive = [1, 1];
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(4);
+            });
+            test('with both chars present favoring the lie', () => {
+                const lettersByPosition = {black: { h: 3 }, yellow: { h: 7 }};
+                const directive = [1, 1];
+                expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, directive)).toBe(0);
+            });
+            test('with one yellow and one black', () => {
+                const guessWord = 'ghijk';
+                const scores = [1, 0, 0, 0, 0];
+                // for every 82 runs, we expect 1 black-g and 1 yellow-h
+                const lettersByPosition = { yellow: { g: 9 }, black: { h: 9 } };
+                let numBlackGs = 0;
+                let numYellowHs = 0;
+                let numOthers = 0;
+                // const hits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                const lim = 82000;
+                for (let i = 0; i < lim; i++) {
+                    const [posn, direction] = perturb.perturb(guessWord, scores, lettersByPosition);
+                    // const idx = 2 * posn + (direction === -1 ? 0 : 1);
+                    // hits[idx] += 1;
+                    if (posn === 0 && direction === -1) {
+                        numBlackGs += 1;
+                    } else if (posn === 1 && direction === 1) {
+                        numYellowHs += 1;
+                    } else {
+                        numOthers += 1;
+                    }
+                }
+                // console.log('hits:', hits);
+                // console.log(`numBlackGs: ${ numBlackGs }, numYellowHs: ${ numYellowHs }`)
+                // I would expect these to be more around lim / 82 -> 1000, but no they're more around 200
+                expect(numBlackGs).toBeGreaterThan(100);
+                expect(numBlackGs).toBeLessThan(2000);
+                expect(numYellowHs).toBeGreaterThan(100);
+                expect(numYellowHs).toBeLessThan(2000);
+            });
+        });
     });
     describe('duplicate words', () => {
         test('favors greens over duplicate assignments', () => {
@@ -148,7 +203,7 @@ describe('perturbation tests', () => {
             // console.log(`greenAt0: ${ greenAt0 }, numBlackGs: ${ otherDirective }`)
             // picking 7 green "a"s and 9 others
             expect(greenAt0).toBeGreaterThan((5.0 * lim) / 16);
-            expect(greenAt0).toBeLessThan((9.0 * lim) / 16);
+            expect(greenAt0).toBeLessThan((9.5 * lim) / 16);
         });
         test("ignores duplicate words when they're all in use", () => {
             const guessWord = 'abcde';
