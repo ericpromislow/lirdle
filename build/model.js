@@ -382,7 +382,7 @@ Model.prototype = {
         const scores = this.saveableState.scores;
         const changes = this.saveableState.changes;
         const scoreLines = scores.map((scoreLine, i) => {
-            const changeLine = changes[i] ?? [-1];
+            const changeLine = changes[i] || [-1];
             const emojiBits = scoreLine.flatMap((scoreBit, j) => {
                 if (changeLine[0] === j) {
                     return ['|',

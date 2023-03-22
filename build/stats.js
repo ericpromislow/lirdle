@@ -15,7 +15,7 @@ Stats.prototype = {
         if (reinit) {
             this.totalFinishedGuesses = 0;
             this.totalFinishedGames = 0;
-            this.lowestScore = 1_000_000;
+            this.lowestScore = 1000000;
             this.highestScore = -1;
             this.totalUnfinishedGuesses = 0;
             this.totalUnfinishedGames = 0;
@@ -25,12 +25,12 @@ Stats.prototype = {
         if (('data' in oldStats) || ('totalGames' in oldStats)) {
             oldStats = {
                 version: 2,
-                totalFinishedGames: oldStats.data.totalFinishedGames ?? 0,
-                totalFinishedGuesses: oldStats.data['totalGuesses'] ?? 0,
-                totalUnfinishedGames: oldStats.data.totalUnfinishedGames ?? 0,
-                totalUnfinishedGuesses: oldStats.data.totalUnfinishedGuesses ?? 0,
-                lowestScore: oldStats.data.lowestScore ?? 0,
-                highestScore: oldStats.data.highestScore ?? 0
+                totalFinishedGames: oldStats.data.totalFinishedGames || 0,
+                totalFinishedGuesses: oldStats.data['totalGuesses'] || 0,
+                totalUnfinishedGames: oldStats.data.totalUnfinishedGames || 0,
+                totalUnfinishedGuesses: oldStats.data.totalUnfinishedGuesses || 0,
+                lowestScore: oldStats.data.lowestScore || 0,
+                highestScore: oldStats.data.highestScore || 0
             }
         }
         if (!('version' in oldStats)) {

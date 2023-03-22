@@ -133,7 +133,7 @@ View.prototype = {
             console.log(`Can't find result div`);
             setTimeout(() => {
                 alert(msg);
-            }, 1_000);
+            }, 1000);
             return;
         }
         result.children[0].textContent = msg;
@@ -148,7 +148,7 @@ View.prototype = {
             console.log(`Can't find div alldone`);
             setTimeout(() => {
                 alert(msg);
-            }, 1_000);
+            }, 1000);
             return;
         }
         allDone.children[0].textContent = msg;
@@ -393,11 +393,11 @@ View.prototype = {
                 });
             };
             fetchFunc();
-            intervalPID = setInterval(fetchFunc, 30 * 60_000);
+            intervalPID = setInterval(fetchFunc, 30 * 60000);
         }
     },
     showTodaysStats() {
-        let numTriesNeededHere = this.model.saveableState.guessWords.length ?? 0;
+        let numTriesNeededHere = this.model.saveableState.guessWords.length || 0;
         const todaysStatsElt = document.getElementById('todaysStats');
         const todaysPctFinishedSoFarElt = todaysStatsElt.querySelector('span#todaysPctFinishedSoFar');
         const todaysAvgSoFarElt = todaysStatsElt.querySelector('span#todaysAvgSoFar');
@@ -439,7 +439,7 @@ View.prototype = {
             });
 	    };
         fetchFunc();
-        intervalPID = setInterval(fetchFunc, 10 * 60_000);
+        intervalPID = setInterval(fetchFunc, 10 * 60000);
     },
     showTestimonial() {
         const currentDateNumber = getInternalDateNumber(getDateNumber());
