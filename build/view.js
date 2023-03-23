@@ -528,13 +528,13 @@ View.prototype = {
         const elts = Array.from(document.querySelectorAll('link.theme')).
         filter(elt => elt.classList.contains('theme'));
         for (const elt of elts) {
-            if (elt.getAttribute('href') !== `${ theme }.css`) {
+            if (elt.getAttribute('href') !== `styles/${ theme }.css`) {
                 elt.parentElement.removeChild(elt);
             }
         }
         document.getElementsByTagName("head")[0].insertAdjacentHTML(
             "beforeend",
-            `<link rel="stylesheet" class="theme" href="${ theme }.css" />`);
+            `<link rel="stylesheet" class="theme" href="styles/${ theme }.css" />`);
     },
     updateHintCounts(values) {
         const hintsBlock = document.querySelector('div#hintsBlock');
