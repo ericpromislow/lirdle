@@ -11,3 +11,7 @@
   --white: black;
   --black: #aaaaaa;
 }
+
+.letter-box {
+  font-family: "Gill Sans";
+}
