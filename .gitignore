@@ -110,3 +110,4 @@ dist
 build/tease
 build/stats
 build/usage
+.DS_Store
