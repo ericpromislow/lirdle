@@ -5,9 +5,14 @@
   --green: #6EBE3B;
   --red: red;
   --yellow: #FEE774;
-  --gray: gray;
+  --gray: #ddd;
   --orange: #ed9121;
   --blue: #005581;
   --white: white;
   --black: black;
+}
+
+.letter-box {
+  font-family: "Futura BQ Bold Condensed", "Futura BQ Bold", "Futura BQ", Futura;
+  color: #ec1e32; /* #D72137; */
 }
