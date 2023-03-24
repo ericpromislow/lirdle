@@ -517,7 +517,7 @@ View.prototype = {
     },
     changeThemeHandler(e) {
         const value = e.target.value;
-        if (!['brainerd', 'butter', 'classic', 'dark', 'louisiana', 'pink', 'frikadeller', 'tommy'].includes(value)) {
+        if (!['brainerd', 'butter', 'classic', 'dark', 'distractle', 'frikadeller', 'louisiana', 'pink', 'tommy'].includes(value)) {
             console.log(`Can't process theme ${ value }`);
             return;
         }

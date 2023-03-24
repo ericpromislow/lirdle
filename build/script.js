@@ -109,7 +109,7 @@ function initialize() {
         if (themeName) {
             model.changeTheme(themeName);
         }
-        e.currentTarget.blur();
+        e.target.blur();
     });
 
     view.showTestimonial();

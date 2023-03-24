@@ -1,0 +1,45 @@
+/*
+// Copyright (C) 2023 Bovination Productions, MIT License
+*/
+root {
+  --green: green;
+  --red: red;
+  --yellow: yellow;
+  --gray: gray;
+  --orange: #ed9121;
+  --blue: #04d9ff;
+  --white: white;
+  --black: black;
+}
+
+body {
+  background: url(https://sguru.org/wp-content/uploads/2017/06/1960-Psychedelic-Wallpaper.jpg);
+}
+
+.filled-box {
+  animation: rotate 2s infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(-45deg);
+  }
+  /*100% {*/
+  /*  transform: rotate(45deg)*/
+  /*}*/
+}
+
+.letter-row  {
+  animation-name: slippery;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+}
+@keyframes slippery {
+  0% {
+    margin-left: -10px;
+  }
+  0% {
+    margin-left: +10px;
+  }
+}
+
