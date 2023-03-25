@@ -4,6 +4,7 @@ import { WORDS, OTHERWORDS } from "./words.js";
 import { devMode, getDateNumber, getWordNumber, lie } from "./numbers.js";
 import beep from "./beep.js";
 import Stats from "./stats.js";
+import { getSolverData, updateSolver} from './solver.js';
 
 const INIT_NUM_ROWS = 6;
 const EMOJI_BLACK = String.fromCodePoint(0x25fc);
@@ -65,6 +66,14 @@ Model.prototype = {
                     hints.labels[0].textContent = `Hints are ${this.prefs.hints ? 'on' : 'off'}`;
                     hints.checked = this.prefs.hints;
                 }
+                if (!('showNumLeft' in this.prefs)) {
+                    this.prefs.showNumLeft = false; // they're opt-in
+                }
+                const showNumLeft = document.getElementById('toggle-num-left');
+                if (showNumLeft) {
+                    showNumLeft.labels[0].textContent = `Showing # possibilities is ${this.prefs.showNumLeft ? 'on' : 'off'}`;
+                    showNumLeft.checked = this.prefs.showNumLeft;
+                }
             }
         } catch {
             this.prefs = null;
@@ -100,6 +109,11 @@ Model.prototype = {
             this.saveableState.numBoardRows = this.saveableState.guessWords.length;
         }
         this.view.populateBoardFromSaveableState(this.saveableState.numBoardRows, this.saveableState.guessWords, this.saveableState.scores, this.saveableState.markers);
+        updateSolver(this.saveableState.guessWords, this.saveableState.scores, this.solverData);
+        for (let i = 0; i < this.solverData.level - 1; i++) {
+            this.view.showOrHideNumLeftForRow(this.prefs.showNumLeft, i);
+            this.view.updateShowNumLeft(this.prefs.showNumLeft, i, this.solverData.possibleWordCounts[i]);
+        }
         if (this.saveableState.finished) {
             if (devMode()) {
                 this.view.clearBoard();
@@ -116,6 +130,9 @@ Model.prototype = {
                 numDuplicateWordsEarned: this.saveableState.numDuplicateWordsEarned,
                 numNonWordsEarned: this.saveableState.numNonWordsEarned,
             });
+            const lastNumLeftIndex = this.solverData.level - 1;
+            this.view.showOrHideNumLeftForRow(this.prefs.showNumLeft, lastNumLeftIndex);
+            this.view.updateShowNumLeft(this.prefs.showNumLeft, lastNumLeftIndex, this.solverData.possibleWordCounts[lastNumLeftIndex]);
         }
         this.guessCount = this.saveableState.guessWords.length;
     },
@@ -222,6 +239,7 @@ Model.prototype = {
             green: ["", "", "", "", ""],
             assignments: {}, // hash of a word to an array of directives
             };
+        this.solverData = getSolverData();
     },
 
     checkGuess() {
@@ -310,7 +328,6 @@ Model.prototype = {
                 this.view.appendBoardRow();
                 this.saveableState.numBoardRows += 1;
             }
-            doFetch('guess', { date: this.saveableState.date, count: this.guessCount });
             const intervalUpdates = {};
             if (this.guessCount % DUPLICATE_WORD_INTERVAL === 0) {
                 this.saveableState.numDuplicateWordsEarned += 1;
@@ -323,6 +340,13 @@ Model.prototype = {
             if (Object.keys(intervalUpdates).length > 0) {
                 this.view.updateHintCounts(intervalUpdates);
             }
+            //const t1 = (new Date()).valueOf();
+            updateSolver(this.saveableState.guessWords, this.saveableState.scores, this.solverData);
+            this.view.showOrHideNumLeftForRow(this.prefs.showNumLeft, this.solverData.level - 1);
+            this.view.updateShowNumLeft(this.prefs.showNumLeft, this.solverData.level - 1, this.solverData.possibleWords.length);
+            doFetch('guess', { date: this.saveableState.date, count: this.guessCount, numLeft: this.solverData.possibleWords.length });
+            // const t2 = (new Date()).valueOf();
+            // console.log(`calc time: ${ t2 - t1 } msec`)
         }
         this.currentGuess = [];
         this.nextLetterPosition = 0;
@@ -420,6 +444,7 @@ Model.prototype = {
                     return EMOJI_COLORS[scores[i][j]];
                 }
             });
+            emojiBits.push(' - ', this.solverData.possibleWordCounts[i]);
             return emojiBits.join('');
         });
         return [`Lirdle game #${ gameNumber }`,
@@ -434,6 +459,20 @@ Model.prototype = {
         this.prefs.hints = value;
         this.savePrefs();
         doFetch('toggleHintStatus', { date: this.saveableState.date, checked: value });
+    },
+    updateShowNumLeftStatus(showNumLeft) {
+        const sd = this.solverData;
+        if (sd.possibleWordCounts.length === 0) {
+            return;
+        }
+        this.prefs.showNumLeft = showNumLeft;
+        // Need to do all rows
+        for (let i = 0; i < sd.level; i++) {
+            this.view.updateShowNumLeft(showNumLeft, i, sd.possibleWordCounts[i]);
+        }
+
+        this.savePrefs();
+        doFetch('toggleShowNumLeft', { date: this.saveableState.date, checked: showNumLeft, count: this.guessCount || 0 });
     },
 };
 

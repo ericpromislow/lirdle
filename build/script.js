@@ -95,6 +95,16 @@ function initialize() {
             model.updateHintStatus(checked);
         });
     }
+    const showNumLeftButton = document.querySelector('div#hintsBlock input#toggle-num-left');
+    if (showNumLeftButton) {
+        showNumLeftButton.addEventListener('click', (e) => {
+            const button = e.target;
+            const checked = button.checked;
+            button.labels[0].textContent = `Showing # possibilities is ${ checked ? 'on' : 'off'}`;
+            model.updateShowNumLeftStatus(checked);
+            view.showOrHideNumLeft(checked);
+        });
+    }
 
     document.getElementById('shareResults').addEventListener('click', (e) => {
         const shareText = model.getShareText();

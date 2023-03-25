@@ -83,7 +83,7 @@ View.prototype = {
         } else {
             // We avoid constraints on number of marked letters
             // due to complexity and individual preferences
-            const row = target.parentElement;
+            // const row = target.parentElement;
             target.classList.add('show-lie');
         }
         e.preventDefault();
@@ -100,6 +100,23 @@ View.prototype = {
             box.addEventListener('click', this.handleLetterBoxClick.bind(this));
             row.appendChild(box);
         }
+
+        const numWordsLeft = document.createElement("div");
+        numWordsLeft.classList.add("numWordsLeftContainer", "hidden");
+        const numLeftHeading = document.createElement("span");
+        numLeftHeading.classList.add("numLeftHeading", "hidden");
+        numLeftHeading.textContent = " (" ;
+        const numLeftAmount = document.createElement("span");
+        numLeftAmount.className = "numLeftAmount";
+        numLeftAmount.textContent = "";
+        const numRightHeading = document.createElement("span");
+        numRightHeading.classList.add("numLeftHeading", "hidden");
+        numRightHeading.textContent = ")   " ;
+        numWordsLeft.appendChild(numLeftHeading);
+        numWordsLeft.appendChild(numLeftAmount);
+        numWordsLeft.appendChild(numRightHeading);
+        row.appendChild(numWordsLeft);
+
         this.board.appendChild(row);
         const classNames = ["small1", "small2", "small3", "small4"];
         const classList = this.board.classList;
@@ -511,7 +528,7 @@ View.prototype = {
     },
     initializeTheme(theme) {
         document.querySelector('#theme-select').value = theme;
-        if (theme != 'classic') {
+        if (theme !== 'classic') {
             this.changeTheme(theme);
         }
     },
@@ -546,6 +563,55 @@ View.prototype = {
                 }
             }
         }
+    },
+    showOrHideNumLeft(checked) {
+        const rows = Array.from(this.board.querySelectorAll('.letter-row'));
+        let firstBlankRow = rows.findIndex(row => !row.querySelector('.filled-box'));
+        if (firstBlankRow === -1) {
+            firstBlankRow = rows.length;
+        }
+
+        const nodes = rows.slice(0, firstBlankRow).map(row => row.querySelector('div.numWordsLeftContainer'));
+        if (!nodes.length) {
+            // console.log(`QQQ: selector for the num-words-left-container failed`);
+            return;
+        }
+        const [classToShow, classToHide ] = checked ? [ 'show', 'hidden' ] : [ 'hidden', 'show' ];
+        for (const node of nodes) {
+            node.classList.add(classToShow);
+            node.classList.remove(classToHide);
+        }
+    },
+    showOrHideNumLeftForRow(checked, rowNum) {
+        const rows = this.board.querySelectorAll('.letter-row');
+        if (!rows) {
+            console.log(`No board rows`);
+            return;
+        }
+        const row = rows.item(rowNum);
+        const node = row.querySelector('div.numWordsLeftContainer');
+        if (!node) {
+            //console.log(`QQQ: selector for the num-words-left-container failed`);
+            return;
+        }
+        const [classToShow, classToHide ] = checked ? [ 'show', 'hidden' ] : [ 'hidden', 'show' ];
+        node.classList.add(classToShow);
+        node.classList.remove(classToHide);
+    },
+
+    updateShowNumLeft(checked, rowNum, numLeft) {
+        const boardRow = this.board.querySelectorAll('div.letter-row').item(rowNum)
+        if (!boardRow) {
+            //console.log(`QQQ: updateShowNumLeft: no row ${ rowNum }`);
+            return;
+        }
+        const numWordsLeftContainer = boardRow.querySelector('div.numWordsLeftContainer');
+        const showNumLeftSpan = numWordsLeftContainer && numWordsLeftContainer.querySelector('span.numLeftAmount');
+        if (!showNumLeftSpan) {
+            //console.log(`QQQ: updateShowNumLeft: no span#numLeftAmount uin the last child`);
+            return;
+        }
+        showNumLeftSpan.textContent = numLeft.toString();
     }
 }
 

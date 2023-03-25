@@ -214,6 +214,22 @@ div#hintsBlock {
   max-width: 20em;
 }
 
+div.numWordsLeftContainer {
+  display: inline;
+  vertical-align: bottom;
+  width: 6em;
+}
+
+div.numWordsLeftContainer.hidden {
+  visibility: hidden;
+}
+
+span.numLeftHeading.hidden {
+  visibility: hidden;
+  vertical-align: bottom;
+  padding: 2px;
+}
+
 div#statistics {
   /*position: fixed;*/
   /*top: 30px;*/

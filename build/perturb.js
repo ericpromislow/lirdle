@@ -36,7 +36,6 @@ export function perturb(guessWord, scores, lettersByPosition) {
             indices.push(i);
         }
     }
-    // console.log(`QQQ: so pick from indices: [${ indices }]`);
     const index = indices[Math.floor(Math.random() * indices.length)];
     return directives[index];
 }
@@ -47,13 +46,10 @@ export function scoreContradiction(guessWord, scores, lettersByPosition, directi
     const blackPositions = lettersByPosition.black || {};
     const yellowPositions = lettersByPosition.yellow || {};
     if (!greenLettersByPosition && !directivesByWord && !blackPositions && !yellowPositions)  {
-	    // console.log(`QQQ: no directives, no green letters`);
         return 0;
     }
     const directives = directivesByWord && directivesByWord[guessWord];
-    // console.log(`QQQ: can we find ${ directive } in ${ directives }?`)
     if (directives && directives.find(dir => dir[0] === directive[0] && dir[1] === directive[1])) {
-        // console.log(`QQQ: found directive [${ directive }], don't want it`);
         return 9;
     }
     const [posn, direction] = directive;
@@ -66,24 +62,15 @@ export function scoreContradiction(guessWord, scores, lettersByPosition, directi
         if (delta > 0) {
             return delta >= 9 ? 9 : delta;
         }
-        // console.log(`QQQ: got newVal = ${ newVal }, contradiction score 0`)
         return 0;
     }
     if (!greenLettersByPosition) {
         return 0;
     }
-    // console.log(`QQQ: posn ${ posn }, newVal 2, char ${ c }`);
-    // console.log(`QQQ: lettersByPosition.green: ${ lettersByPosition.green }`);
     const currentGreensAtPosn = lettersByPosition.green[posn];
-    // console.log(`QQQ: currentGreensAtPosn: ${ currentGreensAtPosn }`);
-    // if (currentGreensAtPosn) {
-    //     console.log(`QQQ: currentGreensAtPosn.includes(c): ${currentGreensAtPosn.includes(c)}`);
-    // }
     if (!currentGreensAtPosn || currentGreensAtPosn.includes(c)) {
-        // console.log(`QQQ: no green here, contradiction score 0`)
         return 0;
     }
-    // console.log(`QQQ: currentGreensAtPosn.length: ${ currentGreensAtPosn.length }`);
     switch(currentGreensAtPosn.length) {
         case 1:
             // Weight this too high and it makes it likelier the second green is truthful
