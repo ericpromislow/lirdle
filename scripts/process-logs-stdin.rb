@@ -24,14 +24,6 @@ elsif options.has_key?(:text) && options.has_key?(:json)
 end
 dateNum = options[:dateNum].to_s
 
-LOG='/opt/nginx/logs'
-
-usage = {}
-
-def id(ip, fprint)
-  return "#{ip}:#{fprint}"
-end
-
 ptn = %r{^([.\d]+).*GET /usage/(.+?)\?(\S+) HTTP.*" "([^"]+)"\s*$}
 
 started = 0
@@ -50,9 +42,9 @@ ARGF.readlines.each do |line|
   m = ptn.match(line)
   next if !m
   ip = m[1]
+  next if ENV['MYIP'] && ENV['MYIP'].split(',').include?(ip)
   op = m[2]
   args = m[3].split('&')
-  fprint = m[4]
   h = Hash[args.map { |x| x.split('=', 2) }]
   next if h['date'] != dateNum
 
