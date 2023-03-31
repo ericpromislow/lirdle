@@ -322,6 +322,12 @@ Model.prototype = {
             this.saveableState.finished = true;
             this.view.showTheWin(this.guessCount, this.saveableState.changes);
             this.doneFunc();
+            if (!this.prefs.showNumLeft) {
+                const sd = this.solverData;
+                for (let i = 0; i < sd.level; i++) {
+                    this.view.showOrHideNumLeftForRow(true, i);
+                }
+            }
             doFetch('finished', { date: this.saveableState.date, count: this.guessCount });
         } else {
             if (this.guessCount >= this.saveableState.numBoardRows) {
@@ -444,7 +450,9 @@ Model.prototype = {
                     return EMOJI_COLORS[scores[i][j]];
                 }
             });
-            emojiBits.push(' - ', this.solverData.possibleWordCounts[i]);
+            if (i < scores.length - 1) {
+                emojiBits.push(' - ', this.solverData.possibleWordCounts[i]);
+            }
             return emojiBits.join('');
         });
         return [`Lirdle game #${ gameNumber }`,
