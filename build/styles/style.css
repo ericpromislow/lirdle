@@ -112,6 +112,10 @@ h1 {
   color: var(--blue);
 }
 
+.letter-row-container {
+  display: flex;
+}
+
 .letter-row {
   display: flex;
 }
@@ -214,10 +218,20 @@ div#hintsBlock {
   max-width: 20em;
 }
 
+div.balancingLeftSideNumLeftHeading {
+  display: inline;
+  vertical-align: bottom;
+  width: 4em;
+}
+
+div.balancingLeftSideNumLeftHeading.hidden {
+  visibility: hidden;
+}
+
 div.numWordsLeftContainer {
   display: inline;
   vertical-align: bottom;
-  width: 6em;
+  width: 4em;
 }
 
 div.numWordsLeftContainer.hidden {

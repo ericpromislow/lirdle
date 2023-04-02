@@ -44,7 +44,7 @@ View.prototype = {
             }
             this.enterScoredGuess(guessWords[i], scores[i], i, false, true);
             try {
-                if (markers && markers[i] && markers[i].some(x => x != '')) {
+                if (markers && markers[i] && markers[i].some(x => x !== '')) {
                     const row = rows[i];
                     const boxes = Array.from(row.querySelectorAll('div.letter-box'));
                     for (let j = 0; j < boxes.length; j++) {
@@ -83,7 +83,6 @@ View.prototype = {
         } else {
             // We avoid constraints on number of marked letters
             // due to complexity and individual preferences
-            // const row = target.parentElement;
             target.classList.add('show-lie');
         }
         e.preventDefault();
@@ -91,15 +90,22 @@ View.prototype = {
     },
 
     appendBoardRow() {
-        let row = document.createElement("div");
-        row.className = "letter-row";
+        const letterRowContainer = document.createElement("div");
+        letterRowContainer.className = "letter-row-container";
 
+        const balancingLeftSideNumLeftHeading = document.createElement("div");
+        balancingLeftSideNumLeftHeading.classList.add("balancingLeftSideNumLeftHeading", "hidden");
+        letterRowContainer.appendChild(balancingLeftSideNumLeftHeading);
+
+        const letterRow = document.createElement("div");
+        letterRow.className = "letter-row";
         for (let j = 0; j < 5; j++) {
             let box = document.createElement("div");
             box.className = "letter-box";
             box.addEventListener('click', this.handleLetterBoxClick.bind(this));
-            row.appendChild(box);
+            letterRow.appendChild(box);
         }
+        letterRowContainer.appendChild(letterRow);
 
         const numWordsLeft = document.createElement("div");
         numWordsLeft.classList.add("numWordsLeftContainer", "hidden");
@@ -115,9 +121,9 @@ View.prototype = {
         numWordsLeft.appendChild(numLeftHeading);
         numWordsLeft.appendChild(numLeftAmount);
         numWordsLeft.appendChild(numRightHeading);
-        row.appendChild(numWordsLeft);
+        letterRowContainer.appendChild(numWordsLeft);
 
-        this.board.appendChild(row);
+        this.board.appendChild(letterRowContainer);
         const classNames = ["small1", "small2", "small3", "small4"];
         const classList = this.board.classList;
         const eltCount = this.board.childElementCount;
@@ -194,13 +200,14 @@ View.prototype = {
      */
     showDeceptiveSquares(changes) {
         for (let i = 0; i < changes.length; i++) {
-            const row = this.board.children[i];
-            if (!row) {
-                console.log(`showDeceptiveSquares: No row at entry ${ i }`);
+            const rowContainer = this.board.children.item(i);
+            if (!rowContainer) {
+                console.log(`showDeceptiveSquares: No rowContainer at entry ${ i }`);
                 break;
             }
+            const rowLetters = rowContainer.querySelector(".letter-row");
             const change = changes[i];
-            const box = row.children[change[0]];
+            const box = rowLetters.children[change[0]];
             const actualColor = COLORS[change[1]];
             box.classList.add(`actual${ actualColor }`);
         }
@@ -261,17 +268,17 @@ View.prototype = {
     },
 
     markCurrentWordInvalid(rowNum) {
-        const row = this.board.children[rowNum];
+        const row = this.board.querySelectorAll(".letter-row-container").item(rowNum).querySelector(".letter-row");
         for (let i = 0; i < 5; i++) {
-            const box = row.children[i];
+            const box = row.childNodes[i];
             box.classList.add('invalid');
         }
     },
 
     markCurrentWordValid(rowNum) {
-        const row = this.board.children[rowNum];
+        const row = this.board.querySelectorAll(".letter-row-container").item(rowNum).querySelector(".letter-row");
         for (let i = 0; i < 5; i++) {
-            const box = row.children[i];
+            const box = row.childNodes[i];
             box.classList.remove('invalid');
         }
     },
@@ -565,13 +572,13 @@ View.prototype = {
         }
     },
     showOrHideNumLeft(checked) {
-        const rows = Array.from(this.board.querySelectorAll('.letter-row'));
-        let firstBlankRow = rows.findIndex(row => !row.querySelector('.filled-box'));
+        const rowContainers = Array.from(this.board.querySelectorAll("div.letter-row-container"));
+        let firstBlankRow = rowContainers.findIndex(rowContainer => !rowContainer.querySelector('.filled-box'));
         if (firstBlankRow === -1) {
-            firstBlankRow = rows.length;
+            firstBlankRow = rowContainers.length;
         }
 
-        const nodes = rows.slice(0, firstBlankRow).map(row => row.querySelector('div.numWordsLeftContainer'));
+        const nodes = rowContainers.slice(0, firstBlankRow).map(rowContainer => rowContainer.querySelector('div.numWordsLeftContainer'));
         if (!nodes.length) {
             // console.log(`QQQ: selector for the num-words-left-container failed`);
             return;
@@ -583,13 +590,8 @@ View.prototype = {
         }
     },
     showOrHideNumLeftForRow(checked, rowNum) {
-        const rows = this.board.querySelectorAll('.letter-row');
-        if (!rows) {
-            console.log(`No board rows`);
-            return;
-        }
-        const row = rows.item(rowNum);
-        const node = row.querySelector('div.numWordsLeftContainer');
+        const rowContainer = this.board.querySelectorAll("div.letter-row-container").item(rowNum);
+        const node = rowContainer.querySelector('div.numWordsLeftContainer');
         if (!node) {
             //console.log(`QQQ: selector for the num-words-left-container failed`);
             return;
@@ -600,12 +602,8 @@ View.prototype = {
     },
 
     updateShowNumLeft(checked, rowNum, numLeft) {
-        const boardRow = this.board.querySelectorAll('div.letter-row').item(rowNum)
-        if (!boardRow) {
-            //console.log(`QQQ: updateShowNumLeft: no row ${ rowNum }`);
-            return;
-        }
-        const numWordsLeftContainer = boardRow.querySelector('div.numWordsLeftContainer');
+        const rowContainer = this.board.querySelectorAll("div.letter-row-container").item(rowNum);
+        const numWordsLeftContainer = rowContainer.querySelector('div.numWordsLeftContainer');
         const showNumLeftSpan = numWordsLeftContainer && numWordsLeftContainer.querySelector('span.numLeftAmount');
         if (!showNumLeftSpan) {
             //console.log(`QQQ: updateShowNumLeft: no span#numLeftAmount uin the last child`);
