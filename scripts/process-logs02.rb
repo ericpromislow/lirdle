@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
+require 'json'
 
 options = {}
 
@@ -8,11 +9,11 @@ OptionParser.new do |opts|
   opts.on('-t', '--text')
   opts.on('-j', '--json')
   opts.on('-d NUM', '--dateNum', Integer)
+  opts.on('-p FILE', '--positions', String)
 end.parse!(into: options)
 
-
 def usage(msg=nil)
-  puts "Usage: #{$0} [-t | --text | -j | --json] [-d | --dateNum] dateNum"
+  puts "Usage: #{$0} [-t | --text | -j | --json] [-d | --dateNum] -p positionsFile"
   puts msg if msg
   exit 1
 end
@@ -21,18 +22,29 @@ if !options.has_key?(:dateNum)
   usage("No date-num given")
 elsif options.has_key?(:text) && options.has_key?(:json)
   usage("Specified both text and json")
+elsif !options.has_key?(:positions)
+  usage("No positions file given")
 end
-dateNum = options[:dateNum].to_s
+dateNumInt = options[:dateNum].to_i
+positionsFile = options[:positions]
+
+if !File.exist?(positionsFile)
+  @positionsData = {
+    'firstLine' => nil,
+    'offsets' => [nil] * dateNumInt,
+    'firstOffset' => 0,
+  }
+else
+  File.open(positionsFile, 'r') { |fd|
+    @positionsData = JSON.load(fd)
+  }
+end
 
 LOG='/opt/nginx/logs'
 
-usage = {}
+# usage = {}
 
-def id(ip, fprint)
-  return "#{ip}:#{fprint}"
-end
-
-ptn = %r{^([.\d]+).*GET /usage/(.+?)\?(\S+) HTTP.*" "([^"]+)"\s*$}
+ptn = %r{^([.\d]+).*GET /usage/(.+?)\?(\S+) HTTP.*" "[^"]+"\s*$}
 
 started = 0
 startedGame = 0
@@ -44,17 +56,58 @@ guessesNeeded = []
 firstGuessCount = 0
 unfinishedGuessesNeeded = []
 
-ARGF.readlines.each do |line|
-  line.chomp!
+fd = File.open("#{LOG}/access.log", 'r')
+
+pos = nil
+firstLine = fd.readline.chomp
+if firstLine == @positionsData['firstLine']
+  pos = @positionsData['offsets'][dateNumInt]
+  if !pos
+    possibleIdx = dateNumInt - 1
+    while possibleIdx > 0 && @positionsData['offsets'][possibleIdx].nil?
+      possibleIdx -= 1
+    end
+    if possibleIdx >= 0
+      pos = @positionsData['offsets'][possibleIdx]
+    end
+  end
+  if pos
+    fd.seek(pos, IO::SEEK_SET)
+  end
+else
+  @positionsData[:firstLine] = firstLine
+  @positionsData['offsets'] = [nil] * dateNumInt
+  @positionsData[:firstOffset] = 0
+  fd.seek(0, IO::SEEK_SET)
+end
+
+begin
+while line = fd.readline.chomp
   next if line =~ %r{bentframe.org/staging}
   m = ptn.match(line)
   next if !m
   ip = m[1]
+  next if ENV['MYIP'] && ENV['MYIP'].split(',').include?(ip)
   op = m[2]
   args = m[3].split('&')
-  fprint = m[4]
   h = Hash[args.map { |x| x.split('=', 2) }]
-  next if h['date'] != dateNum
+  next if !h.has_key?('date')
+  thisDateNum = h['date'].to_i
+  if thisDateNum > 20230218
+    thisDateNum -= 20230218
+  elsif thisDateNum > dateNumInt + 10
+    # Forget it...
+    next
+  end
+  if @positionsData['offsets'][thisDateNum].nil?
+    @positionsData['offsets'][thisDateNum] = fd.pos
+    if @positionsData[:firstOffset].nil?
+      @positionsData[:firstOffset] = thisDateNum
+    end
+  end
+  if thisDateNum != dateNumInt
+    next
+  end
 
   case op
   when 'start'
@@ -80,6 +133,9 @@ ARGF.readlines.each do |line|
     continuing += 1
   end
 end
+rescue EOFError
+end
+File.open(positionsFile, 'w') { |fd| JSON.dump(@positionsData, fd) }
 
 def avg(a)
   return 0 if a.size == 0
