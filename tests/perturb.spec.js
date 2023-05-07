@@ -228,4 +228,26 @@ describe('perturbation tests', () => {
             expect(greenAt0).toBeLessThan(134);
         });
     });
+    describe('fetus bug', () => {
+        test("shouldn't repeat the result for a duplicate word", () => {
+            const soFar = [
+                ['waltz', [3, -1]],
+                ['fjord', [0,-1]],
+                ['nymph', [0,1]],
+                ['quick', [4,1]],
+                ['boxes', [3,1]],
+                ['sleek', [1,1]],
+                ['unpeg', [2,-1]],
+                ['stunk', [1,1]],
+                ['utter', [0,1]]
+            ];
+            const guessWord = 'utter';
+            const scores = [1, 1, 1, 0, 0];
+            const lettersByPosition = {
+                green: ['','t','pt','e','s'],
+                assignments: { utter: [[0, -1]] },
+            };
+            expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, [0, -1])).toEqual(9);
+        })
+    })
 });
