@@ -308,7 +308,7 @@ Model.prototype = {
             this.saveStats();
         } else {
             newScores = [].concat(scores);
-            lie(guessString, newScores, this.lettersByPosition, this.saveableState.changes);
+            lie(guessString, newScores, this.lettersByPosition, this.saveableState.changes, this.solverData);
         }
         for (let i = 0; i < 5; i++) {
             this.addColorHit(this.currentGuess[i], newScores[i]);

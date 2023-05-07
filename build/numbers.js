@@ -2,6 +2,7 @@
 
 import { WORDS } from "./words.js";
 import * as perturb from './perturb.js';
+import { evalPossibleWords } from "./solver.js";
 
 export function getDateNumber() {
     const d = new Date();
@@ -43,9 +44,24 @@ export function devMode() {
     return (location.hostname === "localhost" || location.hostname === "127.0.0.1");// && Math.random() < 0.00000001;
 }
 
-// Modifies both arguments
-export function lie(guessWord, scores, lettersByPosition, changes) {
-    const [i, direction] = perturb.perturb(guessWord, scores, lettersByPosition);
+function pickALie(guessWord, scores, lettersByPosition, changes, solverData) {
+    const directive1 = solverData.possibleWords.length > 1 ? findWorstLie(guessWord, scores, solverData) : null;
+    const directive2 = perturb.perturb(guessWord, scores, lettersByPosition);
+    if (!directive1) {
+        return directive2;
+    }
+    // 1 time out of 10 they don't get the worst lie
+    const indices = new Array(10);
+    indices[0] = 0;
+    for (let i = 1; i < indices.length; i++) {
+        indices[i] = 1;
+    }
+    const winner = indices[Math.floor(Math.random() * indices.length)];
+    return [directive1,directive2][winner];
+}
+// Modifies all arguments except guessWord
+export function lie(guessWord, scores, lettersByPosition, changes, solverData) {
+    const [i, direction] = pickALie(guessWord, scores, lettersByPosition, changes, solverData);
     const oldVal = scores[i] + 3;
     scores[i] = (oldVal + direction) % 3;
     changes.push([i, oldVal - 3, scores[i]]);
@@ -54,6 +70,36 @@ export function lie(guessWord, scores, lettersByPosition, changes) {
         lettersByPosition.assignments[guessWord] = [];
     }
     lettersByPosition.assignments[guessWord].push([i, direction]);
+}
+
+export function findWorstLie(guessWord, scores, solverData) {
+    const directives = [];
+    const lengths = [];
+    for (let i = 0; i < 5; i++) {
+        directives.push([i, -1]);
+        directives.push([i, +1]);
+    }
+    let longestDirective = [-1, null]; // [length, [position, direction]]
+    let longestIndices = [];
+    for (const i in directives) {
+        const directive = directives[i];
+        const newScores = [].concat(scores);
+        newScores[directive[0]] = (newScores[directive[0]] + 3 + directive[1]) % 3;
+        const numPossibleWords = evalPossibleWords(guessWord, newScores, solverData.possibleWords).length;
+        if (numPossibleWords > longestDirective[0]) {
+            longestDirective = [numPossibleWords, directive];
+            longestIndices = [i];
+        } else if (numPossibleWords == longestDirective[0]) {
+            longestIndices.push(i);
+        }
+        lengths.push(numPossibleWords);
+    }
+    switch (longestIndices.length) {
+        case 0: return null;
+        case 1: return longestDirective[1];
+        default:
+            return directives[longestIndices[Math.floor(Math.random() * longestIndices.length)]];
+    }
 }
 
 export const POSITIONS = [2253, 191, 608, 45, 1461, 706, 264, 2012, 1404, 1244,
