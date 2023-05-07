@@ -380,7 +380,7 @@ View.prototype = {
             if (this.model.nextLetterPosition === 5) {
                 beep();
             } else {
-                this.model.insertLetter(pressedKey);
+                this.model.insertLetter(pressedKey.toLowerCase());
             }
         } else {
             console.log(`Lirdle: ignoring key event ${pressedKey}`);
