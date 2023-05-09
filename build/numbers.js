@@ -45,7 +45,12 @@ export function devMode() {
 }
 
 function pickALie(guessWord, scores, lettersByPosition, changes, solverData) {
-    const directive1 = solverData.possibleWords.length > 1 ? findWorstLie(guessWord, scores, solverData) : null;
+    let directive1 = null;
+    try {
+        directive1 = solverData.possibleWords.length > 1 ? findWorstLie(guessWord, scores, solverData) : null;
+    } catch(ex) {
+        console.log(`Error in findWorstLie: ${ ex }`, ex);
+    }
     const directive2 = perturb.perturb(guessWord, scores, lettersByPosition);
     if (!directive1) {
         return directive2;
@@ -74,7 +79,6 @@ export function lie(guessWord, scores, lettersByPosition, changes, solverData) {
 
 export function findWorstLie(guessWord, scores, solverData) {
     const directives = [];
-    const lengths = [];
     for (let i = 0; i < 5; i++) {
         directives.push([i, -1]);
         directives.push([i, +1]);
@@ -89,10 +93,9 @@ export function findWorstLie(guessWord, scores, solverData) {
         if (numPossibleWords > longestDirective[0]) {
             longestDirective = [numPossibleWords, directive];
             longestIndices = [i];
-        } else if (numPossibleWords == longestDirective[0]) {
+        } else if (numPossibleWords === longestDirective[0]) {
             longestIndices.push(i);
         }
-        lengths.push(numPossibleWords);
     }
     switch (longestIndices.length) {
         case 0: return null;
