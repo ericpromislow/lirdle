@@ -110,7 +110,7 @@ export function isPossibleWord(guessLetters, scores, candidateWord) {
     // finally deal with the blacks
     for (let i = 0; i < 5; i++) {
         if (scores[i] === 0 && candidateLetters.some(c => c === guessLetters[i])) {
-            const posn = candidateLetters.indexOf(guessLetters[i]);
+            // const posn = candidateLetters.indexOf(guessLetters[i]);
             // console.log(`Black at position ${ i }, found char ${ guessLetters[i] } at posn ${ posn }`);
             return false;
         }

@@ -146,14 +146,6 @@ describe('solver tests', () => {
                 expect(scoreMakesSense('parer', 'abhor', [0,0,2,0,0])).toBeFalsy();
                 expect(scoreMakesSense('parer', 'abhor', [0,1,2,0,0])).toBeTruthy();
                 expect(scoreMakesSense('parer', 'abhor', [0,2,2,0,0])).toBeFalsy();
-/*
-                const wordList2 = evalPossibleWords('parer', [0, 1, 1, 0, 0], currentWordList);
-                expect(wordList2.length).toEqual(340);
-                expect(wordList2).toContain('urban');
-                expect(wordList2).not.toContain('abhor');
-                expect(wordList2.length).toBeGreaterThanOrEqual(691);
-                expect(wordList2.length).toEqual(804);
-                */
             })
         });
     });
