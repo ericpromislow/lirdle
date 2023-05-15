@@ -18,7 +18,7 @@ export function getSolverData() {
 export function updateSolver(guesses, scores, solver) {
     while (solver.level < guesses.length) {
         const possibleWords = evalPossibleWords(guesses[solver.level], scores[solver.level], solver.possibleWords);
-        if (solver.possibleWords.length === 0) {
+        if (possibleWords.length === 0) {
             throw new Error("Can't happen - no words match this line")
         }
         solver.possibleWords = possibleWords;
@@ -28,48 +28,59 @@ export function updateSolver(guesses, scores, solver) {
 }
 
 export function evalPossibleWords(guess, scores, currentWordList) {
-    const guessLetters = guess.split('');
     const possibleWords = {};
     const lim = currentWordList.length;
     for (let i = 0; i < lim; i++) {
         const candidateWord = currentWordList[i];
-        let keepGoing = true;
-        for (let j = 0; j < 5 && keepGoing; j++) {
-            const origScore = scores[j];
-            try {
-                scores[j] = (scores[j] + 2) % 3;
-                // console.log(`-isPossibleWord 1(${guessLetters.join('')}, ${scores.join(',')}, ${candidateWord}}`);
-                if (isPossibleWord(guessLetters, scores, candidateWord)) {
-                    // console.log(`yes 1`);
-                    possibleWords[candidateWord] = true;
-                    keepGoing = false;
-                    break;
-                }
-                // console.log(`no 1`);
-                scores[j] = (origScore + 1) % 3;
-                // console.log(`-isPossibleWord 2(${guessLetters.join('')}, ${scores.join(',')}, ${candidateWord}}`);
-                if (isPossibleWord(guessLetters, scores, candidateWord)) {
-                    // console.log(`yes 2`);
-                    possibleWords[candidateWord] = true;
-                    keepGoing = false;
-                    break;
-                }
-                // console.log(`no 2`);
-            } finally {
-                scores[j] = origScore;
-            }
+        if (scoreMakesSense(guess, candidateWord, scores)) {
+            possibleWords[candidateWord] = true;
         }
     }
     return Object.keys(possibleWords);
+}
+
+export function evaluateGuess(targetWord, guess) {
+    const target = Array.from(targetWord);
+    const myGuess = Array.from(guess);
+    const scores = [0, 0, 0, 0, 0];
+
+    // Issue #19: find the perfect hits first!
+    for (let i = 0; i < 5; i++) {
+        if (myGuess[i] === target[i]) {
+            scores[i] = 2;
+            myGuess[i] = target[i] = '#';
+        }
+    }
+    for (let i = 0; i < 5; i++) {
+        if (myGuess[i] === '#') {
+            continue;
+        }
+        let letterPosition = target.indexOf(myGuess[i]);
+        if (letterPosition !== -1) {
+            scores[i] = 1;
+            target[letterPosition] = "#";
+        }
+    }
+    return scores;
+}
+
+export function scoreMakesSense(guess, candidateWord, scores) {
+    const thisScores = evaluateGuess(candidateWord, guess);
+    if (thisScores.length !== scores.length) {
+        throw new Error(`Doesn't make sense: expected ${ scores.length } scores, got ${ thisScores.length }`)
+    }
+    return thisScores.filter((elt, i) => { return elt !== scores[i] }).length === 1;
 }
 
 export function isPossibleWord(guessLetters, scores, candidateWord) {
     const candidateLetters = candidateWord.split('');
     // const workingGuess = [].concat(guessLetters);
     // first deal with the greens
+    // console.log(`Testing word ${ candidateLetters.join('') }`);
     for (let i = 0; i < 5; i++) {
         if (scores[i] === 2) {
             if (guessLetters[i] !== candidateLetters[i]) {
+                // console.log(`QQQ: Expecting green letter ${ guessLetters[i] } at posn ${ i }, got ${ candidateLetters[i] } `);
                 return false;
             } else {
                 // block it out
@@ -81,12 +92,15 @@ export function isPossibleWord(guessLetters, scores, candidateWord) {
     // now deal with the yellows
     for (let i = 0; i < 5; i++) {
         if (scores[i] === 1) {
+            // console.log(`QQQ: got a yellow at posn ${ i }`);
             const c = guessLetters[i];
             if (candidateLetters[i] === c) {
+                // console.log(`QQQ: found char '${ c }' at posn ${ i } -- should be green`);
                 return false;
             }
             const idx = candidateLetters.indexOf(c);
             if (idx === -1) {
+                // console.log(`QQQ: didn't find char ${ c } in the word`);
                 return false;
             }
             candidateLetters[idx] = '*';
@@ -96,7 +110,7 @@ export function isPossibleWord(guessLetters, scores, candidateWord) {
     // finally deal with the blacks
     for (let i = 0; i < 5; i++) {
         if (scores[i] === 0 && candidateLetters.some(c => c === guessLetters[i])) {
-            // const posn = candidateLetters.indexOf(guessLetters[i]);
+            const posn = candidateLetters.indexOf(guessLetters[i]);
             // console.log(`Black at position ${ i }, found char ${ guessLetters[i] } at posn ${ posn }`);
             return false;
         }

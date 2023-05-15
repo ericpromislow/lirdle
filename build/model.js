@@ -4,7 +4,7 @@ import { WORDS, OTHERWORDS } from "./words.js";
 import { devMode, getDateNumber, getWordNumber, lie } from "./numbers.js";
 import beep from "./beep.js";
 import Stats from "./stats.js";
-import { getSolverData, updateSolver} from './solver.js';
+import { evaluateGuess, getSolverData, updateSolver} from './solver.js';
 
 const INIT_NUM_ROWS = 6;
 const EMOJI_BLACK = String.fromCodePoint(0x25fc);
