@@ -3,6 +3,12 @@ import {evalPossibleWords, evaluateGuess, getSolverData, isPossibleWord, scoreMa
 // import {WORDS} from "../build/words";
 
 describe('solver tests', () => {
+    describe('evaluate guess', () => {
+        test('can handle duplicate letters', () => {
+            expect(evaluateGuess('abhor', 'parer')).toEqual([0, 1, 0, 0, 2]);
+            expect(evaluateGuess('mamma', 'amima')).toEqual([1, 1, 0, 2, 2]);
+        })
+    })
     describe('reduced word list', () => {
         const currentWordList = ['taste', 'waste', 'wedge', 'llama', 'mango'];
         describe('isPossibleWord', () => {
@@ -141,11 +147,23 @@ describe('solver tests', () => {
                 expect(scoreMakesSense('parer', 'abhor', [0,1,0,0,0])).toBeTruthy();
                 expect(scoreMakesSense('parer', 'abhor', [0,2,0,0,0])).toBeFalsy();
                 expect(scoreMakesSense('parer', 'abhor', [0,0,1,0,0])).toBeFalsy();
-                expect(scoreMakesSense('parer', 'abhor', [0,1,1,0,0])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,1,1,0,0])).toBeFalsy();
                 expect(scoreMakesSense('parer', 'abhor', [0,2,1,0,0])).toBeFalsy();
                 expect(scoreMakesSense('parer', 'abhor', [0,0,2,0,0])).toBeFalsy();
-                expect(scoreMakesSense('parer', 'abhor', [0,1,2,0,0])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,1,2,0,0])).toBeFalsy();
                 expect(scoreMakesSense('parer', 'abhor', [0,2,2,0,0])).toBeFalsy();
+                expect(scoreMakesSense('parer', 'abhor', [0,1,0,0,2])).toBeFalsy();
+                // Now the only possible truthers
+                expect(scoreMakesSense('parer', 'abhor', [0,1,0,0,0])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,1,0,0,1])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,1,0,1,2])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,1,0,2,2])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,1,1,0,2])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,1,2,0,2])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,0,0,0,2])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [0,2,0,0,2])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [1,1,0,0,2])).toBeTruthy();
+                expect(scoreMakesSense('parer', 'abhor', [2,1,0,0,2])).toBeTruthy();
             })
         });
     });

@@ -279,27 +279,7 @@ Model.prototype = {
         }
 
         this.saveableState.guessWords.push(guessString);
-        const target = Array.from(this.targetString);
-        const myGuess = Array.from(this.currentGuess);
-        const scores = [0, 0, 0, 0, 0];
-
-        // Issue #19: find the perfect hits first!
-        for (let i = 0; i < 5; i++) {
-            if (myGuess[i] === target[i]) {
-                scores[i] = 2;
-                myGuess[i] = target[i] = '#';
-            }
-        }
-        for (let i = 0; i < 5; i++) {
-            if (myGuess[i] === '#') {
-                continue;
-            }
-            let letterPosition = target.indexOf(myGuess[i]);
-            if (letterPosition !== -1) {
-                scores[i] = 1;
-                myGuess[i] = target[letterPosition] = "#";
-            }
-        }
+        const scores = evaluateGuess(this.targetString, this.currentGuess);
         const guessedIt = guessString === this.targetString;
         let newScores;
         if (guessedIt) {
