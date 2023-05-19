@@ -1,6 +1,6 @@
 import * as solver from '../build/solver.js';
 import {evalPossibleWords, evaluateGuess, getSolverData, isPossibleWord, scoreMakesSense} from "../build/solver.js";
-// import {WORDS} from "../build/words";
+import {WORDS} from "../build/words";
 
 describe('solver tests', () => {
     describe('evaluate guess', () => {
@@ -121,7 +121,7 @@ describe('solver tests', () => {
             });
         });
     });
-    describe('full word list', () => {
+    describe('smaller word list', () => {
         const currentWordList = ['abhor', 'urban'];
         describe('abhor/parer bug', () => {
             test('abhor parer test 1', () => {
@@ -165,6 +165,15 @@ describe('solver tests', () => {
                 expect(scoreMakesSense('parer', 'abhor', [1,1,0,0,2])).toBeTruthy();
                 expect(scoreMakesSense('parer', 'abhor', [2,1,0,0,2])).toBeTruthy();
             })
+        });
+    });
+    describe('full word list', () => {
+        const currentWordList = WORDS.concat([]);
+        describe('how many for grape', () => {
+            it('finds matches for grape', () => {
+                const wordList2 = evalPossibleWords('grape', [2, 2, 2, 2, 2], currentWordList)
+                expect(wordList2).toEqual(['drape', 'grace', 'grade', 'graph', 'grate', 'grave', 'graze', 'gripe', 'grope']);
+            });
         });
     });
 });
