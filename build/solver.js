@@ -9,14 +9,16 @@ export function getSolverData() {
 }
 
 /**
- * returns a good answer, tries not to give away too much too often
+ * updates number of possible words remaining after each guess
  * @param guesses: array of char[5]
  * @param scores: array of number[5]
  * @param solver - { level, possibleWords: initially null when currentLevel = 0 }
+ * @param finished - ignore last guess if we're finished
  * @return void
  */
-export function updateSolver(guesses, scores, solver) {
-    while (solver.level < guesses.length) {
+export function updateSolver(guesses, scores, solver, finished=false) {
+    const lim = guesses.length - (finished ? 2 : 1);
+    while (solver.level <= lim) {
         const possibleWords = evalPossibleWords(guesses[solver.level], scores[solver.level], solver.possibleWords);
         if (possibleWords.length === 0) {
             throw new Error("Can't happen - no words match this line")
