@@ -32,7 +32,7 @@ Stats.prototype = {
                 totalUnfinishedGuesses: oldStats.data.totalUnfinishedGuesses || 0,
                 lowestScore: oldStats.data.lowestScore || 0,
                 highestScore: oldStats.data.highestScore || 0,
-                numFiveGreenFakeOuts: oldStats.data.numFiveGreenFakeOuts ?? 0
+                numFiveGreenFakeOuts: oldStats.data.numFiveGreenFakeOuts || 0
             }
         }
         if (!('version' in oldStats)) {
