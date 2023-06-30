@@ -267,6 +267,20 @@ View.prototype = {
         }
     },
 
+    showHitFakeOut() {
+        const elt = document.getElementById("fiveGreenFakeOut");
+        if (elt) {
+            elt.classList.remove('hidden')
+            elt.classList.add('show');
+            setTimeout(() => {
+                elt.classList.remove('show')
+                elt.classList.add('hidden');
+            }, 10 * 1000);
+        } else {
+            console.log(`Can't find a "fiveGreenFakeOut" element.`);
+        }
+    },
+
     markCurrentWordInvalid(rowNum) {
         const row = this.board.querySelectorAll(".letter-row-container").item(rowNum).querySelector(".letter-row");
         for (let i = 0; i < 5; i++) {

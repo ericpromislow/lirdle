@@ -249,5 +249,5 @@ describe('perturbation tests', () => {
             };
             expect(perturb.scoreContradiction(guessWord, scores, lettersByPosition, [0, -1])).toEqual(9);
         })
-    })
+    });
 });

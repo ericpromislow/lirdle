@@ -326,6 +326,11 @@ Model.prototype = {
             if (Object.keys(intervalUpdates).length > 0) {
                 this.view.updateHintCounts(intervalUpdates);
             }
+            if (newScores.every(x => x == 2)) {
+                // We have a fakeout
+                this.stats.addFiveGreenFakeOut();
+                this.view.showHitFakeOut(); //TODO: Implement
+            }
             //const t1 = (new Date()).valueOf();
             updateSolver(this.saveableState.guessWords, this.saveableState.scores, this.solverData);
             this.view.showOrHideNumLeftForRow(this.prefs.showNumLeft, this.solverData.level - 1);
