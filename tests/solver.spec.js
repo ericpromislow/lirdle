@@ -135,4 +135,20 @@ describe('solver tests', () => {
             });
         });
     });
+    describe('when finished', () => {
+        const currentWordList = ['abcde', 'fghij', 'abklm'];
+        it('can deal with the end', () => {
+            const solverData = getSolverData();
+            const guesses = ['zzzzz', 'abiju', 'abklm'];
+            const scores = [[0, 0, 2, 0, 0], [2, 1, 0, 0, 0], [2, 2, 2, 2, 2]];
+            solverData.possibleWords = currentWordList;
+            updateSolver(guesses, scores, solverData, true);
+            expect(solverData.level).toBe(2);
+            expect(solverData).toEqual({
+                level: 2,
+                possibleWords: [ 'abcde', 'abklm'],
+                possibleWordCounts: [3, 2],
+            });
+        });
+    });
 });

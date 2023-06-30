@@ -109,7 +109,7 @@ Model.prototype = {
         }
         this.view.populateBoardFromSaveableState(this.saveableState.numBoardRows, this.saveableState.guessWords, this.saveableState.scores, this.saveableState.markers);
         updateSolver(this.saveableState.guessWords, this.saveableState.scores, this.solverData, this.saveableState.finished);
-        for (let i = 0; i < this.solverData.level - 1; i++) {
+        for (let i = 0; i < this.solverData.level; i++) {
             this.view.showOrHideNumLeftForRow(this.prefs.showNumLeft, i);
             this.view.updateShowNumLeft(this.prefs.showNumLeft, i, this.solverData.possibleWordCounts[i]);
         }
