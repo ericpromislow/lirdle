@@ -2,7 +2,6 @@
 
 import { WORDS, OTHERWORDS } from "./words.js";
 import { devMode, getDateNumber, getWordNumber, lie } from "./numbers.js";
-import beep from "./beep.js";
 import Stats from "./stats.js";
 import { getSolverData, updateSolver} from './solver.js';
 
@@ -398,7 +397,6 @@ Model.prototype = {
 
     deleteLetter() {
         if (this.currentGuess === 0) {
-            beep();
             return;
         }
         this.view.deleteLetter(this.guessCount, this.nextLetterPosition - 1);

@@ -1,6 +1,5 @@
 // Copyright (C) 2023 Bovination Productions, MIT License
 
-import beep from "./beep.js";
 import { devMode, getDateNumber, getYesterdaysWord } from "./numbers.js";
 
 export default function View() {
@@ -376,26 +375,28 @@ View.prototype = {
         // console.log('>> keyup');
         const pressedKey = String(e.key);
         if (pressedKey === "Backspace" || pressedKey === "Del") {
-            if (this.model.nextLetterPosition!== 0) {
+            if (this.model.nextLetterPosition !== 0) {
                 this.model.deleteLetter();
-            } else {
-                beep();
+                console.log(`lirdle: ignoring backspace at position 0`)
             }
         } else if (pressedKey.toLowerCase() === "enter") {
             // console.log(`pressed enter, currentTarget: ${e.currentTarget}, target: ${e.target}`);
             e.stopPropagation();
             e.cancelBubble = true;
             if (this.wordIsInvalid) {
-                beep();
+                // Otherwise do nothing -- there's a line that we're on an invalid word
+                return;
+            } else if (this.model.nextLetterPosition < 5) {
+                console.log(`lirdle: ignoring return before full word is typed`);
                 return;
             }
             this.model.checkGuess();
         } else if (pressedKey.match(/^[a-z]$/i)) {
-            if (this.model.nextLetterPosition === 5) {
-                beep();
-            } else {
+            if (this.model.nextLetterPosition < 5) {
                 this.model.insertLetter(pressedKey.toLowerCase());
             }
+            // Otherwise do nothing -- there's a line that we're on
+            // an invalid word
         } else {
             console.log(`Lirdle: ignoring key event ${pressedKey}`);
         }
