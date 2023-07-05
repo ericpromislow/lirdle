@@ -42,6 +42,8 @@ export function evalPossibleWords(guess, scores, currentWordList) {
             possibleWords[candidateWord] = true;
         }
     }
+    // The miner bug -- if we're looking for possible words, make sure we drop the current one.
+    delete possibleWords[guess];
     return Object.keys(possibleWords);
 }
 

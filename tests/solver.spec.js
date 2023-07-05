@@ -127,27 +127,64 @@ describe('solver tests', () => {
         });
     });
     describe('full word list', () => {
-        const currentWordList = WORDS.concat([]);
         describe('how many for grape', () => {
+            const currentWordList = WORDS.concat([]);
             it('finds matches for grape', () => {
                 const wordList2 = evalPossibleWords('grape', [2, 2, 2, 2, 2], currentWordList)
                 expect(wordList2).toEqual(['drape', 'grace', 'grade', 'graph', 'grate', 'grave', 'graze', 'gripe', 'grope']);
             });
         });
-    });
-    describe('when finished', () => {
-        const currentWordList = ['abcde', 'fghij', 'abklm'];
-        it('can deal with the end', () => {
+        describe('updateSolver for miner', () => {
+            const currentWordList = WORDS.concat([]);
             const solverData = getSolverData();
-            const guesses = ['zzzzz', 'abiju', 'abklm'];
-            const scores = [[0, 0, 2, 0, 0], [2, 1, 0, 0, 0], [2, 2, 2, 2, 2]];
+            const guesses = [];
+            const scores = [];
             solverData.possibleWords = currentWordList;
-            updateSolver(guesses, scores, solverData, true);
-            expect(solverData.level).toBe(2);
-            expect(solverData).toEqual({
-                level: 2,
-                possibleWords: [ 'abcde', 'abklm'],
-                possibleWordCounts: [3, 2],
+            test('follow through 4 lines', () => {
+                updateSolver(guesses, scores, solverData);
+
+                guesses.push('sauce');
+                scores.push([2, 0, 0, 0, 1]);
+                updateSolver(guesses, scores, solverData);
+                expect(solverData.level).toEqual(1);
+                expect(solverData.possibleWordCounts[0]).toEqual(427);
+                expect(solverData.possibleWords.length).toBe(427);
+
+                guesses.push('cause');
+                scores.push([0, 0, 1, 0, 1]);
+                updateSolver(guesses, scores, solverData);
+                expect(solverData.level).toEqual(2);
+                expect(solverData.possibleWordCounts[1]).toEqual(263);
+                expect(solverData.possibleWords.length).toBe(263);
+                expect(solverData.possibleWords).toContain('miner');
+
+                guesses.push('suite');
+                scores.push([0, 1, 1, 0, 1]);
+                updateSolver(guesses, scores, solverData);
+                expect(solverData.level).toEqual(3);
+                expect(solverData.possibleWords.length).toBe(45);
+                expect(solverData.possibleWords).toContain('miner');
+
+                guesses.push('diner');
+                scores.push([0, 2, 0, 2, 2]);
+                updateSolver(guesses, scores, solverData);
+                expect(solverData.level).toEqual(4);
+                expect(solverData.possibleWords.length).toBe(8);
+                expect(solverData.possibleWords).toContain('miner');
+
+                guesses.push('liner');
+                scores.push([0, 2, 2, 2, 1]);
+                updateSolver(guesses, scores, solverData);
+                expect(solverData.level).toEqual(5);
+                expect(solverData.possibleWords.length).toBe(2);
+                expect(solverData.possibleWords).toContain('miner');
+
+                guesses.push('finer');
+                scores.push([1, 2, 2, 2, 2]);
+                updateSolver(guesses, scores, solverData);
+                expect(solverData.level).toEqual(6);
+                expect(solverData.possibleWords.length).toBe(1);
+                expect(solverData.possibleWords).toContain('miner');
             });
         });
     });
