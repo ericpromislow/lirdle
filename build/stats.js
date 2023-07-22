@@ -91,7 +91,7 @@ Stats.prototype = {
         }
         lines.push('');
         lines.push('<hr>');
-        lines.push('Stats start around late February, 2023');
+        lines.push('Stats are now from mid-July, 2023');
         return lines.join(' <br> \n');
     },
     round2(n) {
