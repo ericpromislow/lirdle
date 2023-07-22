@@ -2,6 +2,14 @@
 
 require 'optparse'
 
+
+IP='24.84.204.176'
+def usage(msg=nil)
+  puts "Usage: #{$0} [-t | --text | -j | --json] [-d | --dateNum] dateNum"
+  puts msg if msg
+  exit 1
+end
+
 options = {}
 
 OptionParser.new do |opts|
@@ -10,19 +18,13 @@ OptionParser.new do |opts|
   opts.on('-d NUM', '--dateNum', Integer)
 end.parse!(into: options)
 
-
-def usage(msg=nil)
-  puts "Usage: #{$0} [-t | --text | -j | --json] [-d | --dateNum] dateNum"
-  puts msg if msg
-  exit 1
-end
-
 if !options.has_key?(:dateNum)
   usage("No date-num given")
 elsif options.has_key?(:text) && options.has_key?(:json)
   usage("Specified both text and json")
 end
 dateNum = options[:dateNum].to_s
+usage() if ARGV.size == 0
 
 LOG='/opt/nginx/logs'
 
@@ -44,12 +46,13 @@ guessesNeeded = []
 firstGuessCount = 0
 unfinishedGuessesNeeded = []
 
-ARGF.readlines.each do |line|
+File.readlines("#{LOG}/access.log").each do |line|
   line.chomp!
   next if line =~ %r{bentframe.org/staging}
   m = ptn.match(line)
   next if !m
   ip = m[1]
+  next if ip == IP
   op = m[2]
   args = m[3].split('&')
   fprint = m[4]
@@ -84,7 +87,7 @@ end
 def avg(a)
   return 0 if a.size == 0
   sum = a.reduce(0) { |a, b| a + b }
-  sum.to_f / a.size
+  "%.2f" % (sum.to_f / a.size)
 end
 
 usage = {
