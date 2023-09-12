@@ -141,6 +141,7 @@ View.prototype = {
     showTheWin(guessCount, changes) {
         this.showWinningInfo(guessCount);
         this.showDeceptiveSquares(changes);
+        this.activateWordsLeftLink();
         this.showAllDone();
         this.showTodaysStats();
         this.gameFinished = true;
@@ -210,6 +211,42 @@ View.prototype = {
             const actualColor = COLORS[change[1]];
             box.classList.add(`actual${ actualColor }`);
         }
+    },
+
+    activateWordsLeftLink() {
+        const numLeftContainers = this.board.querySelectorAll(".letter-row-container .numWordsLeftContainer");
+        for (let i = 0; i < numLeftContainers.length; i++) {
+            const container = numLeftContainers.item(i);
+            const firstPart = container.firstChild;
+            const numLeftAmountSpan = firstPart.nextSibling;
+            const lastPart = numLeftAmountSpan.nextSibling;
+            const numLeftAmount = parseInt(numLeftAmountSpan.textContent, 10);
+            if (numLeftAmount <= 1) {
+                break;
+            }
+            const numLeftButton = document.createElement('button');
+            numLeftButton.textContent = numLeftAmountSpan.textContent;
+            numLeftButton.addEventListener('click', () => {
+                this.showMatchedWords(i, numLeftAmount);
+            });
+            firstPart.parentElement.removeChild(numLeftAmountSpan);
+            firstPart.insertAdjacentElement('afterend', numLeftButton);
+            if (numLeftButton.nextSibling != lastPart) {
+                alert("Need to fix element placement");
+            }
+        }
+    },
+
+    showMatchedWords(i, numLeftAmount) {
+        console.log(`QQQ: showMatchedWords: i:${ i }, num: ${ numLeftAmount }`);
+        const solverData = this.model.solverData;
+        if (i >= solverData.remainingWords.length) {
+            console.log(`Error: can't find row ${i} out of ${solverData.remainingWords.length}`);
+            return;
+        }
+        const remainingWords = solverData.remainingWords[i];
+        remainingWords.sort();
+        alert(`Remaining words:\n\n${ remainingWords.join(' ') }`);
     },
 
     showStats() {

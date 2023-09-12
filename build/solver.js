@@ -4,6 +4,7 @@ export function getSolverData() {
     return {
         level: 0,
         possibleWords: WORDS,
+        remainingWords: [],
         possibleWordCounts: [],
     };
 }
@@ -25,6 +26,7 @@ export function updateSolver(guesses, scores, solver, finished=false) {
         }
         solver.possibleWords = possibleWords;
         solver.possibleWordCounts[solver.level] = possibleWords.length;
+        solver.remainingWords[solver.level] = possibleWords;
         solver.level += 1;
     }
 }

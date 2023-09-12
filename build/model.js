@@ -325,7 +325,7 @@ Model.prototype = {
             if (Object.keys(intervalUpdates).length > 0) {
                 this.view.updateHintCounts(intervalUpdates);
             }
-            if (newScores.every(x => x == 2)) {
+            if (newScores.every(x => x === 2)) {
                 // We have a fakeout
                 this.stats.addFiveGreenFakeOut();
                 this.view.showHitFakeOut(); //TODO: Implement
