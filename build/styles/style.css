@@ -321,5 +321,6 @@ div#matchingWords textarea {
   border: 3px blue solid;
   overflow-y: scroll;
   color: red;
-  font-family: serif;
+  font-family: sans-serif;
+  text-transform: uppercase;
 }

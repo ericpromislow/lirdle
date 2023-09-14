@@ -223,6 +223,8 @@ View.prototype = {
             const numLeftAmount = parseInt(numLeftAmountSpan.textContent, 10);
             if (numLeftAmount <= 1) {
                 break;
+            } else if (numLeftAmount > 20) {
+                continue;
             }
             const numLeftButton = document.createElement('button');
             numLeftButton.textContent = numLeftAmountSpan.textContent;
