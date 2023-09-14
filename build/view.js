@@ -226,8 +226,8 @@ View.prototype = {
             }
             const numLeftButton = document.createElement('button');
             numLeftButton.textContent = numLeftAmountSpan.textContent;
-            numLeftButton.addEventListener('click', () => {
-                this.showMatchedWords(i, numLeftAmount);
+            numLeftButton.addEventListener('click', (event) => {
+                this.showMatchedWords(event, i, numLeftAmount);
             });
             firstPart.parentElement.removeChild(numLeftAmountSpan);
             firstPart.insertAdjacentElement('afterend', numLeftButton);
@@ -237,8 +237,7 @@ View.prototype = {
         }
     },
 
-    showMatchedWords(i, numLeftAmount) {
-        console.log(`QQQ: showMatchedWords: i:${ i }, num: ${ numLeftAmount }`);
+    showMatchedWords(event, i, numLeftAmount) {
         const solverData = this.model.solverData;
         if (i >= solverData.remainingWords.length) {
             console.log(`Error: can't find row ${i} out of ${solverData.remainingWords.length}`);
@@ -246,7 +245,42 @@ View.prototype = {
         }
         const remainingWords = solverData.remainingWords[i];
         remainingWords.sort();
-        alert(`Remaining words:\n\n${ remainingWords.join(' ') }`);
+
+        const matchingWordsPanel = document.getElementById('matchingWords');
+        if (!matchingWordsPanel) {
+            console.log('Failed to get the matchingWords panel');
+            alert(`Remaining words:\n\n${ remainingWords.join(' ') }`);
+            return;
+        }
+        const wordList = matchingWordsPanel.querySelector('#matchingWordsList');
+        if (!wordList) {
+            console.log('Got the matchingWords panel but not the wordList');
+            alert(`Remaining words:\n\n${ remainingWords.join(' ') }`);
+            return;
+        }
+        const closeMatchingWordsButton = matchingWordsPanel.querySelector('#closeMatchingWords');
+        if (!closeMatchingWordsButton) {
+            console.log('Got the matchingWords panel and the wordList but not the panel');
+            alert(`Remaining words:\n\n${ remainingWords.join(' ') }`);
+            return;
+        }
+        wordList.textContent = remainingWords.join('\n');
+        const closeFunc = () => {
+            matchingWordsPanel.classList.add('hidden');
+            matchingWordsPanel.classList.remove('show');
+        }
+        closeMatchingWordsButton.addEventListener('click', () => {
+            closeFunc();
+        });
+        matchingWordsPanel.addEventListener('keyup', (e) => {
+            if (e.key === "Escape" || (e.ctrlKey && e.key === "W")) {
+                closeFunc();
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }, true)
+        matchingWordsPanel.classList.remove('hidden');
+        matchingWordsPanel.classList.add('show');
     },
 
     showStats() {

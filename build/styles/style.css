@@ -166,9 +166,9 @@ h2.collapsible.show span {
 }
 
 nothing {
-  font-color: var(--green);
-  font-color: var(--orange);
-  font-color: var(--blue);
+  color: var(--green);
+  color: var(--orange);
+  color: var(--blue);
 }
 
 .wordProblemPrompt {
@@ -298,15 +298,17 @@ div#matchingWords.hidden {
   display: none;
 }
 
-div#matchingWords {
+div#matchingWords.show {
+  visibility: visible;
+  display: block;
   border-right: 1px #ff4444 solid;
   border-bottom: 1px #ff4444 solid;
-  border-left: 5px #777777 solid;
-  border-top: 5px #777777 solid;
+  border-left: 5px #777700 solid;
+  border-top: 5px #777700 solid;
   position: fixed;
-  /*top: 100px;*/
-  /*right: 100px;*/
-  align-items: center;
+  top: 100px;
+  right: 300px;
+  /*align-items: center;*/
   opacity: 1;
   background-color: white;
   color: black;
@@ -318,4 +320,6 @@ div#matchingWords textarea {
   margin-bottom: 6px;
   border: 3px blue solid;
   overflow-y: scroll;
+  color: red;
+  font-family: serif;
 }
