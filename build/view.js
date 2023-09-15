@@ -245,7 +245,8 @@ View.prototype = {
             console.log(`Error: can't find row ${i} out of ${solverData.remainingWords.length}`);
             return;
         }
-        const remainingWords = solverData.remainingWords[i];
+        const targetWord = this.model.targetString;
+        const remainingWords = solverData.remainingWords[i].filter(x => x !== targetWord);
         remainingWords.sort();
 
         const matchingWordsPanel = document.getElementById('matchingWords');
