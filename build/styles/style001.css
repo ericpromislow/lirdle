@@ -307,7 +307,7 @@ div#matchingWords.show {
   border-top: 5px var(--black) solid;
   position: fixed;
   top: 100px;
-  right: 300px;
+  /*right: 200px;*/
   /*align-items: center;*/
   opacity: 1;
   background-color: var(--white);
