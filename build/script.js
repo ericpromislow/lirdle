@@ -7,10 +7,9 @@ let view = null;
 let model = view;
 
 function afdCheck() {
-    console.log('in afdCheck ...');
+    // console.log('in afdCheck ...');
     const date = new Date();
-    // if (date.getMonth() !== 3 || date.getDate() !== 1) {
-    if (date.getMonth() !== 11 || date.getDate() !== 19) {
+    if (date.getMonth() !== 3 || date.getDate() !== 1) {
         return;
     }
     // console.table(location);
@@ -20,15 +19,16 @@ function afdCheck() {
         return;
     }
     if (location.origin.includes('127.0.0.1')) {
-        location.href = 'http://bentframe.org/staging/lirdle41';
+        window.location.href = 'http://bentframe.org/staging/lirdle41';
     }
-    let protocol = location.protocol;
-    protocol = 'http:'; // TODO: Remove this...
-    const parts = [protocol, '//', 'bentframe.org/staging/lirdle41', location.pathname];
-    const newURL = parts.join('');
-    console.log(`QQQ: - Switch to ${ newURL }`);
+    const href = window.location.href.toString();
+    const newURL = href.replace('lirdle.com', 'lirdle41.com');
+    if (href == newURL) {
+        return;
+    }
+    // console.log(`QQQ: - Switch to ${ newURL }`);
     window.location.href = newURL;
-    console.log(`QQQ: + Switch to ${ newURL }`);
+    // console.log(`QQQ: + Switch to ${ newURL }`);
 }
 function initialize() {
     afdCheck();
