@@ -6,7 +6,32 @@ import Model from './model.js';
 let view = null;
 let model = view;
 
+function afdCheck() {
+    console.log('in afdCheck ...');
+    const date = new Date();
+    // if (date.getMonth() !== 3 || date.getDate() !== 1) {
+    if (date.getMonth() !== 11 || date.getDate() !== 19) {
+        return;
+    }
+    // console.table(location);
+    const searchParams = new URLSearchParams(window.location.search);
+    // console.log(`QQQ: has std: ${ searchParams.has('noafj')}`);
+    if (searchParams.has('noafj')) {
+        return;
+    }
+    if (location.origin.includes('127.0.0.1')) {
+        location.href = 'http://bentframe.org/staging/lirdle41';
+    }
+    let protocol = location.protocol;
+    protocol = 'http:'; // TODO: Remove this...
+    const parts = [protocol, '//', 'bentframe.org/staging/lirdle41', location.pathname];
+    const newURL = parts.join('');
+    console.log(`QQQ: - Switch to ${ newURL }`);
+    window.location.href = newURL;
+    console.log(`QQQ: + Switch to ${ newURL }`);
+}
 function initialize() {
+    afdCheck();
     view = new View();
     model = new Model(view);
     view.setModel(model);
