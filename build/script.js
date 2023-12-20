@@ -175,7 +175,7 @@ function alreadyPlayedToday() {
     }
     try {
         const state = JSON.parse(saveableState);
-        return state.date == getDateNumber();
+        return state.date === getDateNumber();
     } catch(ex) {
         console.log(`QQQ: problem: ${ ex }`);
     }
@@ -185,8 +185,8 @@ function alreadyPlayedToday() {
 function afdCheck() {
     // console.log('in afdCheck ...');
     const date = new Date();
-    // if (date.getMonth() !== 3 || date.getDate() !== 1) {
-    if (date.getMonth() !== 11 || date.getDate() !== 19) {
+    // if (date.getMonth() !== 11 || date.getDate() !== 19) {
+    if (date.getMonth() !== 3 || date.getDate() !== 1) {
         return;
     }
     if (alreadyPlayedToday()) {
@@ -203,7 +203,7 @@ function afdCheck() {
     }
     const href = window.location.href.toString();
     const newURL = href.replace('lirdle.com', 'lirdle41.com');
-    if (href == newURL) {
+    if (href === newURL) {
         return;
     }
     // console.log(`QQQ: - Switch to ${ newURL }`);
