@@ -2,34 +2,11 @@
 
 import View from './view.js';
 import Model from './model.js';
+import { getDateNumber } from "./numbers.js";
 
 let view = null;
 let model = view;
 
-function afdCheck() {
-    // console.log('in afdCheck ...');
-    const date = new Date();
-    if (date.getMonth() !== 3 || date.getDate() !== 1) {
-        return;
-    }
-    // console.table(location);
-    const searchParams = new URLSearchParams(window.location.search);
-    // console.log(`QQQ: has std: ${ searchParams.has('noafj')}`);
-    if (searchParams.has('noafj')) {
-        return;
-    }
-    if (location.origin.includes('127.0.0.1')) {
-        window.location.href = 'http://bentframe.org/staging/lirdle41';
-    }
-    const href = window.location.href.toString();
-    const newURL = href.replace('lirdle.com', 'lirdle41.com');
-    if (href == newURL) {
-        return;
-    }
-    // console.log(`QQQ: - Switch to ${ newURL }`);
-    window.location.href = newURL;
-    // console.log(`QQQ: + Switch to ${ newURL }`);
-}
 function initialize() {
     afdCheck();
     view = new View();
@@ -189,4 +166,47 @@ function copyTextToClipboard(text) {
         console.error(`navigator.clipboard.writeText failed: ${ e }`);
         fallbackCopyTextToClipboard(text);
     });
+}
+
+function alreadyPlayedToday() {
+    const saveableState = localStorage.getItem('saveableState');
+    if (!saveableState) {
+        return false;
+    }
+    try {
+        const state = JSON.parse(saveableState);
+        return state.date == getDateNumber();
+    } catch(ex) {
+        console.log(`QQQ: problem: ${ ex }`);
+    }
+    return false;
+}
+
+function afdCheck() {
+    // console.log('in afdCheck ...');
+    const date = new Date();
+    // if (date.getMonth() !== 3 || date.getDate() !== 1) {
+    if (date.getMonth() !== 11 || date.getDate() !== 19) {
+        return;
+    }
+    if (alreadyPlayedToday()) {
+        return;
+    }
+    // console.table(location);
+    const searchParams = new URLSearchParams(window.location.search);
+    // console.log(`QQQ: has std: ${ searchParams.has('noafj')}`);
+    if (searchParams.has('noafj')) {
+        return;
+    }
+    if (location.origin.includes('127.0.0.1')) {
+        window.location.href = 'http://bentframe.org/staging/lirdle41';
+    }
+    const href = window.location.href.toString();
+    const newURL = href.replace('lirdle.com', 'lirdle41.com');
+    if (href == newURL) {
+        return;
+    }
+    // console.log(`QQQ: - Switch to ${ newURL }`);
+    window.location.href = newURL;
+    // console.log(`QQQ: + Switch to ${ newURL }`);
 }
