@@ -10,6 +10,7 @@ export default function View() {
     }
     this.model = null;
     this.wordIsInvalid = false;
+    this.wordIsNonTarget - false;
     this.gameFinished = false;
 }
 
@@ -322,6 +323,24 @@ View.prototype = {
         }
     },
 
+    changeNonTargetWordState(rowNum, wordIsNonTarget, guessString) {
+        if (this.wordIsNonTarget !== wordIsNonTarget) {
+            if (!this.wordIsNonTarget) {
+                this.markCurrentWordNonTarget(rowNum);
+                if (guessString) {
+                    this.dupWord.querySelector('#dupWordContents').textContent = guessString;
+                    this.dupWord.classList.remove('hidden');
+                    this.dupWord.classList.add('show');
+                }
+            } else {
+                this.unmarkCurrentWordNonTarget(rowNum);
+                this.dupWord.classList.remove('show');
+                this.dupWord.classList.add('hidden');
+            }
+            this.wordIsNonTarget = wordIsNonTarget;
+        }
+    },
+
     showInvalidWordPrompt(promptID) {
         const elt = document.getElementById(promptID);
         if (elt) {
@@ -367,6 +386,22 @@ View.prototype = {
         for (let i = 0; i < 5; i++) {
             const box = row.childNodes[i];
             box.classList.remove('invalid');
+        }
+    },
+
+    markCurrentWordNonTarget(rowNum) {
+        const row = this.board.querySelectorAll(".letter-row-container").item(rowNum).querySelector(".letter-row");
+        for (let i = 0; i < 5; i++) {
+            const box = row.childNodes[i];
+            box.classList.add('nontarget');
+        }
+    },
+
+    unmarkCurrentWordNonTarget(rowNum) {
+        const row = this.board.querySelectorAll(".letter-row-container").item(rowNum).querySelector(".letter-row");
+        for (let i = 0; i < 5; i++) {
+            const box = row.childNodes[i];
+            box.classList.remove('nontarget');
         }
     },
 
