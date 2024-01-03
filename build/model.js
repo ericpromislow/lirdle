@@ -276,9 +276,6 @@ Model.prototype = {
             this.isInvalidWord = true;
             this.view.changeInvalidWordState(this.guessCount, true);
             return;
-        } else if (!WORDS.includes(guessString) && OTHERWORDS.includes(guessString)) {
-            this.isNonTargetWord = true;
-            this.view.changeNonTargetWordState(this.guessCount, true);
         }
 
         this.saveableState.guessWords.push(guessString);
@@ -300,6 +297,7 @@ Model.prototype = {
         this.saveableState.scores.push(newScores);
         this.view.enterScoredGuess(guessString, newScores, this.guessCount, guessedIt, false);
         this.guessCount += 1;
+        this.isNonTargetWord = false;
 
         if (guessedIt) {
             this.saveableState.finished = true;
@@ -448,6 +446,9 @@ Model.prototype = {
                     this.isInvalidWord = true;
                     this.view.changeInvalidWordState(this.guessCount, true, guessString);
                 }
+            } else if (!WORDS.includes(guessString) && OTHERWORDS.includes(guessString)) {
+                this.isNonTargetWord = true;
+                this.view.changeNonTargetWordState(this.guessCount, true);
             }
         }
     },

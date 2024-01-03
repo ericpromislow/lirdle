@@ -10,7 +10,7 @@ export default function View() {
     }
     this.model = null;
     this.wordIsInvalid = false;
-    this.wordIsNonTarget - false;
+    this.wordIsNonTarget = false;
     this.gameFinished = false;
 }
 
@@ -323,19 +323,12 @@ View.prototype = {
         }
     },
 
-    changeNonTargetWordState(rowNum, wordIsNonTarget, guessString) {
+    changeNonTargetWordState(rowNum, wordIsNonTarget) {
         if (this.wordIsNonTarget !== wordIsNonTarget) {
             if (!this.wordIsNonTarget) {
                 this.markCurrentWordNonTarget(rowNum);
-                if (guessString) {
-                    this.dupWord.querySelector('#dupWordContents').textContent = guessString;
-                    this.dupWord.classList.remove('hidden');
-                    this.dupWord.classList.add('show');
-                }
             } else {
                 this.unmarkCurrentWordNonTarget(rowNum);
-                this.dupWord.classList.remove('show');
-                this.dupWord.classList.add('hidden');
             }
             this.wordIsNonTarget = wordIsNonTarget;
         }
