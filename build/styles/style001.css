@@ -77,11 +77,6 @@ h1 {
   background-color: var(--white);
 }
 
-.letter-box.nontarget {
-  color: var(--orange);
-  background-color: var(--white);
-}
-
 .letter-box.actualgrey {
   border: 6px solid var(--black);
 }

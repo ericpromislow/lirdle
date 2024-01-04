@@ -413,7 +413,7 @@ Model.prototype = {
                 this.chargeInvalidWord = CHARGE_NONE;
             } else if (this.isNonTargetWord) {
                 this.isNonTargetWord = false;
-                this.view.changeNonTargetWordState(this.guessCount, false);
+                this.view.changeNonTargetWordState(false);
             } 
         }
     },
@@ -437,7 +437,7 @@ Model.prototype = {
             } else if (this.saveableState.guessWords.includes(guessString)) {
                  if (!WORDS.includes(guessString) && OTHERWORDS.includes(guessString)) {
                         this.isNonTargetWord = true;
-                        this.view.changeNonTargetWordState(this.guessCount, true, '');
+                        this.view.changeNonTargetWordState(this.guessCount, true, guessString);
                 }
                 if (this.prefs.hints && this.saveableState.numDuplicateWordsEarned > 0) {
                     this.chargeInvalidWord = CHARGE_DUPLICATE;
@@ -448,7 +448,7 @@ Model.prototype = {
                 }
             } else if (!WORDS.includes(guessString) && OTHERWORDS.includes(guessString)) {
                 this.isNonTargetWord = true;
-                this.view.changeNonTargetWordState(this.guessCount, true);
+                this.view.changeNonTargetWordState(true, guessString);
             }
         }
     },

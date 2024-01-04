@@ -5,6 +5,7 @@ import { devMode, getDateNumber, getYesterdaysWord } from "./numbers.js";
 export default function View() {
     this.board = document.getElementById("game-board");
     this.dupWord = document.getElementById("dupWord");
+    this.secondaryWordWarning = document.getElementById("secondaryWordWarning");
     for (const elem of document.getElementsByClassName("keyboard-button")) {
         elem.style.backgroundColor = NEUTRAL_COLOR;
     }
@@ -323,12 +324,17 @@ View.prototype = {
         }
     },
 
-    changeNonTargetWordState(rowNum, wordIsNonTarget) {
+    changeNonTargetWordState(wordIsNonTarget, guessString="") {
         if (this.wordIsNonTarget !== wordIsNonTarget) {
             if (!this.wordIsNonTarget) {
-                this.markCurrentWordNonTarget(rowNum);
+                if (guessString) {
+                    this.secondaryWordWarning.querySelector('#secondaryWordContents').textContent = guessString;
+                    this.secondaryWordWarning.classList.remove('hidden');
+                    this.secondaryWordWarning.classList.add('show');
+                }
             } else {
-                this.unmarkCurrentWordNonTarget(rowNum);
+                this.secondaryWordWarning.classList.remove('show');
+                this.secondaryWordWarning.classList.add('hidden');
             }
             this.wordIsNonTarget = wordIsNonTarget;
         }
@@ -379,22 +385,6 @@ View.prototype = {
         for (let i = 0; i < 5; i++) {
             const box = row.childNodes[i];
             box.classList.remove('invalid');
-        }
-    },
-
-    markCurrentWordNonTarget(rowNum) {
-        const row = this.board.querySelectorAll(".letter-row-container").item(rowNum).querySelector(".letter-row");
-        for (let i = 0; i < 5; i++) {
-            const box = row.childNodes[i];
-            box.classList.add('nontarget');
-        }
-    },
-
-    unmarkCurrentWordNonTarget(rowNum) {
-        const row = this.board.querySelectorAll(".letter-row-container").item(rowNum).querySelector(".letter-row");
-        for (let i = 0; i < 5; i++) {
-            const box = row.childNodes[i];
-            box.classList.remove('nontarget');
         }
     },
 
@@ -492,6 +482,7 @@ View.prototype = {
                 console.log(`lirdle: ignoring return before full word is typed`);
                 return;
             }
+            this.changeNonTargetWordState(false);
             this.model.checkGuess();
         } else if (pressedKey.match(/^[a-z]$/i)) {
             if (this.model.nextLetterPosition < 5) {
