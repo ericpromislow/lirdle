@@ -231,6 +231,7 @@ Model.prototype = {
         this.scoresByLetter = {};
         this.targetString = '';
         this.isInvalidWord = false;
+        this.isNonTargetWord = false;
         this.chargeInvalidWord = 0; // 1: charge dup, 2: charge non-word
         this.allDone = false;
         this.lettersByPosition = {
@@ -296,6 +297,7 @@ Model.prototype = {
         this.saveableState.scores.push(newScores);
         this.view.enterScoredGuess(guessString, newScores, this.guessCount, guessedIt, false);
         this.guessCount += 1;
+        this.isNonTargetWord = false;
 
         if (guessedIt) {
             this.saveableState.finished = true;
@@ -409,7 +411,10 @@ Model.prototype = {
             } else if (this.chargeInvalidWord !== CHARGE_NONE) {
                 this.view.clearInvalidWordPrompt();
                 this.chargeInvalidWord = CHARGE_NONE;
-            }
+            } else if (this.isNonTargetWord) {
+                this.isNonTargetWord = false;
+                this.view.changeNonTargetWordState(false);
+            } 
         }
     },
 
@@ -430,6 +435,10 @@ Model.prototype = {
                     this.view.changeInvalidWordState(this.guessCount, true, '');
                 }
             } else if (this.saveableState.guessWords.includes(guessString)) {
+                 if (!WORDS.includes(guessString) && OTHERWORDS.includes(guessString)) {
+                        this.isNonTargetWord = true;
+                        this.view.changeNonTargetWordState(this.guessCount, true, guessString);
+                }
                 if (this.prefs.hints && this.saveableState.numDuplicateWordsEarned > 0) {
                     this.chargeInvalidWord = CHARGE_DUPLICATE;
                     this.view.showInvalidWordPrompt("dupWordHint");
@@ -437,6 +446,9 @@ Model.prototype = {
                     this.isInvalidWord = true;
                     this.view.changeInvalidWordState(this.guessCount, true, guessString);
                 }
+            } else if (!WORDS.includes(guessString) && OTHERWORDS.includes(guessString)) {
+                this.isNonTargetWord = true;
+                this.view.changeNonTargetWordState(true, guessString);
             }
         }
     },

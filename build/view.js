@@ -5,11 +5,13 @@ import { devMode, getDateNumber, getYesterdaysWord } from "./numbers.js";
 export default function View() {
     this.board = document.getElementById("game-board");
     this.dupWord = document.getElementById("dupWord");
+    this.secondaryWordWarning = document.getElementById("secondaryWordWarning");
     for (const elem of document.getElementsByClassName("keyboard-button")) {
         elem.style.backgroundColor = NEUTRAL_COLOR;
     }
     this.model = null;
     this.wordIsInvalid = false;
+    this.wordIsNonTarget = false;
     this.gameFinished = false;
 }
 
@@ -322,6 +324,22 @@ View.prototype = {
         }
     },
 
+    changeNonTargetWordState(wordIsNonTarget, guessString="") {
+        if (this.wordIsNonTarget !== wordIsNonTarget) {
+            if (!this.wordIsNonTarget) {
+                if (guessString) {
+                    this.secondaryWordWarning.querySelector('#secondaryWordContents').textContent = guessString;
+                    this.secondaryWordWarning.classList.remove('hidden');
+                    this.secondaryWordWarning.classList.add('show');
+                }
+            } else {
+                this.secondaryWordWarning.classList.remove('show');
+                this.secondaryWordWarning.classList.add('hidden');
+            }
+            this.wordIsNonTarget = wordIsNonTarget;
+        }
+    },
+
     showInvalidWordPrompt(promptID) {
         const elt = document.getElementById(promptID);
         if (elt) {
@@ -464,6 +482,7 @@ View.prototype = {
                 console.log(`lirdle: ignoring return before full word is typed`);
                 return;
             }
+            this.changeNonTargetWordState(false);
             this.model.checkGuess();
         } else if (pressedKey.match(/^[a-z]$/i)) {
             if (this.model.nextLetterPosition < 5) {
