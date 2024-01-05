@@ -328,7 +328,6 @@ View.prototype = {
         if (this.wordIsNonTarget !== wordIsNonTarget) {
             if (!this.wordIsNonTarget) {
                 if (guessString) {
-                    this.secondaryWordWarning.querySelector('#secondaryWordContents').textContent = guessString;
                     this.secondaryWordWarning.classList.remove('hidden');
                     this.secondaryWordWarning.classList.add('show');
                 }
