@@ -435,10 +435,6 @@ Model.prototype = {
                     this.view.changeInvalidWordState(this.guessCount, true, '');
                 }
             } else if (this.saveableState.guessWords.includes(guessString)) {
-                 if (!WORDS.includes(guessString) && OTHERWORDS.includes(guessString)) {
-                        this.isNonTargetWord = true;
-                        this.view.changeNonTargetWordState(this.guessCount, true, guessString);
-                }
                 if (this.prefs.hints && this.saveableState.numDuplicateWordsEarned > 0) {
                     this.chargeInvalidWord = CHARGE_DUPLICATE;
                     this.view.showInvalidWordPrompt("dupWordHint");
