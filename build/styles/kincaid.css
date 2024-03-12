@@ -1,0 +1,82 @@
+/*
+// Copyright (C) 2023 Bovination Productions, MIT License
+*/
+:root {
+  --green: green;
+  --red: red;
+  --yellow: yellow;
+  --gray: gray;
+  --orange: #ed9121;
+  --blue: #04d9ff;
+  --white: black;
+  --black: #333;
+}
+
+body {
+  background: url('kincaid-800x700.png');
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #ddd, 1px 1px 0 #ddd;
+  /*text-stroke-width: 2px;*/
+  /*text-stroke-color: red;*/
+  /*-moz-text-stroke-width: 2px;*/
+  /*-moz-text-stroke-color: red;*/
+}
+
+.filled-box {
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -3px 3px 0 #ddd, 3px 3px 0 #ddd;
+}
+
+.filled-box {
+  animation: rotate 7s infinite;
+}
+
+.filled-box.background-grey {
+  animation: rotate 5s infinite;
+}
+
+.filled-box.background-green {
+  animation: rotate 1s infinite;
+}
+
+.filled-box.background-yellow {
+  animation: rotatecc 3s infinite;
+}
+
+@keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotatecc {
+  from {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+  to {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+
+.letter-row  {
+  animation-name: slippery;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+}
+@keyframes slippery {
+  0% {
+    margin-left: -10px;
+  }
+  0% {
+    margin-left: +10px;
+  }
+}
+
