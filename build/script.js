@@ -185,8 +185,8 @@ function alreadyPlayedToday() {
 function afdCheck() {
     // console.log('in afdCheck ...');
     const date = new Date();
-    // if (date.getMonth() !== 11 || date.getDate() !== 19) {
-    if (date.getMonth() !== 3 || date.getDate() !== 1) {
+    if (date.getMonth() !== 2 || date.getDate() !== 12) {
+    // if (date.getMonth() !== 3 || date.getDate() !== 1) {
         return;
     }
     if (alreadyPlayedToday()) {
@@ -198,14 +198,29 @@ function afdCheck() {
     if (searchParams.has('noafj')) {
         return;
     }
-    if (location.origin.includes('127.0.0.1')) {
-        window.location.href = 'http://bentframe.org/staging/lirdle41';
+    let mainTheme = '';
+    try {
+        mainTheme = JSON.parse(localStorage.getItem('prefs'))['theme'];
+    } catch(ex) {
+        if (location.origin.includes('127.0.0.1')) {
+            console.log(`QQQ: error setting theme: ${ ex }`)
+        }
+    }
+    let styleString = '';
+    if (mainTheme) {
+        const req = new URLSearchParams();
+        req.set('mainTheme', mainTheme);
+        styleString = `?${req.toString()}`
+    }
+    if (location.origin.includes('127.0.0.1') || location.origin.includes('localhost')) {
+        window.location.href = `http://bentframe.org/staging/lirdle41${ styleString }`;
     }
     const href = window.location.href.toString();
-    const newURL = href.replace('lirdle.com', 'lirdle41.com');
+    let newURL = href.replace('lirdle.com', 'lirdle41.com');
     if (href === newURL) {
         return;
     }
+    newURL += styleString;
     // console.log(`QQQ: - Switch to ${ newURL }`);
     window.location.href = newURL;
     // console.log(`QQQ: + Switch to ${ newURL }`);
