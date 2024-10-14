@@ -577,32 +577,25 @@ View.prototype = {
         const currentDateNumber = getInternalDateNumber(getDateNumber());
         const currentWeekNum = pad(Math.floor(currentDateNumber / 7), 3, '0');
         const liTOTW = document.getElementById('tofw');
-        const liNoTOTW = document.getElementById('no-tofw');
-        if (!liTOTW || !liNoTOTW) {
-            if (liNoTOTW) {
-                liNoTOTW.classList.remove('hidden');
-                liNoTOTW.classList.add('show');
-            }
+        if (!liTOTW ) {
             return;
         }
         fetch(`/tease/t${ currentWeekNum }.txt`)
             .then((response) => {
                 if (response.status === 200) {
                     return response.text();
-                } else {
-                    this.showOnOff(liNoTOTW, liTOTW);
                 }
             })
             .then((txt) => {
                 if (!txt || txt.length === 0) {
-                    this.showOnOff(liNoTOTW, liTOTW);
+                    this.showOnOff(liTOTW, false);
                 } else {
                     liTOTW.querySelector('span#tofw-body').innerHTML = this.sanitize(txt);
-                    this.showOnOff(liTOTW, liNoTOTW);
+                    this.showOnOff(liTOTW, true);
                 }
             }).catch((err) => {
                 console.log(`Failed to process t${currentWeekNum}.txt `, err);
-                this.showOnOff(liNoTOTW, liTOTW);
+                this.showOnOff(liTOTW, false);
             });
     },
     sanitize(txt) {
@@ -611,11 +604,14 @@ View.prototype = {
             .replace('<', '&lt;')
             .replace(/\r?\n/, '<br />');
     },
-    showOnOff(onNode, offNode) {
-        onNode.classList.add('show');
-        onNode.classList.remove('hidden');
-        offNode.classList.add('hidden');
-        offNode.classList.remove('show');
+    showOnOff(node, showNode) {
+        if (showNode) {
+            node.classList.add('show');
+            node.classList.remove('hidden');
+        } else {
+            node.classList.add('hidden');
+            node.classList.remove('show');
+        }
     },
 
     doBlurbs() {
