@@ -269,7 +269,7 @@ View.prototype = {
             alert(`Remaining words:\n\n${ remainingWords.join(' ') }`);
             return;
         }
-        wordList.textContent = remainingWords.join('\n');
+        wordList.value = remainingWords.join('\n');
         const closeFunc = () => {
             matchingWordsPanel.classList.add('hidden');
             matchingWordsPanel.classList.remove('show');
