@@ -37,6 +37,7 @@ describe('solver tests', () => {
                     level: 0,
                     possibleWords: currentWordList,
                     possibleWordCounts: [],
+		    remainingWords: [],
                 });
                 // ['taste', 'waste', 'wedge', 'llama', 'mango'];
 
@@ -47,6 +48,9 @@ describe('solver tests', () => {
                     level: 1,
                     possibleWords: currentWordList,
                     possibleWordCounts: [currentWordList.length],
+		    remainingWords: [
+			['taste', 'waste', 'wedge', 'llama', 'mango'],
+		    ],
                 });
                 expect(solverData.level).toBe(1);
                 expect(solverData.possibleWords.length).toBe(currentWordList.length);
@@ -58,6 +62,10 @@ describe('solver tests', () => {
                     level: 2,
                     possibleWords: ['taste', 'waste', 'llama', 'mango'],
                     possibleWordCounts: [5, 4],
+		    remainingWords: [
+			['taste', 'waste', 'wedge', 'llama', 'mango'],
+			['taste', 'waste', 'llama', 'mango'],
+		    ],
                 });
 
                 guesses.push('abmdc');
@@ -67,6 +75,11 @@ describe('solver tests', () => {
                     level: 3,
                     possibleWords: ['llama', 'mango'],
                     possibleWordCounts: [5, 4, 2],
+		    remainingWords: [
+			['taste', 'waste', 'wedge', 'llama', 'mango'],
+			['taste', 'waste', 'llama', 'mango'],
+			['llama', 'mango'],
+		    ],
                 });
 
                 guesses.push('alarm');
@@ -76,6 +89,12 @@ describe('solver tests', () => {
                     level: 4,
                     possibleWords: ['llama'],
                     possibleWordCounts: [5, 4, 2, 1],
+		    remainingWords: [
+			['taste', 'waste', 'wedge', 'llama', 'mango'],
+			['taste', 'waste', 'llama', 'mango'],
+			['llama', 'mango'],
+			['llama'],
+		    ],
                 });
             });
         });
@@ -124,6 +143,17 @@ describe('solver tests', () => {
                 expect(scoreMakesSense('parer', 'abhor', [1,1,0,0,2])).toBeTruthy();
                 expect(scoreMakesSense('parer', 'abhor', [2,1,0,0,2])).toBeTruthy();
             })
+        });
+    });
+    describe('full word list for issue 41', () => {
+        const currentWordList = WORDS.concat([]);
+        test('green i should fail', () => {
+            let words = evalPossibleWords('score', [1, 2, 0, 0, 0], currentWordList);
+            expect(words.length).toEqual(87);
+            expect(words).toContain('scuba');
+            for (const word in "budge,deuce,fudge,hedge,judge,nudge".split(',')) {
+                expect(words).not.toContain(word);
+            }
         });
     });
     describe('full word list', () => {
