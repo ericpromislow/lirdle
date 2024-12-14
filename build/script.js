@@ -190,6 +190,7 @@ function afdCheck() {
     if (searchParams.has('noafj')) {
         return;
     }
+    const nocom = searchParams.has('nocom');
     if (!searchParams.has('afj')) {
         // Test the stuff...
         const date = new Date();
@@ -219,7 +220,13 @@ function afdCheck() {
         window.location.href = `http://bentframe.org/staging/lirdle41${ styleString }`;
     }
     const href = window.location.href.toString();
-    let newURL = href.replace('lirdle.com', 'lirdle41.com');
+    let beforeSitename = 'lirdle';
+    let afterSitename = 'lirdle41';
+    if (!nocom) {
+        beforeSitename += '.com';
+        afterSitename += '.com';
+    }
+    let newURL = href.replace(beforeSitename, afterSitename);
     if (href === newURL) {
         return;
     }
