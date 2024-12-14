@@ -216,15 +216,22 @@ function afdCheck() {
         }
     }
     let styleString = '';
+    let styleStringBase = '';
+    const href = window.location.href.toString();
     if (mainTheme) {
         const req = new URLSearchParams();
         req.set('mainTheme', mainTheme);
-        styleString = `?${req.toString()}`
+        if (href.includes('?')) {
+            styleString = '&';
+        } else {
+            styleString = '?';
+        }
+        styleStringBase = req.toString()
+        styleString += styleStringBase;
     }
     if (location.origin.includes('127.0.0.1') || location.origin.includes('localhost')) {
-        window.location.href = `http://bentframe.org/staging/lirdle41${ styleString }`;
+        window.location.replace(`http://bentframe.org/staging/lirdle41?${ styleStringBase }`);
     }
-    const href = window.location.href.toString();
     let beforeSitename = 'lirdle';
     let afterSitename = 'lirdle41';
     if (!nocom) {
@@ -237,6 +244,6 @@ function afdCheck() {
     }
     newURL += styleString;
     // console.log(`QQQ: - Switch to ${ newURL }`);
-    window.location.href = newURL;
+    window.location.replace(newURL);
     // console.log(`QQQ: + Switch to ${ newURL }`);
 }
