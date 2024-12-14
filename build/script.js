@@ -191,11 +191,16 @@ function afdCheck() {
         return;
     }
     const nocom = searchParams.has('nocom');
-    if (!searchParams.has('afj')) {
+    if (searchParams.has('afj')) {
+        console.log("Testing the flip");
+    } else {
         // Test the stuff...
         const date = new Date();
-        if (date.getMonth() !== 2 || date.getDate() !== 12) {
-            // if (date.getMonth() !== 3 || date.getDate() !== 1) {
+        // This next block is for testing...
+        // if (date.getMonth() !== 2 || date.getDate() !== 12) {
+        //     return;
+        // }
+        if (date.getMonth() !== 3 || date.getDate() !== 1) {
             return;
         }
         if (alreadyPlayedToday()) {
