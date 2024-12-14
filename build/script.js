@@ -184,19 +184,22 @@ function alreadyPlayedToday() {
 
 function afdCheck() {
     // console.log('in afdCheck ...');
-    const date = new Date();
-    if (date.getMonth() !== 2 || date.getDate() !== 12) {
-    // if (date.getMonth() !== 3 || date.getDate() !== 1) {
-        return;
-    }
-    if (alreadyPlayedToday()) {
-        return;
-    }
-    // console.table(location);
     const searchParams = new URLSearchParams(window.location.search);
+    // console.table(location);
     // console.log(`QQQ: has std: ${ searchParams.has('noafj')}`);
     if (searchParams.has('noafj')) {
         return;
+    }
+    if (!searchParams.has('afj')) {
+        // Test the stuff...
+        const date = new Date();
+        if (date.getMonth() !== 2 || date.getDate() !== 12) {
+            // if (date.getMonth() !== 3 || date.getDate() !== 1) {
+            return;
+        }
+        if (alreadyPlayedToday()) {
+            return;
+        }
     }
     let mainTheme = '';
     try {
