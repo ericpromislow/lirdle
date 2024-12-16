@@ -303,7 +303,7 @@ Model.prototype = {
             this.saveableState.finished = true;
             this.view.showTheWin(this.guessCount, this.saveableState.changes);
             this.doneFunc();
-            if (this.prefs.showNumLeft) {
+            if (!this.prefs.showNumLeft) {
                 const sd = this.solverData;
                 for (let i = 0; i < sd.level; i++) {
                     this.view.showOrHideNumLeftForRow(true, i);
